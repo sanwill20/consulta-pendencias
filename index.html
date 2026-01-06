@@ -29,7 +29,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 async function buscar() {
   const operacao = document.getElementById("operacao").value;
-  const vendedor = document.getElementById("rn").value;
+  const rn = document.getElementById("rn").value;
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?Operacao=eq.${encodeURIComponent(operacao)}&Setor=eq.${rn}`, {
     headers: { apikey: SUPABASE_KEY }
@@ -41,6 +41,7 @@ async function buscar() {
 </script>
 </body>
 </html>
+
 
 
 
