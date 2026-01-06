@@ -17,7 +17,7 @@
   </select>
 
   Vendedor:
-  <input id="vendedor" maxlength="3" placeholder="000">
+  <input id="Setor" maxlength="3" placeholder="000">
 
   <button onclick="buscar()">Buscar</button>
 
@@ -28,8 +28,8 @@ const SUPABASE_URL = "https://SEU_PROJETO.supabase.co";
 const SUPABASE_KEY = "SUA_PUBLIC_ANON_KEY";
 
 async function buscar() {
-  const operacao = document.getElementById("operacao").value;
-  const vendedor = document.getElementById("vendedor").value;
+  const operacao = document.getElementById("Operacao").value;
+  const vendedor = document.getElementById("Setor").value;
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?operacao=eq.${encodeURIComponent(operacao)}&vendedor=eq.${vendedor}`, {
     headers: { apikey: SUPABASE_KEY }
@@ -41,3 +41,4 @@ async function buscar() {
 </script>
 </body>
 </html>
+
