@@ -16,20 +16,20 @@
     <option>Asa Norte Bom Jesus</option>
   </select>
 
-  Vendedor:
-  <input id="Setor" maxlength="3" placeholder="000">
+  RN:
+  <input id="rn" maxlength="3" placeholder="000">
 
   <button onclick="buscar()">Buscar</button>
 
   <pre id="resultado"></pre>
 
 <script>
-const SUPABASE_URL = "https://SEU_PROJETO.supabase.co";
-const SUPABASE_KEY = "SUA_PUBLIC_ANON_KEY";
+const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
 async function buscar() {
-  const operacao = document.getElementById("Operacao").value;
-  const vendedor = document.getElementById("Setor").value;
+  const operacao = document.getElementById("operacao").value;
+  const vendedor = document.getElementById("rn").value;
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?operacao=eq.${encodeURIComponent(operacao)}&vendedor=eq.${vendedor}`, {
     headers: { apikey: SUPABASE_KEY }
@@ -41,4 +41,5 @@ async function buscar() {
 </script>
 </body>
 </html>
+
 
