@@ -31,7 +31,7 @@ async function buscar() {
   const operacao = document.getElementById("operacao").value;
   const vendedor = document.getElementById("rn").value;
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?operacao=eq.${encodeURIComponent(operacao)}&vendedor=eq.${vendedor}`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?Operacao=eq.${encodeURIComponent(operacao)}&Setor=eq.${rn}`, {
     headers: { apikey: SUPABASE_KEY }
   });
 
@@ -41,5 +41,6 @@ async function buscar() {
 </script>
 </body>
 </html>
+
 
 
