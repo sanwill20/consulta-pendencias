@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Pendências</title>
+</head>
+<body>
+  <h2>Consulta de Pendências</h2>
+
+  Operação:
+  <select id="operacao">
+    <option>Asa Norte Campo Maior</option>
+    <option>Asa Norte Teresina</option>
+    <option>Asa Norte Parnaíba</option>
+    <option>Asa Norte São Raimundo</option>
+    <option>Asa Norte Bom Jesus</option>
+  </select>
+
+  Vendedor:
+  <input id="vendedor" maxlength="3" placeholder="000">
+
+  <button onclick="buscar()">Buscar</button>
+
+  <pre id="resultado"></pre>
+
+<script>
+const SUPABASE_URL = "https://SEU_PROJETO.supabase.co";
+const SUPABASE_KEY = "SUA_PUBLIC_ANON_KEY";
+
+async function buscar() {
+  const operacao = document.getElementById("operacao").value;
+  const vendedor = document.getElementById("vendedor").value;
+
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?operacao=eq.${encodeURIComponent(operacao)}&vendedor=eq.${vendedor}`, {
+    headers: { apikey: SUPABASE_KEY }
+  });
+
+  const data = await res.json();
+  document.getElementById("resultado").textContent = JSON.stringify(data, null, 2);
+}
+</script>
+</body>
+</html>
