@@ -8,7 +8,7 @@
   <h2>Consulta de Pendências</h2>
 
   Operação:
-  <select id="operacao">
+  <select id="Operacao">
     <option>Asa Norte Campo Maior</option>
     <option>Asa Norte Teresina</option>
     <option>Asa Norte Parnaíba</option>
@@ -17,7 +17,7 @@
   </select>
 
   RN:
-  <input id="rn" maxlength="3" placeholder="000">
+  <input id="Setor" maxlength="3" placeholder="000">
 
   <button onclick="buscar()">Buscar</button>
 
@@ -28,10 +28,10 @@ const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
 async function buscar() {
-  const operacao = document.getElementById("operacao").value;
-  const rn = document.getElementById("rn").value;
+  const Operacao = document.getElementById("operacao").value;
+  const Setor = document.getElementById("rn").value;
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?Operacao=eq.${encodeURIComponent(operacao)}&Setor=eq.${rn}`, {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/pendencias?Operacao=eq.${encodeURIComponent(Operacao)}&Setor=eq.${Setor}`, {
     headers: { apikey: SUPABASE_KEY }
   });
 
@@ -41,6 +41,7 @@ async function buscar() {
 </script>
 </body>
 </html>
+
 
 
 
