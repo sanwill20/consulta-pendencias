@@ -59,7 +59,11 @@
   <h2>Consulta de Pendências</h2>
 
   <label>Operação</label>
-  <select id="operacao"></select>
+  <select id="operacao">
+    <option>Asa Norte Campo Maior</option>
+    <option>Asa Norte Teresina</option>
+    <option>Asa Norte Parnaiba</option>
+  </select>
 
   <label>RN</label>
   <input id="setor" maxlength="3" placeholder="000">
@@ -82,7 +86,7 @@
 
 <script>
 const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY = "SUA_ANON_KEY_AQUI";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
 const filtros = ["operacao", "cluster_pri", "cluster_sec", "categoria"];
 
@@ -178,3 +182,4 @@ carregarFiltros();
 </script>
 </body>
 </html>
+
