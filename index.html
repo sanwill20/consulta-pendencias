@@ -3,22 +3,114 @@
 <head>
 <meta charset="UTF-8">
 <title>Pendências</title>
+
 <style>
-body{font-family:Arial;margin:20px}
-h2{margin-bottom:10px}
-label{font-weight:bold;margin-top:6px;display:block}
-select,input{padding:6px;margin-top:2px;min-width:200px}
-button{padding:6px 12px;margin-top:10px;cursor:pointer}
-table{border-collapse:collapse;margin-top:12px;font-size:13px;width:100%}
-th,td{border:1px solid #ccc;padding:5px}
-th{background:#f0f0f0}
+:root{
+  --primary:#333F4F;
+  --secondary:#44546A;
+  --light:#D9D9D9;
+  --black:#000000;
+  --white:#FFFFFF;
+}
+
+body{
+  font-family:Arial;
+  margin:20px;
+  background:var(--light);
+  color:var(--black);
+}
+
+h2{
+  margin-bottom:10px;
+  color:var(--primary);
+}
+
+label{
+  font-weight:bold;
+  margin-top:6px;
+  display:block;
+  color:var(--primary);
+}
+
+select,input{
+  padding:6px;
+  margin-top:2px;
+  min-width:200px;
+  border:1px solid var(--secondary);
+  border-radius:4px;
+  background:var(--white);
+}
+
+button{
+  padding:8px 16px;
+  margin-top:10px;
+  cursor:pointer;
+  background:var(--secondary);
+  color:var(--white);
+  border:none;
+  border-radius:4px;
+  transition:.2s;
+}
+
+button:hover{
+  background:var(--primary);
+}
+
+.toggle{
+  float:right;
+  margin-top:-40px;
+  background:var(--primary);
+}
+
+table{
+  border-collapse:collapse;
+  margin-top:12px;
+  font-size:13px;
+  width:100%;
+  background:var(--white);
+}
+
+th,td{
+  border:1px solid var(--light);
+  padding:6px 8px;
+}
+
+th{
+  background:var(--primary);
+  color:var(--white);
+}
+
+tr:nth-child(even){
+  background:#f7f7f7;
+}
+
 .check{color:green;font-weight:bold}
 .cross{color:red;font-weight:bold}
-.message{margin-top:8px;font-weight:bold}
-.success{color:green}.warning{color:#d97706}.error{color:red}
 
-.filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
-.filter{display:flex;flex-direction:column}
+.message{
+  margin-top:8px;
+  font-weight:bold;
+}
+
+.success{color:green}
+.warning{color:#b45309}
+.error{color:red}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+  background:var(--white);
+  padding:12px;
+  border-radius:6px;
+  border:1px solid var(--light);
+}
+
+.filter{
+  display:flex;
+  flex-direction:column;
+}
 
 .compact body{margin:10px}
 .compact .filters{flex-direction:column}
@@ -26,8 +118,8 @@ th{background:#f0f0f0}
 .compact th,.compact td{padding:4px}
 .compact h2{text-align:center}
 .compact button{width:100%}
-.toggle{float:right;margin-top:-40px}
 </style>
+
 </head>
 <body>
 
@@ -148,3 +240,4 @@ carregarFiltros();
 </script>
 </body>
 </html>
+
