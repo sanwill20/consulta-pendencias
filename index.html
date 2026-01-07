@@ -2,62 +2,91 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pendências</title>
 <style>
-body{font-family:Arial;background:#f2f4f8;display:flex;justify-content:center;margin:0}
-.card{background:#fff;max-width:440px;width:100%;margin:15px;padding:15px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
-h2{text-align:center}
-label{font-weight:bold;margin-top:8px;display:block}
-select,input{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc}
-button{width:100%;margin-top:12px;padding:10px;background:#2563eb;color:#fff;border:none;border-radius:10px;font-size:16px}
-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
-th,td{border:1px solid #ddd;padding:5px}
-th{background:#f1f5f9}
+body{font-family:Arial;margin:20px}
+h2{margin-bottom:10px}
+label{font-weight:bold;margin-top:6px;display:block}
+select,input{padding:6px;margin-top:2px;min-width:200px}
+button{padding:6px 12px;margin-top:10px;cursor:pointer}
+table{border-collapse:collapse;margin-top:12px;font-size:13px;width:100%}
+th,td{border:1px solid #ccc;padding:5px}
+th{background:#f0f0f0}
 .check{color:green;font-weight:bold}
 .cross{color:red;font-weight:bold}
-.message{text-align:center;margin-top:8px;font-weight:bold}
-.success{color:#16a34a}.warning{color:#d97706}.error{color:#dc2626}
+.message{margin-top:8px;font-weight:bold}
+.success{color:green}.warning{color:#d97706}.error{color:red}
+
+.filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.filter{display:flex;flex-direction:column}
+
+.compact body{margin:10px}
+.compact .filters{flex-direction:column}
+.compact table{font-size:11px}
+.compact th,.compact td{padding:4px}
+.compact h2{text-align:center}
+.compact button{width:100%}
+.toggle{float:right;margin-top:-40px}
 </style>
 </head>
 <body>
-<div class="card">
-<h2>Consulta de Task - Asa Norte</h2>
 
-<label>Operação</label>
-<select id="operacao">
-  <option>Asa Norte Campo Maior</option>
-  <option>Asa Norte Teresina</option>
-  <option>Asa Norte Parnaiba</option>
-</select>
+<button class="toggle" onclick="toggleLayout()">Alternar layout</button>
 
-<label>RN</label>
-<input id="setor" maxlength="3" placeholder="000">
+<h2>Asa Norte - Consulta de Task</h2>
 
-<label>Cluster Primário</label>
-<select id="cluster_pri"></select>
+<div class="filters">
+  <div class="filter">
+    <label>Operação</label>
+    <select id="operacao">
+      <option>Asa Norte Campo Maior</option>
+      <option>Asa Norte Teresina</option>
+      <option>Asa Norte Parnaiba</option>
+    </select>
+  </div>
 
-<label>Cluster Secundário</label>
-<select id="cluster_sec"></select>
+  <div class="filter">
+    <label>RN</label>
+    <input id="setor" maxlength="3" placeholder="000">
+  </div>
 
-<label>Categoria</label>
-<select id="categoria"></select>
+  <div class="filter">
+    <label>Cluster Primário</label>
+    <select id="cluster_pri"></select>
+  </div>
 
-<label>Valid</label>
-<select id="filtro_valid">
-  <option value="">Todos</option>
-  <option value="1">Somente ✅</option>
-  <option value="0">Somente ❌</option>
-</select>
+  <div class="filter">
+    <label>Cluster Secundário</label>
+    <select id="cluster_sec"></select>
+  </div>
+
+  <div class="filter">
+    <label>Categoria</label>
+    <select id="categoria"></select>
+  </div>
+
+  <div class="filter">
+    <label>Valid</label>
+    <select id="filtro_valid">
+      <option value="">Todos</option>
+      <option value="1">Somente ✅</option>
+      <option value="0">Somente ❌</option>
+    </select>
+  </div>
+</div>
 
 <button onclick="buscar()">Buscar</button>
+
 <div class="message" id="mensagem"></div>
 <div id="tabela"></div>
-</div>
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY="SUA_ANON_KEY";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+
+function toggleLayout(){
+ document.documentElement.classList.toggle("compact");
+}
 
 const filtros=[["cluster_pri","Cluster_Pri"],["cluster_sec","Cluster_Sec"],["categoria","Categoria"]];
 
@@ -66,29 +95,27 @@ async function carregarFiltros(){
   const r=await fetch(`${SUPABASE_URL}/rest/v1/pendencias?select=${col}`,{headers:{apikey:SUPABASE_KEY}});
   const d=await r.json();
   const vals=[...new Set(d.map(x=>x[col]).filter(Boolean))].sort();
-  const s=document.getElementById(id);
-  s.innerHTML='<option value="">Todos</option>'+vals.map(v=>`<option>${v}</option>`).join('');
+  document.getElementById(id).innerHTML='<option value="">Todos</option>'+vals.map(v=>`<option>${v}</option>`).join('');
  }
 }
 
 async function buscar(){
  const params=[];
- const op=operacao.value,set=setor.value,cp=cluster_pri.value,cs=cluster_sec.value,cat=categoria.value,v=filtro_valid.value;
- if(op)params.push(`Operacao=eq.${encodeURIComponent(op)}`);
- if(set)params.push(`Setor=eq.${set}`);
- if(cp)params.push(`Cluster_Pri=eq.${encodeURIComponent(cp)}`);
- if(cs)params.push(`Cluster_Sec=eq.${encodeURIComponent(cs)}`);
- if(cat)params.push(`Categoria=eq.${encodeURIComponent(cat)}`);
- if(v!=="")params.push(v==="1"?"Valid=gt.0":"Valid=eq.0");
+ if(operacao.value)params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
+ if(setor.value)params.push(`Setor=eq.${setor.value}`);
+ if(cluster_pri.value)params.push(`Cluster_Pri=eq.${encodeURIComponent(cluster_pri.value)}`);
+ if(cluster_sec.value)params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
+ if(categoria.value)params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
+ if(filtro_valid.value!=="")params.push(filtro_valid.value==="1"?"Valid=gt.0":"Valid=eq.0");
 
  const url=`${SUPABASE_URL}/rest/v1/pendencias?select=Pdv,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
- const msg=mensagem,t=tabela;
- msg.textContent="Carregando...";msg.className="message";t.innerHTML="";
+
+ mensagem.textContent="Carregando...";mensagem.className="message";tabela.innerHTML="";
  try{
   const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}});
   const d=await r.json();
-  if(!d.length){msg.textContent="Nenhum registro encontrado.";msg.className="message warning";return;}
-  msg.textContent=`${d.length} registro(s).`;msg.className="message success";
+  if(!d.length){mensagem.textContent="Nenhum registro.";mensagem.className="message warning";return;}
+  mensagem.textContent=`${d.length} registro(s).`;mensagem.className="message success";
   let h="<table><tr><th>PDV</th><th>Cluster Pri</th><th>Cluster Sec</th><th>Categoria</th><th>Meta</th><th>Real</th><th>Task</th><th>Valid</th></tr>";
   d.forEach(r=>{
     h+=`<tr>
@@ -102,9 +129,9 @@ async function buscar(){
       <td>${r.Valid>0?'<span class="check">✅</span>':'<span class="cross">❌</span>'}</td>
     </tr>`;
   });
-  t.innerHTML=h+"</table>";
+  tabela.innerHTML=h+"</table>";
  }catch{
-  msg.textContent="Erro ao consultar.";msg.className="message error";
+  mensagem.textContent="Erro.";mensagem.className="message error";
  }
 }
 
@@ -121,4 +148,3 @@ carregarFiltros();
 </script>
 </body>
 </html>
-
