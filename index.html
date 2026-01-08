@@ -151,9 +151,11 @@ tr:nth-child(even){
   <div class="filter">
     <label>Operação</label>
     <select id="operacao">
+      <option>Asa Bom Jesus</option>
       <option>Asa Norte Campo Maior</option>
-      <option>Asa Norte Teresina</option>
       <option>Asa Norte Parnaiba</option>
+      <option>Asa São Raimundo</option>
+      <option>Asa Norte Teresina</option>
     </select>
   </div>
 
@@ -242,7 +244,7 @@ tr:nth-child(even){
 
   <div class="filter">
     <label>SKU Foco</label>
-    <select id="operacao">
+    <select id="sku_foco">
       <option value="">Todos</option>
       <option>Sim</option>
       <option>Não</option>
@@ -251,7 +253,7 @@ tr:nth-child(even){
   
   <div class="filter">
     <label>Score 5</label>
-    <select id="operacao">
+    <select id="score_5">
       <option value="">Todos</option>
       <option>Sim</option>
       <option>Não</option>
@@ -281,6 +283,9 @@ async function buscar(){
  if(cluster_sec.value)params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
  if(categoria.value)params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
  if(filtro_valid.value!=="")params.push(filtro_valid.value==="1"?"Valid=gt.0":"Valid=eq.0");
+ if(sku_foco.value) params.push(`SKU_Foco=eq.${encodeURIComponent(sku_foco.value)}`);
+ if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
+
 
  const url=`${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
 
@@ -317,12 +322,15 @@ cluster_pri=document.getElementById("cluster_pri"),
 cluster_sec=document.getElementById("cluster_sec"),
 categoria=document.getElementById("categoria"),
 filtro_valid=document.getElementById("filtro_valid"),
+sku_foco=document.getElementById("sku_foco"),
+score5=document.getElementById("score5"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela");
 
 </script>
 </body>
 </html>
+
 
 
 
