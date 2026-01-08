@@ -20,10 +20,26 @@ body{
   color:var(--black);
 }
 
-h2{
-  margin-bottom:10px;
-  color:var(--primary);
+.topbar{
+  display:flex;
+  align-items:center;
+  background:var(--primary);
+  padding:10px 14px;
+  border-radius:6px;
+  margin-bottom:12px;
 }
+
+.topbar .title{
+  color:var(--white);
+  font-size:18px;
+  font-weight:bold;
+}
+
+.logo{
+  height:36px;
+  margin-right:10px;
+}
+
 
 label{
   font-weight:bold;
@@ -123,8 +139,11 @@ tr:nth-child(even){
 
 </head>
 <body>
-
-<h2>Asa Norte - Consulta de Task</h2>
+  
+<div class="topbar">
+  <img src="logo.png" class="logo">
+  <span class="title">Asa Norte - Consulta de Task</span>
+</div>
 
 <button class="toggle" onclick="toggleLayout()">Alternar layout</button>
   
@@ -272,6 +291,7 @@ tabela=document.getElementById("tabela");
 </script>
 </body>
 </html>
+
 
 
 
