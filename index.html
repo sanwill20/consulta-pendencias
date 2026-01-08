@@ -58,7 +58,8 @@ button:hover{
 
 .toggle{
   float:right;
-  margin-top:-40px;
+  margin-top:4px;
+  margin-bottom:12px;
   background:var(--primary);
 }
 
@@ -145,6 +146,7 @@ tr:nth-child(even){
   <div class="filter">
     <label>Cluster Primário</label>
     <select id="cluster_pri">
+      <option value="">Todos</option>
       <option>Desenvolvimento de Portfólio</option>
       <option>Digitalização BEES</option>
       <option>Marketplace</option>
@@ -157,6 +159,7 @@ tr:nth-child(even){
   <div class="filter">
     <label>Cluster Secundário</label>
     <select id="cluster_sec">
+      <option value="">Todos</option>
       <option>B2O</option>
       <option>Combo</option>
       <option>SKU/PDV</option>
@@ -187,6 +190,7 @@ tr:nth-child(even){
   <div class="filter">
     <label>Categoria</label>
     <select id="categoria">
+      <option value="">Todos</option>
       <option>BEER</option>
       <option>NAB</option>
       <option>MATCH</option>
@@ -218,17 +222,6 @@ function toggleLayout(){
  document.documentElement.classList.toggle("compact");
 }
 
-const filtros=[["visita","Visita"]];
-
-async function carregarFiltros(){
- for(let [id,col] of filtros){
-  const r=await fetch(`${SUPABASE_URL}/rest/v1/pendencias?select=${col}`,{headers:{apikey:SUPABASE_KEY}});
-  const d=await r.json();
-  const vals=[...new Set(d.map(x=>x[col]).filter(Boolean))].sort();
-  document.getElementById(id).innerHTML='<option value="">Todos</option>'+vals.map(v=>`<option>${v}</option>`).join('');
- }
-}
-
 async function buscar(){
  const params=[];
  if(operacao.value)params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
@@ -238,7 +231,7 @@ async function buscar(){
  if(categoria.value)params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
  if(filtro_valid.value!=="")params.push(filtro_valid.value==="1"?"Valid=gt.0":"Valid=eq.0");
 
- const url=`${SUPABASE_URL}/rest/v1/pendencias?select=Pdv,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
+ const url=`${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
 
  mensagem.textContent="Carregando...";mensagem.className="message";tabela.innerHTML="";
  try{
@@ -276,10 +269,10 @@ filtro_valid=document.getElementById("filtro_valid"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela");
 
-carregarFiltros();
 </script>
 </body>
 </html>
+
 
 
 
