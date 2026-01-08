@@ -161,7 +161,7 @@ tr:nth-child(even){
 
   <div class="filter">
     <label>Dia de Visita</label>
-    <select id="operacao">
+    <select id="visita">
       <option value="">Todos</option>
       <option>Seg</option>
       <option>Ter</option>
@@ -279,6 +279,7 @@ async function buscar(){
   const params=[];
 
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
+  if(visita.value) params.push(`Visita=eq.${encodeURIComponent(visita.value)}`);
   if(setor.value) params.push(`Setor=eq.${setor.value}`);
   if(cluster_pri.value) params.push(`Cluster_Pri=eq.${encodeURIComponent(cluster_pri.value)}`);
   if(cluster_sec.value) params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
@@ -346,19 +347,22 @@ async function buscar(){
 
 
 const operacao=document.getElementById("operacao"),
+visita=document.getElementById("visita"),
 setor=document.getElementById("setor"),
 cluster_pri=document.getElementById("cluster_pri"),
 cluster_sec=document.getElementById("cluster_sec"),
 categoria=document.getElementById("categoria"),
 filtro_valid=document.getElementById("filtro_valid"),
 sku_foco=document.getElementById("sku_foco"),
-score5=document.getElementById("score5"),
+score5=document.getElementById("score_5"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela");
+
 
 </script>
 </body>
 </html>
+
 
 
 
