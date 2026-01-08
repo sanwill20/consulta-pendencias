@@ -13,73 +13,57 @@
   --light:#D9D9D9;
   --white:#FFFFFF;
 }
-
 body{font-family:Arial;margin:20px;background:var(--light)}
+.topbar{display:flex;align-items:center;background:var(--primary);padding:10px 14px;border-radius:6px;color:white;margin-bottom:12px}
 
-.topbar{
-  display:flex;align-items:center;
-  background:var(--primary);padding:10px 14px;
-  border-radius:6px;color:white;margin-bottom:12px
-}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;background:white;padding:14px;border-radius:8px}
 
-.filters{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:14px;background:white;padding:14px;
-  border-radius:8px
-}
-
-.filter label{
-  font-weight:bold;font-size:13px;
-  color:var(--primary);margin-bottom:4px
-}
+.filter label{font-weight:bold;font-size:13px;color:var(--primary);margin-bottom:4px}
 
 .multi-select{position:relative}
-.select-box{
-  border:1px solid var(--secondary);
-  padding:6px;border-radius:4px;
-  background:white;cursor:pointer;font-size:13px;
-  transition:all .25s ease
-}
-
+.select-box{border:1px solid var(--secondary);padding:7px;border-radius:4px;background:white;cursor:pointer;font-size:13px}
 .select-box:hover{background:#f4f4f4}
 
 .options{
-  display:none;position:absolute;
-  background:white;border:1px solid var(--secondary);
-  border-radius:6px;max-height:180px;
-  overflow-y:auto;z-index:10;width:100%;
-  margin-top:4px;box-shadow:0 6px 12px rgba(0,0,0,.12);
-  animation:fade .25s ease
+  display:none;
+  position:absolute;
+  background:white;
+  border:1px solid var(--secondary);
+  border-radius:6px;
+  max-height:260px;
+  overflow-y:auto;
+  z-index:50;
+  width:100%;
+  margin-top:4px;
+  box-shadow:0 6px 14px rgba(0,0,0,.15);
+  animation:fade .2s ease;
 }
 
 .multi-select.open .options{display:block}
 
-@keyframes fade{
-  from{opacity:0;transform:translateY(-5px)}
-  to{opacity:1;transform:translateY(0)}
-}
+@keyframes fade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
-.options label{
-  display:flex;align-items:center;
-  padding:5px 8px;font-size:12px;cursor:pointer
-}
+.options label{display:flex;align-items:center;padding:6px 8px;font-size:12px;cursor:pointer}
 .options label:hover{background:#f0f0f0}
 
 input[type=text],select{
-  padding:6px;border:1px solid var(--secondary);
-  border-radius:4px
+  padding:7px;
+  border:1px solid var(--secondary);
+  border-radius:4px;
+  font-size:13px;
 }
 
 button{
-  padding:8px 14px;margin-top:10px;
-  background:var(--secondary);color:white;
-  border:none;border-radius:4px;cursor:pointer
+  padding:9px 14px;
+  margin-top:10px;
+  background:var(--secondary);
+  color:white;
+  border:none;
+  border-radius:4px;
+  cursor:pointer
 }
 button:hover{background:var(--primary)}
-
-.btn-clear{background:#999}
-.btn-clear:hover{background:#777}
+.btn-clear{background:#999}.btn-clear:hover{background:#777}
 
 .icon{margin-right:6px;color:#666}
 </style>
@@ -88,14 +72,31 @@ button:hover{background:var(--primary)}
 <body>
 
 <div class="topbar">
-  <span>Pendências - Consulta</span>
+  <span>Pendências — Consulta</span>
 </div>
 
 <div class="filters">
 
   <div class="filter">
     <label><i class="fa fa-search icon"></i>Busca</label>
-    <input id="busca" type="text" placeholder="Digite PDV, Nome ou Task">
+    <input id="busca" type="text" placeholder="PDV, Nome ou Task">
+  </div>
+
+  <div class="filter">
+    <label><i class="fa fa-building icon"></i>Operação</label>
+    <select id="operacao">
+      <option value="">Todas</option>
+      <label><input type="checkbox" value="Asa Bom Jesus"> Asa Bom Jesus</label> 
+      <label><input type="checkbox" value="Asa Norte Campo Maior"> Asa Norte Campo Maior</label> 
+      <label><input type="checkbox" value="Asa Norte Parnaiba"> Asa Norte Parnaiba</label> 
+      <label><input type="checkbox" value="Asa São Raimundo"> Asa São Raimundo</label> 
+      <label><input type="checkbox" value="Asa Norte Teresina"> Asa Norte Teresina</label>
+    </select>
+  </div>
+
+  <div class="filter">
+    <label><i class="fa fa-hashtag icon"></i>RN</label>
+    <input id="setor" type="text" maxlength="3" placeholder="000">
   </div>
 
   <div class="filter">
@@ -118,9 +119,45 @@ button:hover{background:var(--primary)}
     <div class="multi-select" id="cluster_pri">
       <div class="select-box">Selecionar...</div>
       <div class="options">
-        <label><input type="checkbox" value="Volume"> Volume</label>
-        <label><input type="checkbox" value="Execução"> Execução</label>
-        <label><input type="checkbox" value="Marketplace"> Marketplace</label>
+        <label><input type="checkbox" value="Desenvolvimento de Portfólio"> Desenvolvimento de Portfólio</label> 
+        <label><input type="checkbox" value="Digitalização BEES"> Digitalização BEES</label> 
+        <label><input type="checkbox" value="Marketplace"> Marketplace</label> 
+        <label><input type="checkbox" value="Volume"> Volume</label> 
+        <label><input type="checkbox" value="Execução"> Execução</label> 
+        <label><input type="checkbox" value="Nível de Serviço"> Nível de Serviço</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter">
+    <label><i class="fa fa-layer-group icon"></i>Cluster Secundário</label>
+    <div class="multi-select" id="cluster_sec">
+      <div class="select-box">Selecionar...</div>
+      <div class="options">
+        <label><input type="checkbox" value="B2O"> B2O</label> 
+        <label><input type="checkbox" value="Combo"> Combo</label> 
+        <label><input type="checkbox" value="SKU/PDV"> SKU/PDV</label> 
+        <label><input type="checkbox" value="Categoria"> Categoria</label> 
+        <label><input type="checkbox" value="INPUT_MANUAL"> INPUT_MANUAL</label> 
+        <label><input type="checkbox" value="Estabilização"> Estabilização</label> 
+        <label><input type="checkbox" value="Clube B"> Clube B</label> 
+        <label><input type="checkbox" value="Incremento"> Incremento</label> 
+        <label><input type="checkbox" value="Faixa"> Faixa</label> 
+        <label><input type="checkbox" value="Geladeira"> Geladeira</label> 
+        <label><input type="checkbox" value="Mapeamento de loja"> Mapeamento de loja</label> 
+        <label><input type="checkbox" value="TTC"> TTC</label> 
+        <label><input type="checkbox" value="Adoção"> Adoção</label> 
+        <label><input type="checkbox" value="Materiais"> Materiais</label> 
+        <label><input type="checkbox" value="Atendimento"> Atendimento</label> 
+        <label><input type="checkbox" value="Cardápio"> Cardápio</label> 
+        <label><input type="checkbox" value="Devolução"> Devolução</label> 
+        <label><input type="checkbox" value="Cartazete"> Cartazete</label> 
+        <label><input type="checkbox" value="Ponto Extra"> Ponto Extra</label> 
+        <label><input type="checkbox" value="Campanhas Digitais"> Campanhas Digitais</label> 
+        <label><input type="checkbox" value="Reversão"> Reversão</label> 
+        <label><input type="checkbox" value="Scanntech & Mercafácil"> Scanntech & Mercafácil</label> 
+        <label><input type="checkbox" value="Cadastro"> Cadastro</label> 
+        <label><input type="checkbox" value="Gôndola"> Gôndola</label>
       </div>
     </div>
   </div>
@@ -130,10 +167,40 @@ button:hover{background:var(--primary)}
     <div class="multi-select" id="categoria">
       <div class="select-box">Selecionar...</div>
       <div class="options">
-        <label><input type="checkbox" value="BEER"> BEER</label>
-        <label><input type="checkbox" value="MATCH"> MATCH</label>
+        <label><input type="checkbox" value="BEER"> BEER</label> 
+        <label><input type="checkbox" value="NAB"> NAB</label> 
+        <label><input type="checkbox" value="MATCH"> MATCH</label> 
+        <label><input type="checkbox" value="MKTPLACE"> MKTPLACE</label> 
+        <label><input type="checkbox" value="CRAFT"> CRAFT</label>
       </div>
     </div>
+  </div>
+
+  <div class="filter">
+    <label><i class="fa fa-star icon"></i>SKU Foco</label>
+    <select id="sku_foco">
+      <option value="">Todos</option>
+      <option>Sim</option>
+      <option>Não</option>
+    </select>
+  </div>
+
+  <div class="filter">
+    <label><i class="fa fa-trophy icon"></i>Score 5</label>
+    <select id="score5">
+      <option value="">Todos</option>
+      <option>Sim</option>
+      <option>Não</option>
+    </select>
+  </div>
+
+  <div class="filter">
+    <label><i class="fa fa-check icon"></i>Valid</label>
+    <select id="valid">
+      <option value="">Todos</option>
+      <option value="1">Somente ✅</option>
+      <option value="0">Somente ❌</option>
+    </select>
   </div>
 
 </div>
@@ -141,29 +208,23 @@ button:hover{background:var(--primary)}
 <button onclick="buscar()">Buscar</button>
 <button class="btn-clear" onclick="limpar()">Limpar filtros</button>
 
-<div id="mensagem"></div>
+<pre id="mensagem"></pre>
 
 <script>
-document.addEventListener("click", e=>{
+document.addEventListener("click",e=>{
   document.querySelectorAll(".multi-select").forEach(ms=>{
     if(!ms.contains(e.target)) ms.classList.remove("open");
   });
 });
-
-document.querySelectorAll(".select-box").forEach(box=>{
-  box.addEventListener("click", e=>{
-    e.stopPropagation();
-    box.parentElement.classList.toggle("open");
-  });
+document.querySelectorAll(".select-box").forEach(b=>{
+  b.onclick=e=>{e.stopPropagation();b.parentElement.classList.toggle("open");}
 });
-
 document.querySelectorAll(".options input").forEach(cb=>{
-  cb.addEventListener("change", ()=>{
+  cb.onchange=()=>{
     const box=cb.closest(".multi-select");
-    const count=box.querySelectorAll("input:checked").length;
-    box.querySelector(".select-box").textContent =
-      count ? `${count} selecionado(s)` : "Selecionar...";
-  });
+    const c=box.querySelectorAll("input:checked").length;
+    box.querySelector(".select-box").textContent=c?`${c} selecionado(s)`:"Selecionar...";
+  }
 });
 
 function getMulti(id){
@@ -176,17 +237,23 @@ function limpar(){
     else e.value="";
   });
   document.querySelectorAll(".select-box").forEach(b=>b.textContent="Selecionar...");
-  document.getElementById("mensagem").textContent="Filtros limpos.";
+  mensagem.textContent="Filtros limpos.";
 }
 
 function buscar(){
-  const termo=document.getElementById("busca").value;
-  const visita=getMulti("visita");
-  const pri=getMulti("cluster_pri");
-  const cat=getMulti("categoria");
-
-  document.getElementById("mensagem").textContent =
-    `Busca: "${termo}" | Visita: ${visita} | Pri: ${pri} | Cat: ${cat}`;
+  const data={
+    busca:busca.value,
+    operacao:operacao.value,
+    setor:setor.value,
+    visita:getMulti("visita"),
+    cluster_pri:getMulti("cluster_pri"),
+    cluster_sec:getMulti("cluster_sec"),
+    categoria:getMulti("categoria"),
+    sku_foco:sku_foco.value,
+    score5:score5.value,
+    valid:valid.value
+  };
+  mensagem.textContent=JSON.stringify(data,null,2);
 }
 </script>
 
