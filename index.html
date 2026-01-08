@@ -276,45 +276,74 @@ function toggleLayout(){
 }
 
 async function buscar(){
- const params=[];
- if(operacao.value)params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
- if(setor.value)params.push(`Setor=eq.${setor.value}`);
- if(cluster_pri.value)params.push(`Cluster_Pri=eq.${encodeURIComponent(cluster_pri.value)}`);
- if(cluster_sec.value)params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
- if(categoria.value)params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
- if(filtro_valid.value!=="")params.push(filtro_valid.value==="1"?"Valid=gt.0":"Valid=eq.0");
- if(sku_foco.value) params.push(`SKU_Foco=eq.${encodeURIComponent(sku_foco.value)}`);
- if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
+  const params=[];
 
+  if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
+  if(setor.value) params.push(`Setor=eq.${setor.value}`);
+  if(cluster_pri.value) params.push(`Cluster_Pri=eq.${encodeURIComponent(cluster_pri.value)}`);
+  if(cluster_sec.value) params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
+  if(categoria.value) params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
+  if(filtro_valid.value!=="") params.push(filtro_valid.value==="1" ? "Valid=gt.0" : "Valid=eq.0");
+  if(sku_foco.value) params.push(`SKU_Foco=eq.${encodeURIComponent(sku_foco.value)}`);
+  if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
 
- const url=`${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
+  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
 
- mensagem.textContent="Carregando...";mensagem.className="message";tabela.innerHTML="";
- try{
-  const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}});
-  const d=await r.json();
-  if(!d.length){mensagem.textContent="Nenhum registro.";mensagem.className="message warning";return;}
-  mensagem.textContent=`${d.length} registro(s).`;mensagem.className="message success";
-  let h="<table><tr><th>Visita</th><th>PDV</th><th>Nome</th><th>Cluster Pri</th><th>Cluster Sec</th><th>Categoria</th><th>Meta</th><th>Real</th><th>Task</th><th>Valid</th></tr>";
-  d.forEach(r=>{
-    h+=`<tr>
-      <td>${r.Visita||""}</td>
-      <td>${r.Pdv||""}</td>
-      <td>${r.Nome||""}</td>
-      <td>${r.Cluster_Pri||""}</td>
-      <td>${r.Cluster_Sec||""}</td>
-      <td>${r.Categoria||""}</td>
-      <td>${r.Meta||""}</td>
-      <td>${r.Real||""}</td>
-      <td>${r.Task||""}</td>
-      <td>${r.Valid>0?'<span class="check">✅</span>':'<span class="cross">❌</span>'}</td>
-    </tr>`;
-  });
-  tabela.innerHTML=h+"</table>";
- }catch{
-  mensagem.textContent="Erro.";mensagem.className="message error";
- }
+  mensagem.textContent="Carregando...";
+  mensagem.className="message";
+  tabela.innerHTML="";
+
+  try{
+    const r = await fetch(url, {
+      headers:{
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    const d = await r.json();
+
+    if(!Array.isArray(d) || !d.length){
+      mensagem.textContent="Nenhum registro encontrado.";
+      mensagem.className="message warning";
+      return;
+    }
+
+    mensagem.textContent = `${d.length} registro(s).`;
+    mensagem.className = "message success";
+
+    let h = `<table>
+      <tr>
+        <th>Visita</th><th>PDV</th><th>Nome</th>
+        <th>Cluster Pri</th><th>Cluster Sec</th>
+        <th>Categoria</th><th>Meta</th><th>Real</th>
+        <th>Task</th><th>Valid</th>
+      </tr>`;
+
+    d.forEach(r=>{
+      h += `<tr>
+        <td>${r.Visita||""}</td>
+        <td>${r.Pdv||""}</td>
+        <td>${r.Nome||""}</td>
+        <td>${r.Cluster_Pri||""}</td>
+        <td>${r.Cluster_Sec||""}</td>
+        <td>${r.Categoria||""}</td>
+        <td>${r.Meta||""}</td>
+        <td>${r.Real||""}</td>
+        <td>${r.Task||""}</td>
+        <td>${r.Valid>0 ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>
+      </tr>`;
+    });
+
+    tabela.innerHTML = h + "</table>";
+
+  }catch(e){
+    console.error(e);
+    mensagem.textContent="Erro ao consultar os dados.";
+    mensagem.className="message error";
+  }
 }
+
 
 const operacao=document.getElementById("operacao"),
 setor=document.getElementById("setor"),
@@ -330,6 +359,7 @@ tabela=document.getElementById("tabela");
 </script>
 </body>
 </html>
+
 
 
 
