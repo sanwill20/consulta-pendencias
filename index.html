@@ -211,7 +211,9 @@ async function buscar(){
   let h="<table><tr><th>PDV</th><th>Cluster Pri</th><th>Cluster Sec</th><th>Categoria</th><th>Meta</th><th>Real</th><th>Task</th><th>Valid</th></tr>";
   d.forEach(r=>{
     h+=`<tr>
+      <td>${r.Visita||""}</td>
       <td>${r.Pdv||""}</td>
+      <td>${r.Nome||""}</td>
       <td>${r.Cluster_Pri||""}</td>
       <td>${r.Cluster_Sec||""}</td>
       <td>${r.Categoria||""}</td>
@@ -240,5 +242,6 @@ carregarFiltros();
 </script>
 </body>
 </html>
+
 
 
