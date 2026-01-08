@@ -144,17 +144,55 @@ tr:nth-child(even){
 
   <div class="filter">
     <label>Cluster Primário</label>
-    <select id="cluster_pri"></select>
+    <select id="cluster_pri">
+      <option>Desenvolvimento de Portfólio</option>
+      <option>Digitalização BEES</option>
+      <option>Marketplace</option>
+      <option>Volume</option>
+      <option>Execução</option>
+      <option>Nível de Serviço</option>
+    </select>
   </div>
 
   <div class="filter">
     <label>Cluster Secundário</label>
-    <select id="cluster_sec"></select>
+    <select id="cluster_sec">
+      <option>B2O</option>
+      <option>Combo</option>
+      <option>SKU/PDV</option>
+      <option>Categoria</option>
+      <option>INPUT_MANUAL</option>
+      <option>Estabilização</option>
+      <option>Clube B</option>
+      <option>Incremento</option>
+      <option>Faixa</option>
+      <option>Geladeira</option>
+      <option>Mapeamento de loja</option>
+      <option>TTC</option>
+      <option>Adoção</option>
+      <option>Materiais</option>
+      <option>Atendimento</option>
+      <option>Cardápio</option>
+      <option>Devolução</option>
+      <option>Cartazete</option>
+      <option>Ponto Extra</option>
+      <option>Campanhas Digitais</option>
+      <option>Reversão</option>
+      <option>Scanntech & Mercafácil</option>
+      <option>Cadastro</option>
+      <option>Gôndola</option>
+    </select>
   </div>
 
   <div class="filter">
     <label>Categoria</label>
-    <select id="categoria"></select>
+    <select id="categoria">
+      <option>BEER</option>
+      <option>NAB</option>
+      <option>MATCH</option>
+      <option>MKTPLACE</option>
+      <option>CRAFT</option>
+    </select>
   </div>
 
   <div class="filter">
@@ -180,7 +218,7 @@ function toggleLayout(){
  document.documentElement.classList.toggle("compact");
 }
 
-const filtros=[["cluster_pri","Cluster_Pri"],["cluster_sec","Cluster_Sec"],["categoria","Categoria"]];
+const filtros=[["visita","Visita"]];
 
 async function carregarFiltros(){
  for(let [id,col] of filtros){
@@ -208,7 +246,7 @@ async function buscar(){
   const d=await r.json();
   if(!d.length){mensagem.textContent="Nenhum registro.";mensagem.className="message warning";return;}
   mensagem.textContent=`${d.length} registro(s).`;mensagem.className="message success";
-  let h="<table><tr><th>PDV</th><th>Cluster Pri</th><th>Cluster Sec</th><th>Categoria</th><th>Meta</th><th>Real</th><th>Task</th><th>Valid</th></tr>";
+  let h="<table><tr><th>Visita</th><th>PDV</th><th>Nome</th><th>Cluster Pri</th><th>Cluster Sec</th><th>Categoria</th><th>Meta</th><th>Real</th><th>Task</th><th>Valid</th></tr>";
   d.forEach(r=>{
     h+=`<tr>
       <td>${r.Visita||""}</td>
@@ -242,6 +280,7 @@ carregarFiltros();
 </script>
 </body>
 </html>
+
 
 
 
