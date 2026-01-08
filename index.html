@@ -158,6 +158,19 @@ tr:nth-child(even){
   </div>
 
   <div class="filter">
+    <label>Dia de Visita</label>
+    <select id="operacao">
+      <option value="">Todos</option>
+      <option>Seg</option>
+      <option>Ter</option>
+      <option>Qua</option>
+      <option>Qui</option>
+      <option>Sex</option>
+      <option>Sáb</option>
+    </select>
+  </div>
+
+  <div class="filter">
     <label>RN</label>
     <input id="setor" maxlength="3" placeholder="000">
   </div>
@@ -226,6 +239,25 @@ tr:nth-child(even){
       <option value="0">Somente ❌</option>
     </select>
   </div>
+
+  <div class="filter">
+    <label>SKU Foco</label>
+    <select id="operacao">
+      <option value="">Todos</option>
+      <option>Sim</option>
+      <option>Não</option>
+    </select>
+  </div>
+  
+  <div class="filter">
+    <label>Score 5</label>
+    <select id="operacao">
+      <option value="">Todos</option>
+      <option>Sim</option>
+      <option>Não</option>
+    </select>
+  </div>
+  
 </div>
 
 <button onclick="buscar()">Buscar</button>
@@ -291,6 +323,7 @@ tabela=document.getElementById("tabela");
 </script>
 </body>
 </html>
+
 
 
 
