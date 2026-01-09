@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pendências</title>
+<title>Asa Norte - Consulta de Task</title>
 
 <style>
 :root{
@@ -440,6 +440,7 @@ function limpar(){
  document.querySelectorAll("input,select").forEach(e=>e.value="");
  document.querySelectorAll("input[type=checkbox]").forEach(e=>e.checked=false);
  tabela.innerHTML="";mensagem.textContent="";
+  cards.innerHTML="";mensagem.textContent="";
 }
 
 const operacao=document.getElementById("operacao"),
@@ -460,5 +461,6 @@ const cards = document.getElementById("cards");
 </script>
 </body>
 </html>
+
 
 
