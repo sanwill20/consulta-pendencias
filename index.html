@@ -4,239 +4,370 @@
 <meta charset="UTF-8">
 <title>Pendências</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 <style>
 :root{
   --primary:#333F4F;
   --secondary:#44546A;
   --light:#D9D9D9;
+  --black:#000000;
   --white:#FFFFFF;
 }
-body{font-family:Arial;margin:20px;background:var(--light)}
-.topbar{display:flex;align-items:center;background:var(--primary);padding:10px 14px;border-radius:6px;color:white;margin-bottom:12px}
 
-.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;background:white;padding:14px;border-radius:8px}
-
-.filter label{font-weight:bold;font-size:13px;color:var(--primary);margin-bottom:4px}
-
-.multi-select{position:relative}
-.select-box{border:1px solid var(--secondary);padding:7px;border-radius:4px;background:white;cursor:pointer;font-size:13px}
-.select-box:hover{background:#f4f4f4}
-
-.options{
-  display:none;
-  position:absolute;
-  background:white;
-  border:1px solid var(--secondary);
-  border-radius:6px;
-  max-height:260px;
-  overflow-y:auto;
-  z-index:50;
-  width:100%;
-  margin-top:4px;
-  box-shadow:0 6px 14px rgba(0,0,0,.15);
-  animation:fade .2s ease;
+body{
+  font-family:Arial;
+  margin:20px;
+  background:var(--light);
+  color:var(--black);
 }
 
-.multi-select.open .options{display:block}
+.topbar{
+  display:flex;
+  align-items:center;
+  background:var(--primary);
+  padding:10px 14px;
+  border-radius:6px;
+  margin-bottom:12px;
+}
 
-@keyframes fade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.topbar .title{
+  color:var(--white);
+  font-size:18px;
+  font-weight:bold;
+}
 
-.options label{display:flex;align-items:center;padding:6px 8px;font-size:12px;cursor:pointer}
-.options label:hover{background:#f0f0f0}
+.logo{
+  height:36px;
+  margin-right:10px;
+}
 
-input[type=text],select{
-  padding:7px;
+
+label{
+  font-weight:bold;
+  margin-top:6px;
+  display:block;
+  color:var(--primary);
+}
+
+select,input{
+  padding:6px;
+  margin-top:2px;
+  min-width:200px;
   border:1px solid var(--secondary);
   border-radius:4px;
-  font-size:13px;
+  background:var(--white);
 }
 
 button{
-  padding:9px 14px;
+  padding:8px 16px;
   margin-top:10px;
+  cursor:pointer;
   background:var(--secondary);
-  color:white;
+  color:var(--white);
   border:none;
   border-radius:4px;
-  cursor:pointer
+  transition:.2s;
 }
-button:hover{background:var(--primary)}
-.btn-clear{background:#999}.btn-clear:hover{background:#777}
 
-.icon{margin-right:6px;color:#666}
+button:hover{
+  background:var(--primary);
+}
 
-table{margin-top:14px;border-collapse:collapse;width:100%;background:white;font-size:13px}
-th,td{border:1px solid #ddd;padding:6px 8px}
-th{background:var(--primary);color:white}
-tr:nth-child(even){background:#f7f7f7}
+.toggle{
+  float:right;
+  margin-top:4px;
+  margin-bottom:12px;
+  background:var(--primary);
+}
+
+table{
+  border-collapse:collapse;
+  margin-top:12px;
+  font-size:13px;
+  width:100%;
+  background:var(--white);
+}
+
+th,td{
+  border:1px solid var(--light);
+  padding:6px 8px;
+}
+
+th{
+  background:var(--primary);
+  color:var(--white);
+}
+
+tr:nth-child(even){
+  background:#f7f7f7;
+}
+
 .check{color:green;font-weight:bold}
 .cross{color:red;font-weight:bold}
+
+.message{
+  margin-top:8px;
+  font-weight:bold;
+}
+
+.success{color:green}
+.warning{color:#b45309}
+.error{color:red}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+  background:var(--white);
+  padding:12px;
+  border-radius:6px;
+  border:1px solid var(--light);
+}
+
+.filter{
+  display:flex;
+  flex-direction:column;
+}
+
+.compact body{margin:10px}
+.compact .filters{flex-direction:column}
+.compact table{font-size:11px}
+.compact th,.compact td{padding:4px}
+.compact h2{text-align:center}
+.compact button{width:100%}
 </style>
+
 </head>
-
 <body>
+  
+<div class="topbar">
+  <img src="logo.png" class="logo">
+  <span class="title">Asa Norte - Consulta de Task</span>
+</div>
 
-<div class="topbar">Pendências — Consulta</div>
-
+<button class="toggle" onclick="toggleLayout()">Alternar layout</button>
+  
 <div class="filters">
-
-<div class="filter">
-  <label><i class="fa fa-search icon"></i>Busca</label>
-  <input id="busca" type="text" placeholder="PDV, Nome ou Task">
-</div>
-
-<div class="filter">
-  <label><i class="fa fa-building icon"></i>Operação</label>
-  <div class="multi-select" id="operacao">
-    <div class="select-box">Selecionar...</div>
-    <div class="options">
-      <label><input type="checkbox" value="Asa Bom Jesus"> Asa Bom Jesus</label>
-      <label><input type="checkbox" value="Asa Norte Campo Maior"> Asa Norte Campo Maior</label>
-      <label><input type="checkbox" value="Asa Norte Parnaiba"> Asa Norte Parnaiba</label>
-      <label><input type="checkbox" value="Asa São Raimundo"> Asa São Raimundo</label>
-      <label><input type="checkbox" value="Asa Norte Teresina"> Asa Norte Teresina</label>
-    </div>
+  <div class="filter">
+    <label>Operação</label>
+    <select id="operacao">
+      <option>Asa Bom Jesus</option>
+      <option>Asa Norte Campo Maior</option>
+      <option>Asa Norte Parnaiba</option>
+      <option>Asa São Raimundo</option>
+      <option>Asa Norte Teresina</option>
+    </select>
   </div>
-</div>
 
-<div class="filter">
-  <label><i class="fa fa-hashtag icon"></i>RN</label>
-  <input id="setor" maxlength="3" placeholder="000">
-</div>
-
-<div class="filter">
-  <label><i class="fa fa-calendar icon"></i>Visita</label>
-  <div class="multi-select" id="visita">
-    <div class="select-box">Selecionar...</div>
-    <div class="options">
-      <label><input type="checkbox" value="Seg"> Seg</label>
-      <label><input type="checkbox" value="Ter"> Ter</label>
-      <label><input type="checkbox" value="Qua"> Qua</label>
-      <label><input type="checkbox" value="Qui"> Qui</label>
-      <label><input type="checkbox" value="Sex"> Sex</label>
-      <label><input type="checkbox" value="Sáb"> Sáb</label>
-    </div>
+  <div class="filter">
+    <label>Dia de Visita</label>
+    <select id="visita">
+      <option value="">Todos</option>
+      <option>Seg</option>
+      <option>Ter</option>
+      <option>Qua</option>
+      <option>Qui</option>
+      <option>Sex</option>
+      <option>Sáb</option>
+    </select>
   </div>
-</div>
 
-<div class="filter">
-  <label><i class="fa fa-layer-group icon"></i>Cluster Primário</label>
-  <div class="multi-select" id="cluster_pri">
-    <div class="select-box">Selecionar...</div>
-    <div class="options">
-      <label><input type="checkbox" value="Execução"> Execução</label>
-      <label><input type="checkbox" value="Volume"> Volume</label>
-      <label><input type="checkbox" value="Marketplace"> Marketplace</label>
-    </div>
+  <div class="filter">
+    <label>RN</label>
+    <input id="setor" maxlength="3" placeholder="000">
   </div>
-</div>
 
-<div class="filter">
-  <label><i class="fa fa-layer-group icon"></i>Cluster Secundário</label>
-  <div class="multi-select" id="cluster_sec">
-    <div class="select-box">Selecionar...</div>
-    <div class="options">
-      <label><input type="checkbox" value="B2O"> B2O</label>
-      <label><input type="checkbox" value="Combo"> Combo</label>
-      <label><input type="checkbox" value="Geladeira"> Geladeira</label>
-    </div>
+  <div class="filter">
+    <label>Cluster Primário</label>
+    <select id="cluster_pri">
+      <option value="">Todos</option>
+      <option>Desenvolvimento de Portfólio</option>
+      <option>Digitalização BEES</option>
+      <option>Marketplace</option>
+      <option>Volume</option>
+      <option>Execução</option>
+      <option>Nível de Serviço</option>
+    </select>
   </div>
-</div>
 
-<div class="filter">
-  <label><i class="fa fa-tags icon"></i>Categoria</label>
-  <div class="multi-select" id="categoria">
-    <div class="select-box">Selecionar...</div>
-    <div class="options">
-      <label><input type="checkbox" value="BEER"> BEER</label>
-      <label><input type="checkbox" value="NAB"> NAB</label>
-      <label><input type="checkbox" value="MATCH"> MATCH</label>
-    </div>
+  <div class="filter">
+    <label>Cluster Secundário</label>
+    <select id="cluster_sec">
+      <option value="">Todos</option>
+      <option>B2O</option>
+      <option>Combo</option>
+      <option>SKU/PDV</option>
+      <option>Categoria</option>
+      <option>INPUT_MANUAL</option>
+      <option>Estabilização</option>
+      <option>Clube B</option>
+      <option>Incremento</option>
+      <option>Faixa</option>
+      <option>Geladeira</option>
+      <option>Mapeamento de loja</option>
+      <option>TTC</option>
+      <option>Adoção</option>
+      <option>Materiais</option>
+      <option>Atendimento</option>
+      <option>Cardápio</option>
+      <option>Devolução</option>
+      <option>Cartazete</option>
+      <option>Ponto Extra</option>
+      <option>Campanhas Digitais</option>
+      <option>Reversão</option>
+      <option>Scanntech & Mercafácil</option>
+      <option>Cadastro</option>
+      <option>Gôndola</option>
+    </select>
   </div>
-</div>
 
-<div class="filter">
-  <label><i class="fa fa-star icon"></i>SKU Foco</label>
-  <select id="sku_foco"><option value="">Todos</option><option>Sim</option><option>Não</option></select>
-</div>
+  <div class="filter">
+    <label>Categoria</label>
+    <select id="categoria">
+      <option value="">Todos</option>
+      <option>BEER</option>
+      <option>NAB</option>
+      <option>MATCH</option>
+      <option>MKTPLACE</option>
+      <option>CRAFT</option>
+    </select>
+  </div>
 
-<div class="filter">
-  <label><i class="fa fa-trophy icon"></i>Score 5</label>
-  <select id="score5"><option value="">Todos</option><option>Sim</option><option>Não</option></select>
-</div>
+  <div class="filter">
+    <label>Valid</label>
+    <select id="filtro_valid">
+      <option value="">Todos</option>
+      <option value="1">Somente ✅</option>
+      <option value="0">Somente ❌</option>
+    </select>
+  </div>
 
-<div class="filter">
-  <label><i class="fa fa-check icon"></i>Valid</label>
-  <select id="valid"><option value="">Todos</option><option value="1">Somente ✅</option><option value="0">Somente ❌</option></select>
-</div>
-
+  <div class="filter">
+    <label>SKU Foco</label>
+    <select id="sku_foco">
+      <option value="">Todos</option>
+      <option>Sim</option>
+      <option>Não</option>
+    </select>
+  </div>
+  
+  <div class="filter">
+    <label>Score 5</label>
+    <select id="score5">
+      <option value="">Todos</option>
+      <option>Sim</option>
+      <option>Não</option>
+    </select>
+  </div>
+  
 </div>
 
 <button onclick="buscar()">Buscar</button>
-<button class="btn-clear" onclick="limpar()">Limpar</button>
 
-<pre id="mensagem"></pre>
+<div class="message" id="mensagem"></div>
 <div id="tabela"></div>
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
-document.addEventListener("click",e=>{
-  document.querySelectorAll(".multi-select").forEach(ms=>{ if(!ms.contains(e.target)) ms.classList.remove("open");});
-});
-document.querySelectorAll(".select-box").forEach(b=>b.onclick=e=>{e.stopPropagation();b.parentElement.classList.toggle("open");});
-document.querySelectorAll(".options input").forEach(cb=>cb.onchange=()=>{
-  const box=cb.closest(".multi-select");
-  const c=box.querySelectorAll("input:checked").length;
-  box.querySelector(".select-box").textContent=c?`${c} selecionado(s)`:"Selecionar...";
-});
-
-function getMulti(id){return [...document.querySelectorAll(`#${id} input:checked`)].map(i=>i.value);}
-
-function limpar(){
-  document.querySelectorAll("input").forEach(e=>{if(e.type==="checkbox")e.checked=false;else e.value="";});
-  document.querySelectorAll("select").forEach(s=>s.value="");
-  document.querySelectorAll(".select-box").forEach(b=>b.textContent="Selecionar...");
-  tabela.innerHTML="";mensagem.textContent="Filtros limpos.";
+function toggleLayout(){
+ document.documentElement.classList.toggle("compact");
 }
 
 async function buscar(){
-  let params=[];
-  if(busca.value) params.push(`or=(Pdv.ilike.*${busca.value}*,Task.ilike.*${busca.value}*)`);
+  const params=[];
+
+  if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
+  if(visita.value) params.push(`Visita=eq.${encodeURIComponent(visita.value)}`);
   if(setor.value) params.push(`Setor=eq.${setor.value}`);
-  if(valid.value!=="") params.push(valid.value==="1"?"Valid=gt.0":"Valid=eq.0");
-  if(sku_foco.value) params.push(`SKU_Foco=eq.${sku_foco.value}`);
-  if(score5.value) params.push(`S5=eq.${score5.value}`);
+  if(cluster_pri.value) params.push(`Cluster_Pri=eq.${encodeURIComponent(cluster_pri.value)}`);
+  if(cluster_sec.value) params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
+  if(categoria.value) params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
+  if(filtro_valid.value!=="") params.push(filtro_valid.value==="1" ? "Valid=gt.0" : "Valid=eq.0");
+  if(sku_foco.value) params.push(`SKU_Foco=eq.${encodeURIComponent(sku_foco.value)}`);
+  if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
 
-  const m = id => {const v=getMulti(id); if(v.length) params.push(`${id}=in.(${v.join(",")})`);};
-  m("operacao"); m("visita"); m("cluster_pri"); m("cluster_sec"); m("categoria");
+  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
 
-  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
+  mensagem.textContent="Carregando...";
+  mensagem.className="message";
+  tabela.innerHTML="";
 
-  const r = await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}});
-  const d = await r.json();
+  try{
+    const r = await fetch(url, {
+      headers:{
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    });
 
-  if(!d.length){mensagem.textContent="Nenhum resultado.";tabela.innerHTML="";return;}
+    const d = await r.json();
 
-  let h="<table><tr><th>PDV</th><th>Nome</th><th>Cluster Pri</th><th>Cluster Sec</th><th>Categoria</th><th>Meta</th><th>Real</th><th>Task</th><th>Valid</th></tr>";
-  d.forEach(r=>{
-    h+=`<tr><td>${r.Pdv}</td><td>${r.Nome}</td><td>${r.Cluster_Pri}</td><td>${r.Cluster_Sec}</td><td>${r.Categoria}</td><td>${r.Meta}</td><td>${r.Real}</td><td>${r.Task}</td><td>${r.Valid>0?'<span class="check">✅</span>':'<span class="cross">❌</span>'}</td></tr>`;
-  });
-  tabela.innerHTML=h+"</table>";
-  mensagem.textContent=`${d.length} registro(s).`;
+    if(!Array.isArray(d) || !d.length){
+      mensagem.textContent="Nenhum registro encontrado.";
+      mensagem.className="message warning";
+      return;
+    }
+
+    mensagem.textContent = `${d.length} registro(s).`;
+    mensagem.className = "message success";
+
+    let h = `<table>
+      <tr>
+        <th>Visita</th><th>PDV</th><th>Nome</th>
+        <th>Cluster Pri</th><th>Cluster Sec</th>
+        <th>Categoria</th><th>Meta</th><th>Real</th>
+        <th>Task</th><th>Valid</th>
+      </tr>`;
+
+    d.forEach(r=>{
+      h += `<tr>
+        <td>${r.Visita||""}</td>
+        <td>${r.Pdv||""}</td>
+        <td>${r.Nome||""}</td>
+        <td>${r.Cluster_Pri||""}</td>
+        <td>${r.Cluster_Sec||""}</td>
+        <td>${r.Categoria||""}</td>
+        <td>${r.Meta||""}</td>
+        <td>${r.Real||""}</td>
+        <td>${r.Task||""}</td>
+        <td>${r.Valid>0 ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>
+      </tr>`;
+    });
+
+    tabela.innerHTML = h + "</table>";
+
+  }catch(e){
+    console.error(e);
+    mensagem.textContent="Erro ao consultar os dados.";
+    mensagem.className="message error";
+  }
 }
 
-const busca=busca=document.getElementById("busca"),
+
+const operacao=document.getElementById("operacao"),
+visita=document.getElementById("visita"),
 setor=document.getElementById("setor"),
+cluster_pri=document.getElementById("cluster_pri"),
+cluster_sec=document.getElementById("cluster_sec"),
+categoria=document.getElementById("categoria"),
+filtro_valid=document.getElementById("filtro_valid"),
 sku_foco=document.getElementById("sku_foco"),
 score5=document.getElementById("score5"),
-valid=document.getElementById("valid"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela");
-</script>
 
+</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
