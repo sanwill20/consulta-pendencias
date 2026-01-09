@@ -138,59 +138,64 @@ tr:nth-child(even){
 .compact button{width:100%}
 
 
+/* cartões mobile */
+.cards{
+  display:none;
+}
+
+.card{
+  background:white;
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,.08);
+  font-size:13px;
+}
+
+.card b{
+  color:#333F4F;
+}
+
+/* botão fixo no mobile */
+.mobile-bar{
+  display:none;
+}
+
 @media (max-width: 768px){
 
-  body{
-    margin:10px;
-  }
-
-  .filters{
-    flex-direction:column;
-    gap:8px;
-  }
-
-  .filter{
-    width:100%;
-  }
-
-  input, select, .multi{
-    width:100%;
-    min-width:unset;
-    font-size:14px;
-  }
-
-  button{
-    width:100%;
-    font-size:15px;
-  }
-
   table{
-    font-size:12px;
+    display:none;
   }
 
-  th, td{
-    padding:4px;
+  .cards{
+    display:block;
+    margin-top:10px;
   }
 
-  .multi-panel{
-    max-height:250px;
+  .mobile-bar{
+    display:flex;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    padding:10px;
+    border-top:1px solid #ccc;
+    z-index:100;
   }
 
-  .topbar{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:6px;
-  }
-
-  .logo{
-    height:28px;
-  }
-
-  .title{
+  .mobile-bar button{
+    width:100%;
     font-size:16px;
+    padding:12px;
+  }
+
+  body{
+    padding-bottom:70px;
   }
 
 }
+
 
 </style>
 
@@ -324,11 +329,19 @@ tr:nth-child(even){
   
 </div>
 
-<button onclick="buscar()">Buscar</button>
-<button onclick="limpar()">Limpar filtros</button>
+<button onclick="buscar()">🔍 Buscar</button>
+<button onclick="limpar()">🧹 Limpar filtros</button>
 
+<div class="mobile-bar">
+  <button onclick="buscar()">🔍 Buscar</button>
+  <button onclick="limpar()">🧹 Limpar filtros</button>
+</div>
+
+  
 <div class="message" id="mensagem"></div>
 <div id="tabela"></div>
+<div class="cards" id="cards"></div>
+
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
@@ -385,6 +398,8 @@ async function buscar(){
         <th>Task</th><th>Valid</th>
       </tr>`;
 
+    let c = "";
+
     d.forEach(r=>{
       h += `<tr>
         <td>${r.Visita||""}</td>
@@ -396,11 +411,23 @@ async function buscar(){
         <td>${r.Meta||""}</td>
         <td>${r.Real||""}</td>
         <td>${r.Task||""}</td>
-        <td>${r.Valid>0 ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>
+        <td>${r.Valid>0 ? '✅' : '❌'}</td>
       </tr>`;
+
+      c += `<div class="card">
+        <div><b>PDV:</b> ${r.Pdv||""} — ${r.Nome||""}</div>
+        <div><b>Visita:</b> ${r.Visita||""}</div>
+        <div><b>Cluster:</b> ${r.Cluster_Pri||""} / ${r.Cluster_Sec||""}</div>
+        <div><b>Categoria:</b> ${r.Categoria||""}</div>
+        <div><b>Meta:</b> ${r.Meta||""} — <b>Real:</b> ${r.Real||""}</div>
+        <div><b>Task:</b> ${r.Task||""}</div>
+        <div><b>Valid:</b> ${r.Valid>0 ? '✅' : '❌'}</div>
+      </div>`;
+      
     });
 
     tabela.innerHTML = h + "</table>";
+    cards.innerHTML = c;
 
   }catch(e){
     console.error(e);
@@ -428,7 +455,10 @@ pdv=document.getElementById("pdv"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela");
 
+const cards = document.getElementById("cards");
+
 </script>
 </body>
 </html>
+
 
