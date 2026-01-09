@@ -5,378 +5,145 @@
 <title>Pendências</title>
 
 <style>
-:root{
-  --primary:#333F4F;
-  --secondary:#44546A;
-  --light:#D9D9D9;
-  --black:#000000;
-  --white:#FFFFFF;
-}
+:root{--primary:#333F4F;--secondary:#44546A;--light:#D9D9D9;--black:#000;--white:#FFF;}
+body{font-family:Arial;margin:20px;background:var(--light)}
+.filters{display:flex;flex-wrap:wrap;gap:12px;background:white;padding:12px;border-radius:6px}
+.filter{display:flex;flex-direction:column;position:relative}
+label{font-weight:bold;color:var(--primary)}
+input,select{padding:6px;border-radius:4px;border:1px solid #ccc}
 
-body{
-  font-family:Arial;
-  margin:20px;
-  background:var(--light);
-  color:var(--black);
-}
+.multi{border:1px solid #ccc;border-radius:4px;padding:6px;background:white;cursor:pointer;min-width:200px}
+.multi-panel{position:absolute;top:100%;left:0;background:white;border:1px solid #ccc;border-radius:4px;max-height:200px;overflow:auto;display:none;z-index:10}
+.multi-panel label{display:block;font-weight:normal}
 
-.topbar{
-  display:flex;
-  align-items:center;
-  background:var(--primary);
-  padding:10px 14px;
-  border-radius:6px;
-  margin-bottom:12px;
-}
-
-.topbar .title{
-  color:var(--white);
-  font-size:18px;
-  font-weight:bold;
-}
-
-.logo{
-  height:36px;
-  margin-right:10px;
-}
-
-
-label{
-  font-weight:bold;
-  margin-top:6px;
-  display:block;
-  color:var(--primary);
-}
-
-select,input{
-  padding:6px;
-  margin-top:2px;
-  min-width:200px;
-  border:1px solid var(--secondary);
-  border-radius:4px;
-  background:var(--white);
-}
-
-button{
-  padding:8px 16px;
-  margin-top:10px;
-  cursor:pointer;
-  background:var(--secondary);
-  color:var(--white);
-  border:none;
-  border-radius:4px;
-  transition:.2s;
-}
-
-button:hover{
-  background:var(--primary);
-}
-
-.toggle{
-  float:right;
-  margin-top:4px;
-  margin-bottom:12px;
-  background:var(--primary);
-}
-
-table{
-  border-collapse:collapse;
-  margin-top:12px;
-  font-size:13px;
-  width:100%;
-  background:var(--white);
-}
-
-th,td{
-  border:1px solid var(--light);
-  padding:6px 8px;
-}
-
-th{
-  background:var(--primary);
-  color:var(--white);
-}
-
-tr:nth-child(even){
-  background:#f7f7f7;
-}
-
-.check{color:green;font-weight:bold}
-.cross{color:red;font-weight:bold}
-
-.message{
-  margin-top:8px;
-  font-weight:bold;
-}
-
-.success{color:green}
-.warning{color:#b45309}
-.error{color:red}
-
-.filters{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  align-items:flex-end;
-  background:var(--white);
-  padding:12px;
-  border-radius:6px;
-  border:1px solid var(--light);
-}
-
-.filter{
-  display:flex;
-  flex-direction:column;
-}
-
-.compact body{margin:10px}
-.compact .filters{flex-direction:column}
-.compact table{font-size:11px}
-.compact th,.compact td{padding:4px}
-.compact h2{text-align:center}
-.compact button{width:100%}
+table{border-collapse:collapse;width:100%;margin-top:12px;background:white}
+th,td{border:1px solid #ddd;padding:6px}
+th{background:#333F4F;color:white}
+tr:nth-child(even){background:#f7f7f7}
+button{padding:8px 16px;margin-top:10px;border:none;border-radius:4px;background:#44546A;color:white;cursor:pointer}
+button:hover{background:#333F4F}
+.message{margin-top:10px;font-weight:bold}
+.success{color:green}.warning{color:#b45309}.error{color:red}
+.check{color:green}.cross{color:red}
 </style>
-
 </head>
+
 <body>
-  
-<div class="topbar">
-  <img src="logo.png" class="logo">
-  <span class="title">Asa Norte - Consulta de Task</span>
+
+<div class="filters">
+
+<div class="filter"><label>🔍 Busca</label><input id="busca" placeholder="Nome, PDV, Task..."></div>
+
+<div class="filter"><label>🏢 Operação</label><select id="operacao">
+<option>Asa Bom Jesus</option><option>Asa Norte Teresina</option>
+</select></div>
+
+<div class="filter">
+<label>📅 Visita</label>
+<div class="multi" onclick="toggle('visitaPanel')">Selecionar</div>
+<div class="multi-panel" id="visitaPanel">
+<label><input type="checkbox" value="Seg"> Seg</label>
+<label><input type="checkbox" value="Ter"> Ter</label>
+<label><input type="checkbox" value="Qua"> Qua</label>
+</div>
 </div>
 
-<button class="toggle" onclick="toggleLayout()">Alternar layout</button>
-  
-<div class="filters">
-  <div class="filter">
-    <label>🏢 Operação</label>
-    <select id="operacao">
-      <option>Asa Bom Jesus</option>
-      <option>Asa Norte Campo Maior</option>
-      <option>Asa Norte Parnaiba</option>
-      <option>Asa São Raimundo</option>
-      <option>Asa Norte Teresina</option>
-    </select>
-  </div>
+<div class="filter">
+<label>📃 Cluster Primário</label>
+<div class="multi" onclick="toggle('priPanel')">Selecionar</div>
+<div class="multi-panel" id="priPanel">
+<label><input type="checkbox" value="Volume"> Volume</label>
+<label><input type="checkbox" value="Execução"> Execução</label>
+</div>
+</div>
 
-  <div class="filter">
-    <label>📅 Visita</label>
-    <select id="visita">
-      <option value="">Todos</option>
-      <option>Seg</option>
-      <option>Ter</option>
-      <option>Qua</option>
-      <option>Qui</option>
-      <option>Sex</option>
-      <option>Sáb</option>
-    </select>
-  </div>
+<div class="filter">
+<label>📃 Cluster Secundário</label>
+<div class="multi" onclick="toggle('secPanel')">Selecionar</div>
+<div class="multi-panel" id="secPanel">
+<label><input type="checkbox" value="Combo"> Combo</label>
+<label><input type="checkbox" value="Categoria"> Categoria</label>
+</div>
+</div>
 
-  <div class="filter">
-    <label>🥇 RN</label>
-    <input id="setor" maxlength="3" placeholder="000">
-  </div>
+<div class="filter">
+<label>💼 Categoria</label>
+<div class="multi" onclick="toggle('catPanel')">Selecionar</div>
+<div class="multi-panel" id="catPanel">
+<label><input type="checkbox" value="BEER"> BEER</label>
+<label><input type="checkbox" value="NAB"> NAB</label>
+</div>
+</div>
 
-  <div class="filter">
-    <label>📃 Cluster Primário</label>
-    <select id="cluster_pri">
-      <option value="">Todos</option>
-      <option>Desenvolvimento de Portfólio</option>
-      <option>Digitalização BEES</option>
-      <option>Marketplace</option>
-      <option>Volume</option>
-      <option>Execução</option>
-      <option>Nível de Serviço</option>
-    </select>
-  </div>
+<div class="filter"><label>✔ Valid</label><select id="filtro_valid">
+<option value="">Todos</option><option value="1">Somente ✅</option><option value="0">Somente ❌</option>
+</select></div>
 
-  <div class="filter">
-    <label>📃 Cluster Secundário</label>
-    <select id="cluster_sec">
-      <option value="">Todos</option>
-      <option>B2O</option>
-      <option>Combo</option>
-      <option>SKU/PDV</option>
-      <option>Categoria</option>
-      <option>INPUT_MANUAL</option>
-      <option>Estabilização</option>
-      <option>Clube B</option>
-      <option>Incremento</option>
-      <option>Faixa</option>
-      <option>Geladeira</option>
-      <option>Mapeamento de loja</option>
-      <option>TTC</option>
-      <option>Adoção</option>
-      <option>Materiais</option>
-      <option>Atendimento</option>
-      <option>Cardápio</option>
-      <option>Devolução</option>
-      <option>Cartazete</option>
-      <option>Ponto Extra</option>
-      <option>Campanhas Digitais</option>
-      <option>Reversão</option>
-      <option>Scanntech & Mercafácil</option>
-      <option>Cadastro</option>
-      <option>Gôndola</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>💼 Categoria</label>
-    <select id="categoria">
-      <option value="">Todos</option>
-      <option>BEER</option>
-      <option>NAB</option>
-      <option>MATCH</option>
-      <option>MKTPLACE</option>
-      <option>CRAFT</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>✔ Valid</label>
-    <select id="filtro_valid">
-      <option value="">Todos</option>
-      <option value="1">Somente ✅</option>
-      <option value="0">Somente ❌</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>📦 SKU Foco</label>
-    <select id="sku_foco">
-      <option value="">Todos</option>
-      <option>Sim</option>
-      <option>Não</option>
-    </select>
-  </div>
-  
-  <div class="filter">
-    <label>⭐ Score 5</label>
-    <select id="score5">
-      <option value="">Todos</option>
-      <option>Sim</option>
-      <option>Não</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>🏪 PDV</label>
-    <input id="pdv" maxlength="5" placeholder="00000">
-  </div>
-  
 </div>
 
 <button onclick="buscar()">Buscar</button>
+<button onclick="limpar()">Limpar filtros</button>
 
 <div class="message" id="mensagem"></div>
 <div id="tabela"></div>
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+const SUPABASE_KEY="SUA_CHAVE";
 
-function toggleLayout(){
- document.documentElement.classList.toggle("compact");
+function toggle(id){
+ document.getElementById(id).style.display =
+ document.getElementById(id).style.display=="block"?"none":"block";
+}
+
+function pegarMulti(id){
+ return [...document.querySelectorAll(`#${id} input:checked`)].map(e=>e.value);
 }
 
 async function buscar(){
-  const params=[];
+ let params=[];
+ if(busca.value) params.push(`or=(Nome.ilike.*${busca.value}*,Task.ilike.*${busca.value}*)`);
 
-  if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
-  if(visita.value) params.push(`Visita=eq.${encodeURIComponent(visita.value)}`);
-  if(setor.value) params.push(`Setor=eq.${setor.value}`);
-  if(cluster_pri.value) params.push(`Cluster_Pri=eq.${encodeURIComponent(cluster_pri.value)}`);
-  if(cluster_sec.value) params.push(`Cluster_Sec=eq.${encodeURIComponent(cluster_sec.value)}`);
-  if(categoria.value) params.push(`Categoria=eq.${encodeURIComponent(categoria.value)}`);
-  if(filtro_valid.value!=="") params.push(filtro_valid.value==="1" ? "Valid=gt.0" : "Valid=eq.0");
-  if(sku_foco.value) params.push(`SKU_Foco=eq.${encodeURIComponent(sku_foco.value)}`);
-  if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
-  if(pdv.value) params.push(`Pdv=eq.${encodeURIComponent(pdv.value)}`);
+ const visita=pegarMulti("visitaPanel");
+ visita.forEach(v=>params.push(`Visita=eq.${v}`));
 
-  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
+ const pri=pegarMulti("priPanel");
+ pri.forEach(v=>params.push(`Cluster_Pri=eq.${v}`));
 
-  mensagem.textContent="Carregando...";
-  mensagem.className="message";
-  tabela.innerHTML="";
+ const sec=pegarMulti("secPanel");
+ sec.forEach(v=>params.push(`Cluster_Sec=eq.${v}`));
 
-  try{
-    const r = await fetch(url, {
-      headers:{
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`
-      }
-    });
+ const cat=pegarMulti("catPanel");
+ cat.forEach(v=>params.push(`Categoria=eq.${v}`));
 
-    const d = await r.json();
+ if(filtro_valid.value!=="") params.push(filtro_valid.value==="1"?"Valid=gt.0":"Valid=eq.0");
 
-    if(!Array.isArray(d) || !d.length){
-      mensagem.textContent="Nenhum registro encontrado.";
-      mensagem.className="message warning";
-      return;
-    }
+ const url=`${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Task,Valid&${params.join("&")}`;
 
-    mensagem.textContent = `${d.length} registro(s).`;
-    mensagem.className = "message success";
+ mensagem.textContent="Carregando...";
+ tabela.innerHTML="";
 
-    let h = `<table>
-      <tr>
-        <th>Visita</th><th>PDV</th><th>Nome</th>
-        <th>Cluster Pri</th><th>Cluster Sec</th>
-        <th>Categoria</th><th>Meta</th><th>Real</th>
-        <th>Task</th><th>Valid</th>
-      </tr>`;
+ const r=await fetch(url,{headers:{apikey:SUPABASE_KEY,Authorization:`Bearer ${SUPABASE_KEY}`}});
+ const d=await r.json();
 
-    d.forEach(r=>{
-      h += `<tr>
-        <td>${r.Visita||""}</td>
-        <td>${r.Pdv||""}</td>
-        <td>${r.Nome||""}</td>
-        <td>${r.Cluster_Pri||""}</td>
-        <td>${r.Cluster_Sec||""}</td>
-        <td>${r.Categoria||""}</td>
-        <td>${r.Meta||""}</td>
-        <td>${r.Real||""}</td>
-        <td>${r.Task||""}</td>
-        <td>${r.Valid>0 ? '<span class="check">✅</span>' : '<span class="cross">❌</span>'}</td>
-      </tr>`;
-    });
+ if(!d.length){mensagem.textContent="Nada encontrado";mensagem.className="message warning";return;}
 
-    tabela.innerHTML = h + "</table>";
+ mensagem.textContent=`${d.length} registros`;
+ mensagem.className="message success";
 
-  }catch(e){
-    console.error(e);
-    mensagem.textContent="Erro ao consultar os dados.";
-    mensagem.className="message error";
-  }
+ let h=`<table><tr><th>Visita</th><th>PDV</th><th>Nome</th><th>Task</th><th>Valid</th></tr>`;
+ d.forEach(r=>{
+   h+=`<tr><td>${r.Visita}</td><td>${r.Pdv}</td><td>${r.Nome}</td><td>${r.Task}</td><td>${r.Valid>0?'✅':'❌'}</td></tr>`;
+ });
+ tabela.innerHTML=h+"</table>";
 }
 
-
-const operacao=document.getElementById("operacao"),
-visita=document.getElementById("visita"),
-setor=document.getElementById("setor"),
-cluster_pri=document.getElementById("cluster_pri"),
-cluster_sec=document.getElementById("cluster_sec"),
-categoria=document.getElementById("categoria"),
-filtro_valid=document.getElementById("filtro_valid"),
-sku_foco=document.getElementById("sku_foco"),
-score5=document.getElementById("score5"),
-pdv=document.getElementById("pdv"),
-mensagem=document.getElementById("mensagem"),
-tabela=document.getElementById("tabela");
-
+function limpar(){
+ document.querySelectorAll("input,select").forEach(e=>e.value="");
+ document.querySelectorAll("input[type=checkbox]").forEach(e=>e.checked=false);
+ tabela.innerHTML="";mensagem.textContent="";
+}
 </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
