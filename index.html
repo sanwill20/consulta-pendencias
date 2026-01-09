@@ -2,6 +2,7 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pendências</title>
 
 <style>
@@ -135,6 +136,62 @@ tr:nth-child(even){
 .compact th,.compact td{padding:4px}
 .compact h2{text-align:center}
 .compact button{width:100%}
+
+
+@media (max-width: 768px){
+
+  body{
+    margin:10px;
+  }
+
+  .filters{
+    flex-direction:column;
+    gap:8px;
+  }
+
+  .filter{
+    width:100%;
+  }
+
+  input, select, .multi{
+    width:100%;
+    min-width:unset;
+    font-size:14px;
+  }
+
+  button{
+    width:100%;
+    font-size:15px;
+  }
+
+  table{
+    font-size:12px;
+  }
+
+  th, td{
+    padding:4px;
+  }
+
+  .multi-panel{
+    max-height:250px;
+  }
+
+  .topbar{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+  }
+
+  .logo{
+    height:28px;
+  }
+
+  .title{
+    font-size:16px;
+  }
+
+}
+
 </style>
 
 </head>
@@ -268,6 +325,7 @@ tr:nth-child(even){
 </div>
 
 <button onclick="buscar()">Buscar</button>
+<button onclick="limpar()">Limpar filtros</button>
 
 <div class="message" id="mensagem"></div>
 <div id="tabela"></div>
@@ -351,6 +409,11 @@ async function buscar(){
   }
 }
 
+function limpar(){
+ document.querySelectorAll("input,select").forEach(e=>e.value="");
+ document.querySelectorAll("input[type=checkbox]").forEach(e=>e.checked=false);
+ tabela.innerHTML="";mensagem.textContent="";
+}
 
 const operacao=document.getElementById("operacao"),
 visita=document.getElementById("visita"),
@@ -368,3 +431,4 @@ tabela=document.getElementById("tabela");
 </script>
 </body>
 </html>
+
