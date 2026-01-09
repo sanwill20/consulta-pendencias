@@ -259,6 +259,11 @@ tr:nth-child(even){
       <option>Não</option>
     </select>
   </div>
+
+  <div class="filter">
+    <label>🏪 PDV</label>
+    <input id="pdv" maxlength="5" placeholder="00000">
+  </div>
   
 </div>
 
@@ -287,6 +292,7 @@ async function buscar(){
   if(filtro_valid.value!=="") params.push(filtro_valid.value==="1" ? "Valid=gt.0" : "Valid=eq.0");
   if(sku_foco.value) params.push(`SKU_Foco=eq.${encodeURIComponent(sku_foco.value)}`);
   if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
+  if(pdv.value) params.push(`PDV=eq.${encodeURIComponent(pdv.value)}`);
 
   const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
 
@@ -355,12 +361,14 @@ categoria=document.getElementById("categoria"),
 filtro_valid=document.getElementById("filtro_valid"),
 sku_foco=document.getElementById("sku_foco"),
 score5=document.getElementById("score5"),
+pdv=document.getElementById("pdv"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela");
 
 </script>
 </body>
 </html>
+
 
 
 
