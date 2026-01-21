@@ -207,6 +207,8 @@ tr:nth-child(even){
   <span class="title">Asa Norte - Consulta de Task</span>
 </div>
 
+<label >⏰ Atualização: <span id="atualizacao"></span></label>
+  
 <button class="toggle" onclick="toggleLayout()">Alternar layout</button>
   
 <div class="filters">
@@ -443,6 +445,33 @@ function limpar(){
   cards.innerHTML="";mensagem.textContent="";
 }
 
+async function carregarAtualizacao(){
+  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Atualizacao&order=Atualizacao.desc&limit=1`;
+
+  try{
+    const r = await fetch(url, {
+      headers:{
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    const d = await r.json();
+
+    if(d.length){
+      const data = new Date(d[0].Atualizacao);
+
+      atualizacao.textContent = data.toLocaleString("pt-BR");
+    }else{
+      atualizacao.textContent = "não encontrada";
+    }
+
+  }catch(e){
+    atualizacao.textContent = "erro ao carregar";
+  }
+}
+
+  
 const operacao=document.getElementById("operacao"),
 visita=document.getElementById("visita"),
 setor=document.getElementById("setor"),
@@ -458,9 +487,14 @@ tabela=document.getElementById("tabela");
 
 const cards = document.getElementById("cards");
 
+const atualizacao = document.getElementById("atualizacao");
+carregarAtualizacao();
+
+  
 </script>
 </body>
 </html>
+
 
 
 
