@@ -176,7 +176,7 @@ tr:nth-child(even){
   display:none;
 }
 
-@media print{
+print{
   .btn-pdf{display:none;}
 }
   
@@ -354,21 +354,20 @@ tr:nth-child(even){
     </button>
     
   </div>
-</div>
   
-<button onclick="buscar()">🔍 Buscar</button>
-<button onclick="limpar()">🧹 Limpar filtros</button>
-
-<div class="mobile-bar">
   <button onclick="buscar()">🔍 Buscar</button>
   <button onclick="limpar()">🧹 Limpar filtros</button>
-</div>
-
   
-<div class="message" id="mensagem"></div>
-<div id="tabela"></div>
-<div class="cards" id="cards"></div>
-
+  <div class="mobile-bar">
+    <button onclick="buscar()">🔍 Buscar</button>
+    <button onclick="limpar()">🧹 Limpar filtros</button>
+  </div>
+  
+    
+  <div class="message" id="mensagem"></div>
+  <div id="tabela"></div>
+  <div class="cards" id="cards"></div>
+</div>
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
@@ -532,6 +531,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
