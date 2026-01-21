@@ -14,6 +14,11 @@
   --white:#FFFFFF;
 }
 
+/* Elementos que NÃO entram no PDF */
+.no-pdf{
+  display:none !important;
+}
+  
 .btn-pdf{
   background:#d32f2f;   /* vermelho */
   color:white;         /* fonte branca */
@@ -294,9 +299,9 @@ tr:nth-child(even){
   
   <label >⏰ Atualização: <span id="atualizacao"></span></label>
     
-  <button class="toggle" onclick="toggleLayout()">Alternar layout</button>
+  <button class="toggle no-pdf" onclick="toggleLayout()">Alternar layout</button>
     
-  <div class="filters">
+  <div class="filters no-pdf">
     <div class="filter">
       <label>🏢 Operação</label>
       <select id="operacao">
@@ -414,21 +419,21 @@ tr:nth-child(even){
     </div>
 
     <button class="btn-pdf" onclick="exportarPDF()">
-    📄 Exportar PDF
+    📄 Exportar p/ PDF
     </button>
     
   </div>
   
-  <button onclick="buscar()">🔍 Buscar</button>
-  <button onclick="limpar()">🧹 Limpar filtros</button>
+  <button class="no-pdf" onclick="buscar()">🔍 Buscar</button>
+  <button class="no-pdf" onclick="limpar()">🧹 Limpar filtros</button>
   
-  <div class="mobile-bar">
+  <div class="mobile-bar no-pdf">
     <button onclick="buscar()">🔍 Buscar</button>
     <button onclick="limpar()">🧹 Limpar filtros</button>
   </div>
   
     
-  <div class="message" id="mensagem"></div>
+  <div class="message no-pdf" id="mensagem"></div>
   <div id="tabela"></div>
   <div class="cards" id="cards"></div>
 </div>
@@ -564,12 +569,14 @@ async function carregarAtualizacao(){
 function exportarPDF(){
   const area = document.getElementById("area-pdf");
 
-  html2pdf().from(area).set({
+  html2pdf().set({
     margin: 8,
     filename: 'Consulta_Task.pdf',
     html2canvas: { scale: 2 },
-    jsPDF: { orientation: 'landscape' }
-  }).save();
+    jsPDF: { orientation: 'landscape' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+    ignoreElements: el => el.classList.contains("no-pdf")
+  }).from(area).save();
 }
 
   
@@ -598,6 +605,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
