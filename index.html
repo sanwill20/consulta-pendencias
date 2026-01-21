@@ -176,9 +176,12 @@ tr:nth-child(even){
   display:none;
 }
 
-print{
+@media print{
   .btn-pdf{display:none;}
+  .mobile-bar{display:none;}
+  .toggle{display:none;}
 }
+
   
 @media (max-width: 768px){
 
@@ -531,6 +534,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
