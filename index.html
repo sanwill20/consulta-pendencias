@@ -459,9 +459,8 @@ async function carregarAtualizacao(){
     const d = await r.json();
 
     if(d.length){
-      const data = new Date(d[0].Atualizacao);
-
-      atualizacao.textContent = data.toLocaleString("pt-BR");
+      // vem como string e fica como string
+      atualizacao.textContent = d[0].Atualizacao;
     }else{
       atualizacao.textContent = "não encontrada";
     }
@@ -470,6 +469,7 @@ async function carregarAtualizacao(){
     atualizacao.textContent = "erro ao carregar";
   }
 }
+
 
   
 const operacao=document.getElementById("operacao"),
@@ -494,6 +494,7 @@ carregarAtualizacao();
 </script>
 </body>
 </html>
+
 
 
 
