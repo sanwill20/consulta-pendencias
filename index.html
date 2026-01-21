@@ -13,11 +13,6 @@
   --black:#000000;
   --white:#FFFFFF;
 }
-
-/* Elementos que NÃO entram no PDF */
-.no-pdf{
-  display:none !important;
-}
   
 .btn-pdf{
   background:#d32f2f;   /* vermelho */
@@ -179,74 +174,6 @@ tr:nth-child(even){
 /* botão fixo no mobile */
 .mobile-bar{
   display:none;
-}
-
-@media print{
-
-  /* Esconde toda a interface */
-  .btn-pdf,
-  .toggle,
-  .filters,
-  .mobile-bar,
-  button,
-  .cards{
-    display:none !important;
-  }
-
-  /* Força layout limpo */
-  body{
-    background:white;
-    margin:0;
-    padding:0;
-  }
-
-  /* Sempre repetir cabeçalho */
-  thead{
-    display:table-header-group;
-  }
-
-  tfoot{
-    display:table-footer-group;
-  }
-
-  tr{
-    page-break-inside:avoid;
-  }
-
-  /* Tema relatório corporativo */
-  .topbar{
-    background:#000;
-    color:white;
-    border-radius:0;
-    margin-bottom:6px;
-  }
-
-  .title{
-    font-size:14px;
-  }
-
-  label{
-    font-size:11px;
-    margin:4px 0;
-  }
-
-  table{
-    width:100%;
-    font-size:10px;
-  }
-
-  th{
-    background:#000;
-    color:white;
-    font-size:10px;
-    padding:4px;
-  }
-
-  td{
-    font-size:10px;
-    padding:4px;
-  }
-
 }
   
 @media (max-width: 768px){
@@ -591,11 +518,10 @@ sku_foco=document.getElementById("sku_foco"),
 score5=document.getElementById("score5"),
 pdv=document.getElementById("pdv"),
 mensagem=document.getElementById("mensagem"),
-tabela=document.getElementById("tabela");
+tabela=document.getElementById("tabela"),
+cards=document.getElementById("cards"),
+atualizacao=document.getElementById("atualizacao");
 
-const cards = document.getElementById("cards");
-
-const atualizacao = document.getElementById("atualizacao");
 carregarAtualizacao();
 
   
@@ -605,6 +531,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
