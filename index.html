@@ -211,7 +211,59 @@ tr:nth-child(even){
 
 }
 
+/* Itens que não entram no PDF */
+.no-pdf{
+  display:block;
+}
 
+@media print{
+  .no-pdf{
+    display:none !important;
+  }
+
+  body{
+    background:white;
+    margin:0;
+    padding:0;
+  }
+
+  .topbar{
+    background:#000;
+    color:white;
+    border-radius:0;
+    margin-bottom:6px;
+  }
+
+  .title{
+    font-size:14px;
+  }
+
+  table{
+    width:100%;
+    font-size:10px;
+  }
+
+  th{
+    background:#000;
+    color:white;
+    font-size:10px;
+    padding:4px;
+  }
+
+  td{
+    font-size:10px;
+    padding:4px;
+  }
+
+  thead{
+    display:table-header-group;
+  }
+
+  tr{
+    page-break-inside:avoid;
+  }
+}
+  
 </style>
 
 </head>
@@ -346,7 +398,7 @@ tr:nth-child(even){
     </div>
 
     <button class="btn-pdf" onclick="exportarPDF()">
-    📄 Exportar p/ PDF
+    📄 Exportar PDF
     </button>
     
   </div>
@@ -531,6 +583,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
