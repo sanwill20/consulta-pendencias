@@ -177,11 +177,72 @@ tr:nth-child(even){
 }
 
 @media print{
-  .btn-pdf{display:none;}
-  .mobile-bar{display:none;}
-  .toggle{display:none;}
-}
 
+  /* Esconde toda a interface */
+  .btn-pdf,
+  .toggle,
+  .filters,
+  .mobile-bar,
+  button,
+  .cards{
+    display:none !important;
+  }
+
+  /* Força layout limpo */
+  body{
+    background:white;
+    margin:0;
+    padding:0;
+  }
+
+  /* Sempre repetir cabeçalho */
+  thead{
+    display:table-header-group;
+  }
+
+  tfoot{
+    display:table-footer-group;
+  }
+
+  tr{
+    page-break-inside:avoid;
+  }
+
+  /* Tema relatório corporativo */
+  .topbar{
+    background:#000;
+    color:white;
+    border-radius:0;
+    margin-bottom:6px;
+  }
+
+  .title{
+    font-size:14px;
+  }
+
+  label{
+    font-size:11px;
+    margin:4px 0;
+  }
+
+  table{
+    width:100%;
+    font-size:10px;
+  }
+
+  th{
+    background:#000;
+    color:white;
+    font-size:10px;
+    padding:4px;
+  }
+
+  td{
+    font-size:10px;
+    padding:4px;
+  }
+
+}
   
 @media (max-width: 768px){
 
@@ -420,12 +481,15 @@ async function buscar(){
     mensagem.className = "message success";
 
     let h = `<table>
-      <tr>
-        <th>Visita</th><th>PDV</th><th>Nome</th>
-        <th>Cluster Pri</th><th>Cluster Sec</th>
-        <th>Categoria</th><th>Meta</th><th>Real</th>
-        <th>Task</th><th>Valid</th>
-      </tr>`;
+      <thead>
+        <tr>
+          <th>Visita</th><th>PDV</th><th>Nome</th>
+          <th>Cluster Pri</th><th>Cluster Sec</th>
+          <th>Categoria</th><th>Meta</th><th>Real</th>
+          <th>Task</th><th>Valid</th>
+        </tr>
+      </thead>
+      <tbody>`;
 
     let c = "";
 
@@ -455,7 +519,7 @@ async function buscar(){
       
     });
 
-    tabela.innerHTML = h + "</table>";
+    tabela.innerHTML = h + "</tbody></table>";
     cards.innerHTML = c;
 
   }catch(e){
@@ -534,6 +598,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
