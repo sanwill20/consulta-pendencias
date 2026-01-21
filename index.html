@@ -14,6 +14,21 @@
   --white:#FFFFFF;
 }
 
+.btn-pdf{
+  background:#d32f2f;   /* vermelho */
+  color:white;         /* fonte branca */
+  border:none;
+  padding:10px 16px;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-left:10px;
+}
+
+.btn-pdf:hover{
+  background:#b71c1c;  /* vermelho mais escuro */
+}
+  
 body{
   font-family:Arial;
   margin:20px;
@@ -161,6 +176,10 @@ tr:nth-child(even){
   display:none;
 }
 
+@media print{
+  .btn-pdf{display:none;}
+}
+  
 @media (max-width: 768px){
 
   table{
@@ -201,136 +220,143 @@ tr:nth-child(even){
 
 </head>
 <body>
+
+<div id-"area-pdf">
   
-<div class="topbar">
-  <img src="logo.png" class="logo">
-  <span class="title">Asa Norte - Consulta de Task</span>
+  <div class="topbar">
+    <img src="logo.png" class="logo">
+    <span class="title">Asa Norte - Consulta de Task</span>
+  </div>
+  
+  <label >⏰ Atualização: <span id="atualizacao"></span></label>
+    
+  <button class="toggle" onclick="toggleLayout()">Alternar layout</button>
+    
+  <div class="filters">
+    <div class="filter">
+      <label>🏢 Operação</label>
+      <select id="operacao">
+        <option>Asa Bom Jesus</option>
+        <option>Asa Norte Campo Maior</option>
+        <option>Asa Norte Parnaiba</option>
+        <option>Asa São Raimundo</option>
+        <option>Asa Norte Teresina</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>📅 Visita</label>
+      <select id="visita">
+        <option value="">Todos</option>
+        <option>Seg</option>
+        <option>Ter</option>
+        <option>Qua</option>
+        <option>Qui</option>
+        <option>Sex</option>
+        <option>Sáb</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>🥇 RN</label>
+      <input id="setor" maxlength="3" placeholder="000">
+    </div>
+  
+    <div class="filter">
+      <label>📃 Cluster Primário</label>
+      <select id="cluster_pri">
+        <option value="">Todos</option>
+        <option>Desenvolvimento de Portfólio</option>
+        <option>Digitalização BEES</option>
+        <option>Marketplace</option>
+        <option>Volume</option>
+        <option>Execução</option>
+        <option>Nível de Serviço</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>📃 Cluster Secundário</label>
+      <select id="cluster_sec">
+        <option value="">Todos</option>
+        <option>B2O</option>
+        <option>Combo</option>
+        <option>SKU/PDV</option>
+        <option>Categoria</option>
+        <option>INPUT_MANUAL</option>
+        <option>Estabilização</option>
+        <option>Clube B</option>
+        <option>Incremento</option>
+        <option>Faixa</option>
+        <option>Geladeira</option>
+        <option>Mapeamento de loja</option>
+        <option>TTC</option>
+        <option>Adoção</option>
+        <option>Materiais</option>
+        <option>Atendimento</option>
+        <option>Cardápio</option>
+        <option>Devolução</option>
+        <option>Cartazete</option>
+        <option>Ponto Extra</option>
+        <option>Campanhas Digitais</option>
+        <option>Reversão</option>
+        <option>Scanntech & Mercafácil</option>
+        <option>Cadastro</option>
+        <option>Gôndola</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>💼 Categoria</label>
+      <select id="categoria">
+        <option value="">Todos</option>
+        <option>BEER</option>
+        <option>NAB</option>
+        <option>MATCH</option>
+        <option>MKTPLACE</option>
+        <option>CRAFT</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>✔ Valid</label>
+      <select id="filtro_valid">
+        <option value="">Todos</option>
+        <option value="1">Somente ✅</option>
+        <option value="0">Somente ❌</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>📦 SKU Foco</label>
+      <select id="sku_foco">
+        <option value="">Todos</option>
+        <option>Sim</option>
+        <option>Não</option>
+      </select>
+    </div>
+    
+    <div class="filter">
+      <label>⭐ Score 5</label>
+      <select id="score5">
+        <option value="">Todos</option>
+        <option>Sim</option>
+        <option>Não</option>
+      </select>
+    </div>
+  
+    <button class="btn-pdf" onclick="exportarPDF()">
+    📄 Exportar PDF
+    </button>
+  
+    <div class="filter">
+      <label>🏪 PDV</label>
+      <input id="pdv" maxlength="5" placeholder="00000">
+    </div>
+    
+  </div>
 </div>
-
-<label >⏰ Atualização: <span id="atualizacao"></span></label>
   
-<button class="toggle" onclick="toggleLayout()">Alternar layout</button>
-  
-<div class="filters">
-  <div class="filter">
-    <label>🏢 Operação</label>
-    <select id="operacao">
-      <option>Asa Bom Jesus</option>
-      <option>Asa Norte Campo Maior</option>
-      <option>Asa Norte Parnaiba</option>
-      <option>Asa São Raimundo</option>
-      <option>Asa Norte Teresina</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>📅 Visita</label>
-    <select id="visita">
-      <option value="">Todos</option>
-      <option>Seg</option>
-      <option>Ter</option>
-      <option>Qua</option>
-      <option>Qui</option>
-      <option>Sex</option>
-      <option>Sáb</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>🥇 RN</label>
-    <input id="setor" maxlength="3" placeholder="000">
-  </div>
-
-  <div class="filter">
-    <label>📃 Cluster Primário</label>
-    <select id="cluster_pri">
-      <option value="">Todos</option>
-      <option>Desenvolvimento de Portfólio</option>
-      <option>Digitalização BEES</option>
-      <option>Marketplace</option>
-      <option>Volume</option>
-      <option>Execução</option>
-      <option>Nível de Serviço</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>📃 Cluster Secundário</label>
-    <select id="cluster_sec">
-      <option value="">Todos</option>
-      <option>B2O</option>
-      <option>Combo</option>
-      <option>SKU/PDV</option>
-      <option>Categoria</option>
-      <option>INPUT_MANUAL</option>
-      <option>Estabilização</option>
-      <option>Clube B</option>
-      <option>Incremento</option>
-      <option>Faixa</option>
-      <option>Geladeira</option>
-      <option>Mapeamento de loja</option>
-      <option>TTC</option>
-      <option>Adoção</option>
-      <option>Materiais</option>
-      <option>Atendimento</option>
-      <option>Cardápio</option>
-      <option>Devolução</option>
-      <option>Cartazete</option>
-      <option>Ponto Extra</option>
-      <option>Campanhas Digitais</option>
-      <option>Reversão</option>
-      <option>Scanntech & Mercafácil</option>
-      <option>Cadastro</option>
-      <option>Gôndola</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>💼 Categoria</label>
-    <select id="categoria">
-      <option value="">Todos</option>
-      <option>BEER</option>
-      <option>NAB</option>
-      <option>MATCH</option>
-      <option>MKTPLACE</option>
-      <option>CRAFT</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>✔ Valid</label>
-    <select id="filtro_valid">
-      <option value="">Todos</option>
-      <option value="1">Somente ✅</option>
-      <option value="0">Somente ❌</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>📦 SKU Foco</label>
-    <select id="sku_foco">
-      <option value="">Todos</option>
-      <option>Sim</option>
-      <option>Não</option>
-    </select>
-  </div>
-  
-  <div class="filter">
-    <label>⭐ Score 5</label>
-    <select id="score5">
-      <option value="">Todos</option>
-      <option>Sim</option>
-      <option>Não</option>
-    </select>
-  </div>
-
-  <div class="filter">
-    <label>🏪 PDV</label>
-    <input id="pdv" maxlength="5" placeholder="00000">
-  </div>
-  
-</div>
-
 <button onclick="buscar()">🔍 Buscar</button>
 <button onclick="limpar()">🧹 Limpar filtros</button>
 
@@ -470,6 +496,16 @@ async function carregarAtualizacao(){
   }
 }
 
+function exportarPDF(){
+  const area = document.getElementById("area-pdf");
+
+  html2pdf().from(area).set({
+    margin: 8,
+    filename: 'pendencias.pdf',
+    html2canvas: { scale: 2 },
+    jsPDF: { orientation: 'landscape' }
+  }).save();
+}
 
   
 const operacao=document.getElementById("operacao"),
@@ -492,8 +528,12 @@ carregarAtualizacao();
 
   
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 </body>
 </html>
+
 
 
 
