@@ -175,9 +175,17 @@ tr:nth-child(even){
 .mobile-bar{
   display:none;
 }
+
+.desktop-only{
+  display:inline-block;
+}
   
 @media (max-width: 768px){
 
+  .desktop-only{
+    display:none !important;
+  }
+  
   .btn-pdf{
     display:none !important;
   }
@@ -350,8 +358,8 @@ tr:nth-child(even){
     
   </div>
   
-  <button class="no-pdf" onclick="buscar()">🔍 Buscar</button>
-  <button class="no-pdf" onclick="limpar()">🧹 Limpar filtros</button>
+  <button class="no-pdf desktop-only" onclick="buscar()">🔍 Buscar</button>
+  <button class="no-pdf desktop-only" onclick="limpar()">🧹 Limpar filtros</button>
   
   <div class="mobile-bar no-pdf">
     <button onclick="buscar()">🔍 Buscar</button>
@@ -530,6 +538,7 @@ carregarAtualizacao();
 
 </body>
 </html>
+
 
 
 
