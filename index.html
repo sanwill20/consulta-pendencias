@@ -372,6 +372,11 @@ tr:nth-child(even){
       <label>🔎 Buscar na Task</label>
       <input id="task_search" placeholder="Ex: Stella">
     </div>
+
+    <div class="filter">
+      <label>📉 Gap mínimo</label>
+      <input id="gap" type="number" step="0.01" placeholder="Ex: -5">
+    </div>
     
     <button class="btn-pdf" onclick="exportarPDF()">
     📄 Exportar p/ PDF
@@ -426,9 +431,12 @@ async function buscar(){
   if(pdv.value) params.push(`Pdv=eq.${encodeURIComponent(pdv.value)}`);
   if(task_search.value){
   params.push(`Task=ilike.*${encodeURIComponent(task_search.value)}*`);
+  if(gap.value !== ""){
+  params.push(`Gap=gte.${gap.value}`);
+  }
 }
 
-  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Task,Valid&${params.join("&")}`;
+  const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Gap,Task,Valid&${params.join("&")}`;
 
   mensagem.textContent="Carregando...";
   mensagem.className="message";
@@ -458,7 +466,7 @@ async function buscar(){
         <tr>
           <th>Visita</th><th>PDV</th><th>Nome</th>
           <th>Cluster Pri</th><th>Cluster Sec</th>
-          <th>Categoria</th><th>Meta</th><th>Real</th>
+          <th>Categoria</th><th>Meta</th><th>Real</th><th>Gap</th>
           <th>Task</th><th>Valid</th>
         </tr>
       </thead>
@@ -476,6 +484,7 @@ async function buscar(){
         <td>${r.Categoria||""}</td>
         <td>${r.Meta||""}</td>
         <td>${r.Real||""}</td>
+        <td>${r.Gap||""}</td>
         <td>${highlightTask(r.Task||"")}</td>
         <td>${r.Valid>0 ? '✅' : '❌'}</td>
       </tr>`;
@@ -485,7 +494,7 @@ async function buscar(){
         <div><b>Visita:</b> ${r.Visita||""}</div>
         <div><b>Cluster:</b> ${r.Cluster_Pri||""} / ${r.Cluster_Sec||""}</div>
         <div><b>Categoria:</b> ${r.Categoria||""}</div>
-        <div><b>Meta:</b> ${r.Meta||""} — <b>Real:</b> ${r.Real||""}</div>
+        <div><b>Meta:</b> ${r.Meta||""} — <b>Real:</b> ${r.Real||""} — <b>Gap:</b> ${r.Gap||""}</div>
         <div><b>Task:</b> ${highlightTask(r.Task||"")}</div>
         <div><b>Valid:</b> ${r.Valid>0 ? '✅' : '❌'}</div>
       </div>`;
@@ -560,6 +569,7 @@ score5=document.getElementById("score5"),
 cerv0=document.getElementById("cerv0"),
 pdv=document.getElementById("pdv"),
 task_search=document.getElementById("task_search"),
+gap=document.getElementById("gap"),
 mensagem=document.getElementById("mensagem"),
 tabela=document.getElementById("tabela"),
 cards=document.getElementById("cards"),
