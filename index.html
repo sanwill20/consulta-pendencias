@@ -431,6 +431,7 @@ async function buscar(){
   if(pdv.value) params.push(`Pdv=eq.${encodeURIComponent(pdv.value)}`);
   if(task_search.value){
   params.push(`Task=ilike.*${encodeURIComponent(task_search.value)}*`);
+  }
   if(gap.value !== ""){
   params.push(`Gap=gte.${gap.value}`);
   }
