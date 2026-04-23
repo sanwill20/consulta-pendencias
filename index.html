@@ -429,13 +429,14 @@ async function buscar(){
   if(score5.value) params.push(`S5=eq.${encodeURIComponent(score5.value)}`);
   if(cerv0.value) params.push(`Cesta=eq.${encodeURIComponent(cerv0.value)}`);
   if(pdv.value) params.push(`Pdv=eq.${encodeURIComponent(pdv.value)}`);
+
   if(task_search.value){
-  params.push(`Task=ilike.*${encodeURIComponent(task_search.value)}*`);
+    params.push(`Task=ilike.*${encodeURIComponent(task_search.value)}*`);
   }
+
   if(gap.value !== ""){
-  params.push(`Gap=gte.${gap.value}`);
+    params.push(`Gap=gte.${gap.value}`);
   }
-}
 
   const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Gap,Task,Valid&${params.join("&")}`;
 
