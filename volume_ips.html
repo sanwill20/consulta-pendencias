@@ -101,7 +101,7 @@ th{
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+const SUPABASE_KEY="SUA_KEY";
 
 const perfil = localStorage.getItem("perfil");
 const cod = localStorage.getItem("cod");
@@ -111,10 +111,10 @@ if(!perfil){
   window.location.href="login.html";
 }
 
-boasvindas.innerText = `Olá, ${nome}`;
+document.getElementById("boasvindas").innerText = `Olá, ${nome}`;
 
 if(perfil==="Admin"){
-  boxFiltro.style.display="block";
+  document.getElementById("boxFiltro").style.display="block";
 }
 
 function logout(){
@@ -137,8 +137,9 @@ async function buscar(){
     url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${cod}`;
   }
   else if(perfil==="Admin"){
-    if(filtroEquipe.value){
-      url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${filtroEquipe.value}`;
+    const filtroEquipe = document.getElementById("filtroEquipe").value;
+    if(filtroEquipe){
+      url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${filtroEquipe}`;
     }else{
       url = `${SUPABASE_URL}/rest/v1/volume_ips`;
     }
@@ -154,59 +155,55 @@ async function buscar(){
   const d = await r.json();
 
   let h = `<table>
-  <tr class="grupo">
-  <th rowspan="2">Cod</th>
-  <th rowspan="2">Nome</th>
+    <tr class="grupo">
+      <th rowspan="2">Cod</th>
+      <th rowspan="2">Nome</th>
 
-  <th colspan="5">Cerveja TT</th>
-  <th colspan="5">Nab TT</th>
-  <th colspan="5">MKTP</th>
-  <th colspan="4">Task</th>
-</tr>
+      <th colspan="5">Cerveja TT</th>
+      <th colspan="5">Nab TT</th>
+      <th colspan="5">MKTP</th>
+      <th colspan="4">Task</th>
+    </tr>
 
-<tr>
-  <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
-  <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
-  <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
-  <th>Meta</th><th>Real</th><th>Ating</th><th>Gap</th>
-</tr>
+    <tr>
+      <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
+      <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
+      <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
+      <th>Meta</th><th>Real</th><th>Ating</th><th>Gap</th>
+    </tr>`;
 
   d.forEach(r=>{
-  h += `<tr>
-    <td>${r.Cod||""}</td>
-    <td>${r.Nome||""}</td>
+    h += `<tr>
+      <td>${r.Cod ?? ""}</td>
+      <td>${r.Nome ?? ""}</td>
 
-    <!-- Cerveja -->
-    <td>${r.meta_cerveja||""}</td>
-    <td>${r.real_cerveja||""}</td>
-    <td>${r.tend_cerveja||""}</td>
-    <td>${r.ptend_cerveja||""}</td>
-    <td class="${cor(r.gap_cerveja)}">${r.gap_cerveja||""}</td>
+      <td>${r.meta_cerveja ?? ""}</td>
+      <td>${r.real_cerveja ?? ""}</td>
+      <td>${r.tend_cerveja ?? ""}</td>
+      <td>${r.ptend_cerveja ?? ""}</td>
+      <td class="${cor(r.gap_cerveja)}">${r.gap_cerveja ?? ""}</td>
 
-    <!-- NAB -->
-    <td>${r.meta_nab||""}</td>
-    <td>${r.real_nab||""}</td>
-    <td>${r.tend_nab||""}</td>
-    <td>${r.ptend_nab||""}</td>
-    <td class="${cor(r.gap_nab)}">${r.gap_nab||""}</td>
+      <td>${r.meta_nab ?? ""}</td>
+      <td>${r.real_nab ?? ""}</td>
+      <td>${r.tend_nab ?? ""}</td>
+      <td>${r.ptend_nab ?? ""}</td>
+      <td class="${cor(r.gap_nab)}">${r.gap_nab ?? ""}</td>
 
-    <!-- MKTP -->
-    <td>${r.meta_mktp||""}</td>
-    <td>${r.real_mktp||""}</td>
-    <td>${r.tend_mktp||""}</td>
-    <td>${r.ptend_mktp||""}</td>
-    <td class="${cor(r.gap_mktp)}">${r.gap_mktp||""}</td>
+      <td>${r.meta_mktp ?? ""}</td>
+      <td>${r.real_mktp ?? ""}</td>
+      <td>${r.tend_mktp ?? ""}</td>
+      <td>${r.ptend_mktp ?? ""}</td>
+      <td class="${cor(r.gap_mktp)}">${r.gap_mktp ?? ""}</td>
 
-    <!-- TASK -->
-    <td>${r.meta_task||""}</td>
-    <td>${r.real_task||""}</td>
-    <td>${r.ating_task||""}</td>
-    <td class="${cor(r.gap_task)}">${r.gap_task||""}</td>
-  </tr>`;
-});
+      <td>${r.meta_task ?? ""}</td>
+      <td>${r.real_task ?? ""}</td>
+      <td>${r.ating_task ?? ""}</td>
+      <td class="${cor(r.gap_task)}">${r.gap_task ?? ""}</td>
+    </tr>`;
+  });
 
   h += "</table>";
-  tabela.innerHTML = h;
+  document.getElementById("tabela").innerHTML = h;
 }
 
 buscar();
