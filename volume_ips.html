@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volume IPS</title>
+
+<style>
+:root{
+  --primary:#333F4F;
+  --secondary:#44546A;
+  --light:#D9D9D9;
+  --white:#FFFFFF;
+}
+
+body{
+  font-family:Arial;
+  margin:20px;
+  background:var(--light);
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:var(--primary);
+  color:white;
+  padding:10px 15px;
+  border-radius:6px;
+  margin-bottom:15px;
+}
+
+button{
+  padding:8px 14px;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  background:var(--secondary);
+  color:white;
+}
+
+table{
+  border-collapse:collapse;
+  width:100%;
+  background:white;
+  font-size:13px;
+}
+
+th,td{
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+}
+
+th{
+  background:var(--primary);
+  color:white;
+}
+
+.grupo{
+  background:#44546A;
+  color:white;
+}
+
+.negativo{
+  color:red;
+  font-weight:bold;
+}
+
+.positivo{
+  color:green;
+  font-weight:bold;
+}
+
+.filtro-admin{
+  margin-bottom:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <b id="boasvindas"></b>
+  </div>
+  <button onclick="logout()">Sair</button>
+</div>
+
+<div class="filtro-admin" id="boxFiltro" style="display:none;">
+  <select id="filtroEquipe" onchange="buscar()">
+    <option value="">Todas equipes</option>
+    <option value="TE_1">TE_1</option>
+    <option value="SR_1">SR_1</option>
+    <option value="BJ_1">BJ_1</option>
+    <option value="CM_1">CM_1</option>
+    <option value="PN_1">PN_1</option>
+  </select>
+</div>
+
+<div id="tabela"></div>
+
+<script>
+const SUPABASE_URL="SUA_URL";
+const SUPABASE_KEY="SUA_KEY";
+
+const perfil = localStorage.getItem("perfil");
+const cod = localStorage.getItem("cod");
+const nome = localStorage.getItem("nome");
+
+if(!perfil){
+  window.location.href="login.html";
+}
+
+boasvindas.innerText = `Olá, ${nome}`;
+
+if(perfil==="Admin"){
+  boxFiltro.style.display="block";
+}
+
+function logout(){
+  localStorage.clear();
+  window.location.href="login.html";
+}
+
+function cor(v){
+  return Number(v) < 0 ? "negativo" : "positivo";
+}
+
+async function buscar(){
+
+  let url = "";
+
+  if(perfil==="RN"){
+    url = `${SUPABASE_URL}/rest/v1/volume_ips?Cod=eq.${cod}`;
+  }
+  else if(perfil==="Gerente"){
+    url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${cod}`;
+  }
+  else if(perfil==="Admin"){
+    if(filtroEquipe.value){
+      url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${filtroEquipe.value}`;
+    }else{
+      url = `${SUPABASE_URL}/rest/v1/volume_ips`;
+    }
+  }
+
+  const r = await fetch(url,{
+    headers:{
+      apikey:SUPABASE_KEY,
+      Authorization:`Bearer ${SUPABASE_KEY}`
+    }
+  });
+
+  const d = await r.json();
+
+  let h = `<table>
+  <tr class="grupo">
+    <th rowspan="2">Cod</th>
+    <th rowspan="2">Nome</th>
+    <th colspan="5">Cerveja TT</th>
+    <th colspan="5">Nab TT</th>
+  </tr>
+  <tr>
+    <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
+    <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
+  </tr>`;
+
+  d.forEach(r=>{
+    h += `<tr>
+      <td>${r.Cod||""}</td>
+      <td>${r.Nome||""}</td>
+
+      <td>${r.meta_cerveja||""}</td>
+      <td>${r.real_cerveja||""}</td>
+      <td>${r.tend_cerveja||""}</td>
+      <td>${r.ptend_cerveja||""}</td>
+      <td class="${cor(r.gap_cerveja)}">${r.gap_cerveja||""}</td>
+
+      <td>${r.meta_nab||""}</td>
+      <td>${r.real_nab||""}</td>
+      <td>${r.tend_nab||""}</td>
+      <td>${r.ptend_nab||""}</td>
+      <td class="${cor(r.gap_nab)}">${r.gap_nab||""}</td>
+    </tr>`;
+  });
+
+  h += "</table>";
+  tabela.innerHTML = h;
+}
+
+buscar();
+</script>
+
+</body>
+</html>
