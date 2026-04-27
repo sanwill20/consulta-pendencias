@@ -75,6 +75,41 @@ th{
 .filtro-admin{
   margin-bottom:10px;
 }
+
+.tabela-wrap{
+  overflow-x:auto;
+  width:100%;
+  -webkit-overflow-scrolling: touch;
+}
+
+table{
+  min-width:1400px;
+  border-collapse:collapse;
+}
+
+/* primeira coluna */
+.fix1{
+  position:sticky;
+  left:0;
+  background:white;
+  z-index:2;
+}
+
+/* segunda coluna */
+.fix2{
+  position:sticky;
+  left:80px; /* largura da primeira */
+  background:white;
+  z-index:2;
+}
+
+/* cabeçalho */
+th.fix1, th.fix2{
+  background:var(--primary);
+  color:white;
+  z-index:3;
+}
+  
 </style>
 </head>
 <body>
@@ -162,8 +197,8 @@ async function buscar(){
 
   let h = `<table>
     <tr class="grupo">
-      <th rowspan="2">Cod</th>
-      <th rowspan="2">Nome</th>
+      <th rowspan="2" class="fix1">Cod</th>
+      <th rowspan="2" class="fix2">Nome</th>
 
       <th colspan="5">Cerveja TT</th>
       <th colspan="5">Nab TT</th>
@@ -180,8 +215,8 @@ async function buscar(){
 
   d.forEach(r=>{
     h += `<tr>
-      <td>${r.Cod ?? ""}</td>
-      <td>${r.Nome ?? ""}</td>
+      <td class="fix1">${r.Cod ?? ""}</td>
+      <td class="fix2">${r.Nome ?? ""}</td>
 
       <td>${r.meta_cerveja ?? ""}</td>
       <td>${r.real_cerveja ?? ""}</td>
