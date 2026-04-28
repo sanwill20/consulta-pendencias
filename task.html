@@ -375,7 +375,7 @@ tr:nth-child(even){
 
     <div class="filter">
       <label>📉 Gap mínimo</label>
-      <input id="gap" type="text" inputmode="decimal" placeholder="Ex: -5">
+      <input id="gap" placeholder="Ex: -5">
     </div>
     
     <button class="btn-pdf" onclick="exportarPDF()">
@@ -434,9 +434,12 @@ async function buscar(){
     params.push(`Task=ilike.*${encodeURIComponent(task_search.value)}*`);
   }
 
-  if(gap.value !== ""){
+  if(gap.value.trim() !== ""){
    const valorGap = parseFloat(gap.value.replace(",", "."));
-   params.push(`Gap=gte.${valorGap}`);
+
+   if(!isNaN(valorGap)){
+      params.push(`Gap=gte.${valorGap}`);
+   }
   }
 
   const url = `${SUPABASE_URL}/rest/v1/pendencias?select=Visita,Pdv,Nome,Cluster_Pri,Cluster_Sec,Categoria,Meta,Real,Gap,Task,Valid&${params.join("&")}`;
