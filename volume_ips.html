@@ -63,14 +63,16 @@ select,input{
   padding:6px 10px;
 }
 
-#tabela{
-  transform-origin: top left;
-}
-
 .tabela-wrap{
-  overflow-x:auto;
+  overflow:auto;
   width:100%;
   -webkit-overflow-scrolling: touch;
+  background:white;
+}
+
+#zoomWrap{
+  transform-origin: top left;
+  width:max-content;
 }
 
 table{
@@ -133,12 +135,6 @@ th.fix1, th.fix2{
   color: white;
   z-index: 3;
 }
-
-@media (max-width:768px){
-  #tabela{
-    transform: scale(0.7);
-  }
-}
 </style>
 </head>
 <body>
@@ -168,21 +164,24 @@ th.fix1, th.fix2{
 </div>
 
 <div class="zoom-controls">
-  <button onclick="alterarZoom(-0.1)">➖</button>
+  <button onclick="alterarZoom(-10)">➖</button>
   <span id="zoomLabel">70%</span>
-  <button onclick="alterarZoom(0.1)">➕</button>
+  <button onclick="alterarZoom(10)">➕</button>
 </div>
 
-<div id="tabela"></div>
+<div class="tabela-wrap">
+  <div id="zoomWrap">
+    <div id="tabela"></div>
+  </div>
+</div>
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
 const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
-let zoomAtual = window.innerWidth <= 768 ? 0.7 : 1;
+let zoomAtual = window.innerWidth <= 768 ? 70 : 100;
 
 const perfil = localStorage.getItem("perfil");
-const cod = localStorage.getItem("cod");
 const nome = localStorage.getItem("nome");
 
 if(!perfil){
@@ -190,7 +189,6 @@ if(!perfil){
 }
 
 document.getElementById("boasvindas").innerText = `Olá, ${nome}`;
-document.getElementById("zoomLabel").innerText = `${Math.round(zoomAtual*100)}%`;
 
 function logout(){
   localStorage.clear();
@@ -201,14 +199,22 @@ function cor(v){
   return Number(v) < 0 ? "negativo" : "positivo";
 }
 
+function aplicarZoom(){
+  const wrap = document.getElementById("zoomWrap");
+
+  wrap.style.transform = `scale(${zoomAtual/100})`;
+  wrap.style.width = `${100/(zoomAtual/100)}%`;
+
+  document.getElementById("zoomLabel").innerText = zoomAtual + "%";
+}
+
 function alterarZoom(valor){
   zoomAtual += valor;
 
-  if(zoomAtual < 0.5) zoomAtual = 0.5;
-  if(zoomAtual > 1.5) zoomAtual = 1.5;
+  if(zoomAtual < 40) zoomAtual = 40;
+  if(zoomAtual > 100) zoomAtual = 100;
 
-  document.getElementById("tabela").style.transform = `scale(${zoomAtual})`;
-  document.getElementById("zoomLabel").innerText = `${Math.round(zoomAtual*100)}%`;
+  aplicarZoom();
 }
 
 async function buscar(){
@@ -241,7 +247,7 @@ async function buscar(){
 
   const d = await r.json();
 
-  let h = `<div class="tabela-wrap"><table>
+  let h = `<table>
     <tr class="grupo">
       <th rowspan="2" class="fix1">Cod</th>
       <th rowspan="2" class="fix2">Nome</th>
@@ -288,13 +294,14 @@ async function buscar(){
     </tr>`;
   });
 
-  h += "</table></div>";
-
+  h += "</table>";
   document.getElementById("tabela").innerHTML = h;
-  document.getElementById("tabela").style.transform = `scale(${zoomAtual})`;
+
+  setTimeout(aplicarZoom,100);
 }
 
 buscar();
+aplicarZoom();
 </script>
 
 </body>
