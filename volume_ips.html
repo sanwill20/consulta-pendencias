@@ -71,7 +71,6 @@ select,input{
 }
 
 #zoomWrap{
-  transform-origin: top left;
   width:max-content;
 }
 
@@ -112,28 +111,28 @@ th{
 
 /* primeira coluna */
 .fix1{
-  position: sticky;
-  left: 0;
-  width: 70px;
-  min-width: 70px;
-  max-width: 70px;
-  background: white;
-  z-index: 2;
+  position:sticky;
+  left:0;
+  width:70px;
+  min-width:70px;
+  max-width:70px;
+  background:white;
+  z-index:2;
 }
 
 /* segunda coluna */
 .fix2{
-  position: sticky;
-  left: 70px;
-  background: white;
-  z-index: 2;
+  position:sticky;
+  left:70px;
+  background:white;
+  z-index:2;
 }
 
 /* cabeçalho */
 th.fix1, th.fix2{
-  background: var(--primary);
-  color: white;
-  z-index: 3;
+  background:var(--primary);
+  color:white;
+  z-index:3;
 }
 </style>
 </head>
@@ -201,10 +200,8 @@ function cor(v){
 
 function aplicarZoom(){
   const wrap = document.getElementById("zoomWrap");
-
-  wrap.style.transform = `scale(${zoomAtual/100})`;
-  wrap.style.width = `${100/(zoomAtual/100)}%`;
-
+  wrap.style.zoom = `${zoomAtual}%`;
+  wrap.style.width = "max-content";
   document.getElementById("zoomLabel").innerText = zoomAtual + "%";
 }
 
