@@ -66,7 +66,8 @@ select,input{
 .tabela-wrap{
   overflow:auto;
   width:100%;
-  -webkit-overflow-scrolling: touch;
+  max-height:80vh;
+  -webkit-overflow-scrolling:touch;
   background:white;
 }
 
@@ -89,14 +90,22 @@ th,td{
   white-space:nowrap;
 }
 
-th{
+/* primeira linha */
+tr.grupo th{
   background:var(--primary);
   color:white;
+  position:sticky;
+  top:0;
+  z-index:5;
 }
 
-.grupo{
-  background:#44546A;
+/* segunda linha */
+tr.subgrupo th{
+  background:var(--primary);
   color:white;
+  position:sticky;
+  top:34px;
+  z-index:4;
 }
 
 .negativo{
@@ -128,11 +137,12 @@ th{
   z-index:2;
 }
 
-/* cabeçalho */
-th.fix1, th.fix2{
-  background:var(--primary);
-  color:white;
-  z-index:3;
+/* cabeçalhos fixos */
+tr.grupo th.fix1,
+tr.grupo th.fix2,
+tr.subgrupo th.fix1,
+tr.subgrupo th.fix2{
+  z-index:6;
 }
 </style>
 </head>
@@ -207,15 +217,12 @@ function aplicarZoom(){
 
 function alterarZoom(valor){
   zoomAtual += valor;
-
   if(zoomAtual < 40) zoomAtual = 40;
   if(zoomAtual > 100) zoomAtual = 100;
-
   aplicarZoom();
 }
 
 async function buscar(){
-
   let url = `${SUPABASE_URL}/rest/v1/volume_ips`;
 
   const filtroEquipe = document.getElementById("filtroEquipe").value;
@@ -254,7 +261,7 @@ async function buscar(){
       <th colspan="4">Task</th>
     </tr>
 
-    <tr>
+    <tr class="subgrupo">
       <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
       <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
       <th>Meta</th><th>Real</th><th>Tend</th><th>%Tend</th><th>Gap</th>
