@@ -39,7 +39,27 @@ button{
   color:white;
 }
 
+.filtro-admin{
+  margin-bottom:10px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+select,input{
+  padding:8px;
+  border:1px solid #ccc;
+  border-radius:4px;
+}
+
+.tabela-wrap{
+  overflow-x:auto;
+  width:100%;
+  -webkit-overflow-scrolling: touch;
+}
+
 table{
+  min-width:1400px;
   border-collapse:collapse;
   width:100%;
   background:white;
@@ -50,6 +70,7 @@ th,td{
   border:1px solid #ccc;
   padding:6px;
   text-align:center;
+  white-space:nowrap;
 }
 
 th{
@@ -72,21 +93,6 @@ th{
   font-weight:bold;
 }
 
-.filtro-admin{
-  margin-bottom:10px;
-}
-
-.tabela-wrap{
-  overflow-x:auto;
-  width:100%;
-  -webkit-overflow-scrolling: touch;
-}
-
-table{
-  min-width:1400px;
-  border-collapse:collapse;
-}
-
 /* primeira coluna */
 .fix1{
   position: sticky;
@@ -100,31 +106,28 @@ table{
 
 /* segunda coluna */
 .fix2{
-  position:sticky;
-  left:70px; /* largura da primeira */
-  background:white;
-  z-index:2;
+  position: sticky;
+  left: 70px;
+  background: white;
+  z-index: 2;
 }
 
 /* cabeçalho */
 th.fix1, th.fix2{
-  background:var(--primary);
-  color:white;
-  z-index:3;
+  background: var(--primary);
+  color: white;
+  z-index: 3;
 }
-  
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <div>
-    <b id="boasvindas"></b>
-  </div>
+  <div><b id="boasvindas"></b></div>
   <button onclick="logout()">Sair</button>
 </div>
 
-<div class="filtro-admin" id="boxFiltro" style="display:none;">
+<div class="filtro-admin">
   <select id="filtroEquipe" onchange="buscar()">
     <option value="">Todas equipes</option>
     <option value="TE_1">TE_1</option>
@@ -139,13 +142,15 @@ th.fix1, th.fix2{
     <option value="PN_3">PN_3</option>
     <option value="PN_4">PN_4</option>
   </select>
+
+  <input type="text" id="filtroCod" placeholder="Filtrar por Cod" onkeyup="buscar()">
 </div>
 
 <div id="tabela"></div>
 
 <script>
 const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+const SUPABASE_KEY="SUA_KEY";
 
 const perfil = localStorage.getItem("perfil");
 const cod = localStorage.getItem("cod");
@@ -156,10 +161,6 @@ if(!perfil){
 }
 
 document.getElementById("boasvindas").innerText = `Olá, ${nome}`;
-
-if(perfil==="Admin"){
-  document.getElementById("boxFiltro").style.display="block";
-}
 
 function logout(){
   localStorage.clear();
@@ -172,7 +173,27 @@ function cor(v){
 
 async function buscar(){
 
-  let url = "";
+  let url = `${SUPABASE_URL}/rest/v1/volume_ips`;
+
+  const filtroEquipe = document.getElementById("filtroEquipe").value;
+  const filtroCod = document.getElementById("filtroCod").value;
+
+  let filtros = [];
+
+  if(filtroEquipe){
+    filtros.push(`GV=eq.${filtroEquipe}`);
+  }
+
+  if(filtroCod){
+    filtros.push(`Cod=ilike.*${filtroCod}*`);
+  }
+
+  if(filtros.length > 0){
+    url += "?" + filtros.join("&");
+  }
+
+  /*
+  ===== LÓGICA ANTIGA =====
 
   if(perfil==="RN"){
     url = `${SUPABASE_URL}/rest/v1/volume_ips?Cod=eq.${cod}`;
@@ -181,13 +202,13 @@ async function buscar(){
     url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${cod}`;
   }
   else if(perfil==="Admin"){
-    const filtroEquipe = document.getElementById("filtroEquipe").value;
     if(filtroEquipe){
       url = `${SUPABASE_URL}/rest/v1/volume_ips?GV=eq.${filtroEquipe}`;
     }else{
       url = `${SUPABASE_URL}/rest/v1/volume_ips`;
     }
   }
+  */
 
   const r = await fetch(url,{
     headers:{
@@ -198,11 +219,10 @@ async function buscar(){
 
   const d = await r.json();
 
-  let h = `<table>
+  let h = `<div class="tabela-wrap"><table>
     <tr class="grupo">
       <th rowspan="2" class="fix1">Cod</th>
       <th rowspan="2" class="fix2">Nome</th>
-
       <th colspan="5">Cerveja TT</th>
       <th colspan="5">Nab TT</th>
       <th colspan="5">MKTP</th>
@@ -246,7 +266,7 @@ async function buscar(){
     </tr>`;
   });
 
-  h += "</table>";
+  h += "</table></div>";
   document.getElementById("tabela").innerHTML = h;
 }
 
