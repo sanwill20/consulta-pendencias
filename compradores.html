@@ -12,6 +12,9 @@
   --white:#FFFFFF;
 }
 
+.status-ok { color: #2e7d32; font-weight: bold; }   /* Verde escuro */
+.status-nok { color: #d32f2f; font-weight: bold; }  /* Vermelho */
+  
 body{
   font-family:Arial, sans-serif;
   background:var(--light);
@@ -245,6 +248,16 @@ function formatarStatus(valor) {
   return num === 1 ? "✅" : "❌";
 }
 
+// Nova função para formatar o GPS com texto e cor
+function formatarGPS(valor) {
+  const num = Number(valor);
+  if (num === 1) {
+    return `<span class="status-ok">OK</span>`;
+  } else {
+    return `<span class="status-nok">NOK</span>`;
+  }
+}
+  
 function filtrarDadosLocalmente() {
   const cb1 = document.getElementById("cb1").checked; 
   const cb2 = document.getElementById("cb2").checked; 
@@ -282,14 +295,14 @@ function filtrarDadosLocalmente() {
   // Renderizar resultados em ambas as estruturas
   dadosFiltrados.forEach(item => {
     
-    // 1. Renderização para Desktop (Tabela)
+    // 1. Renderização para Desktop (Tabela) - Altere a linha do GPS:
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${item.PDV || ''}</td>
       <td>${item.Nome || ''}</td>
       <td>${item.RN || ''}</td>
       <td>${item.Visita || ''}</td>
-      <td>${item.gps || ''}</td>
+      <td>${formatarGPS(item.gps)}</td>
       <td>${formatarStatus(item.cp_ambev)}</td>
       <td>${formatarStatus(item.cp_mktp)}</td>
       <td>${formatarStatus(item.cp_cervzero)}</td>
@@ -297,7 +310,7 @@ function filtrarDadosLocalmente() {
     `;
     tbody.appendChild(tr);
 
-    // 2. Renderização para Mobile (Cards)
+    // 2. Renderização para Mobile (Cards) - Altere a linha do GPS:
     const card = document.createElement("div");
     card.className = "mobile-card";
     card.innerHTML = `
@@ -305,7 +318,7 @@ function filtrarDadosLocalmente() {
       <div class="card-row"><strong>PDV:</strong> <span>${item.PDV || ''}</span></div>
       <div class="card-row"><strong>RN:</strong> <span>${item.RN || ''}</span></div>
       <div class="card-row"><strong>Visita:</strong> <span>${item.Visita || ''}</span></div>
-      <div class="card-row"><strong>GPS:</strong> <span>${item.gps || ''}</span></div>
+      <div class="card-row"><strong>GPS:</strong> <span>${formatarGPS(item.gps)}</span></div>
       <div class="card-grid-status">
         <div><b>Ambev:</b> ${formatarStatus(item.cp_ambev)}</div>
         <div><b>MKTP:</b> ${formatarStatus(item.cp_mktp)}</div>
