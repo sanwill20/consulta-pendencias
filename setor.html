@@ -1,1 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selecionar Setor - Portal Asa Norte</title>
+<style>
+:root{
+  --primary:#333F4F;
+  --secondary:#44546A;
+  --light:#D9D9D9;
+  --white:#FFFFFF;
+  --danger:#d32f2f;
+}
 
+body{
+  margin:0;
+  font-family:Arial;
+  background:var(--light);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.sector-box{
+  background:var(--primary);
+  padding:30px;
+  border-radius:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  width:320px;
+  text-align:center;
+}
+
+.logo{
+  height:60px;
+  margin-bottom:10px;
+}
+
+h2{
+  margin-bottom:20px;
+  color:var(--white);
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:8px 0;
+  border:1px solid #ccc;
+  border-radius:4px;
+  box-sizing:border-box;
+}
+
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:4px;
+  background:var(--secondary);
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+
+button:hover{
+  background:var(--primary);
+}
+
+.btn-back {
+  background: transparent;
+  color: var(--light);
+  margin-top: 15px;
+  font-size: 14px;
+}
+.btn-back:hover {
+  background: rgba(255,255,255,0.1);
+}
+</style>
+</head>
+<body>
+
+<div class="sector-box">
+  <img src="logo.png" class="logo">
+  <h2>Gap Compradores</h2>
+
+  <input type="text" id="setor" placeholder="Digite o setor (Ex: TE_111)" style="text-transform:uppercase;">
+
+  <button onclick="prosseguir()">Confirmar</button>
+  <button class="btn-back" onclick="window.location.href='index.html'">Voltar ao Início</button>
+</div>
+
+<script>
+function prosseguir(){
+  const setorVal = document.getElementById('setor').value.trim().toUpperCase();
+  if(!setorVal){
+    alert("Por favor, digite um setor.");
+    return;
+  }
+  // Salva o setor para ser usado na próxima tela
+  localStorage.setItem("setor_filtro", setorVal);
+  window.location.href = "compradores.html";
+}
+
+// Permitir pressionar Enter para enviar
+document.getElementById('setor').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') prosseguir();
+});
+</script>
+
+</body>
+</html>
