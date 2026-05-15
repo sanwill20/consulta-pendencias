@@ -58,6 +58,7 @@ body{
 .checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; }
 .checkbox-group label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
 
+/* Estrutura de Tabela para Desktop */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -72,6 +73,70 @@ th { background-color: var(--secondary); color: white; }
 tr:hover { background-color: #f5f5f5; }
 
 .loading { text-align: center; font-weight: bold; padding: 20px; color: var(--secondary); }
+
+/* Estrutura de Cards para Mobile */
+#mobile-cards-container {
+  display: none;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mobile-card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.mobile-card h3 {
+  margin: 0 0 10px 0;
+  color: var(--primary);
+  font-size: 18px;
+}
+
+.card-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dashed #eee;
+  font-size: 14px;
+}
+
+.card-row:last-child {
+  border-bottom: none;
+}
+
+.card-grid-status {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+/* Media Query para alternar entre Tabela e Cards */
+@media (max-width: 768px) {
+  table {
+    display: none !important;
+  }
+  #mobile-cards-container {
+    display: flex;
+  }
+  .header-container {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  .filter-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .checkbox-group {
+    flex-direction: column;
+  }
+}
 </style>
 </head>
 <body>
@@ -126,17 +191,18 @@ tr:hover { background-color: #f5f5f5; }
     </tr>
   </thead>
   <tbody id="dados-tabela">
-    </tbody>
+  </tbody>
 </table>
+
+<div id="mobile-cards-container"></div>
 
 <script>
 const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
-let dadosOriginais = []; // Guarda o retorno bruto do Supabase
+let dadosOriginais = []; 
 const setorAlvo = localStorage.getItem("setor_filtro");
 
-// Inicialização da página
 window.onload = function() {
   if(!setorAlvo) {
     alert("Nenhum setor selecionado!");
@@ -148,7 +214,6 @@ window.onload = function() {
 }
 
 async function buscarDadosSupabase() {
-  // Chamada à tabela 'compradores', filtrando a coluna RN de acordo com o setor informado
   const url = `${SUPABASE_URL}/rest/v1/compradores?RN=eq.${encodeURIComponent(setorAlvo)}`;
   
   try {
@@ -162,7 +227,9 @@ async function buscarDadosSupabase() {
     dadosOriginais = await r.json();
     
     document.getElementById("loading").style.display = "none";
-    document.getElementById("tabela-compradores").style.display = "table";
+    
+    // Mostra a tabela inicialmente se for desktop. O CSS gerencia a alternância para mobile.
+    document.getElementById("tabela-compradores").style.display = "table"; 
     
     filtrarDadosLocalmente();
     
@@ -172,51 +239,81 @@ async function buscarDadosSupabase() {
   }
 }
 
+// Função auxiliar para converter os status (0 e 1) em Ícones
+function formatarStatus(valor) {
+  const num = Number(valor);
+  return num === 1 ? "✅" : "❌";
+}
+
 function filtrarDadosLocalmente() {
-  const cb1 = document.getElementById("cb1").checked; // cp_ambev
-  const cb2 = document.getElementById("cb2").checked; // cp_mktp
-  const cb3 = document.getElementById("cb3").checked; // cp_cervzero
-  const cb4 = document.getElementById("cb4").checked; // cp_nabzero
+  const cb1 = document.getElementById("cb1").checked; 
+  const cb2 = document.getElementById("cb2").checked; 
+  const cb3 = document.getElementById("cb3").checked; 
+  const cb4 = document.getElementById("cb4").checked; 
   const diaSelecionado = document.getElementById("slicer-dia").value;
 
   const tbody = document.getElementById("dados-tabela");
-  tbody.innerHTML = ""; // Limpa a tabela existente
+  const mobileContainer = document.getElementById("mobile-cards-container");
+  
+  // Limpa as duas visões antes de renderizar
+  tbody.innerHTML = ""; 
+  mobileContainer.innerHTML = "";
 
-  // Aplica os filtros lógicos passados nos Checkboxes e no Slicer
+  // Processo de filtragem
   const dadosFiltrados = dadosOriginais.filter(item => {
-    // Se o checkbox estiver marcado, o valor da coluna correspondente DEVE ser 0
     if (cb1 && Number(item.cp_ambev) !== 0) return false;
     if (cb2 && Number(item.cp_mktp) !== 0) return false;
     if (cb3 && Number(item.cp_cervzero) !== 0) return false;
     if (cb4 && Number(item.cp_nabzero) !== 0) return false;
     
-    // Filtro do Slicer de dia (Verifica se sua coluna de dia se chama 'dia_visita' ou similar)
-    // Ajuste o termo 'item.dia' para o nome exato da sua coluna de dia no banco
-    if (diaSelecionado !== "Todos" && item.dia !== diaSelecionado) return false;
+    // Ajustado para filtrar a coluna "Visita" conforme o Slicer
+    if (diaSelecionado !== "Todos" && item.Visita !== diaSelecionado) return false;
     
     return true;
   });
 
   if(dadosFiltrados.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum registro encontrado com os filtros atuais.</td></tr>`;
+    const mensagemSemRegistro = `<tr><td colspan="9" style="text-align:center;">Nenhum registro encontrado com os filtros atuais.</td></tr>`;
+    tbody.innerHTML = mensagemSemRegistro;
+    mobileContainer.innerHTML = `<div style="text-align:center; padding:20px; font-weight:bold; color:#666;">Nenhum registro encontrado.</div>`;
     return;
   }
 
-  // Renderiza as linhas filtradas na tabela
+  // Renderizar resultados em ambas as estruturas
   dadosFiltrados.forEach(item => {
+    
+    // 1. Renderização para Desktop (Tabela)
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${item.PDV || ''}</td>
       <td>${item.Nome || ''}</td>
       <td>${item.RN || ''}</td>
-      <td>${item.Visita || ''}</td
+      <td>${item.Visita || ''}</td>
       <td>${item.gps || ''}</td>
-      <td>${item.cp_ambev}</td>
-      <td>${item.cp_mktp}</td>
-      <td>${item.cp_cervzero}</td>
-      <td>${item.cp_nabzero}</td>
+      <td>${formatarStatus(item.cp_ambev)}</td>
+      <td>${formatarStatus(item.cp_mktp)}</td>
+      <td>${formatarStatus(item.cp_cervzero)}</td>
+      <td>${formatarStatus(item.cp_nabzero)}</td>
     `;
     tbody.appendChild(tr);
+
+    // 2. Renderização para Mobile (Cards)
+    const card = document.createElement("div");
+    card.className = "mobile-card";
+    card.innerHTML = `
+      <h3>${item.Nome || 'Sem Nome'}</h3>
+      <div class="card-row"><strong>PDV:</strong> <span>${item.PDV || ''}</span></div>
+      <div class="card-row"><strong>RN:</strong> <span>${item.RN || ''}</span></div>
+      <div class="card-row"><strong>Visita:</strong> <span>${item.Visita || ''}</span></div>
+      <div class="card-row"><strong>GPS:</strong> <span>${item.gps || ''}</span></div>
+      <div class="card-grid-status">
+        <div><b>Ambev:</b> ${formatarStatus(item.cp_ambev)}</div>
+        <div><b>MKTP:</b> ${formatarStatus(item.cp_mktp)}</div>
+        <div><b>Cerv. Zero:</b> ${formatarStatus(item.cp_cervzero)}</div>
+        <div><b>Nab Zero:</b> ${formatarStatus(item.cp_nabzero)}</div>
+      </div>
+    `;
+    mobileContainer.appendChild(card);
   });
 }
 
