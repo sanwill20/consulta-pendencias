@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gap Compradores - Portal Asa Norte</title>
+<style>
+:root{
+  --primary:#333F4F;
+  --secondary:#44546A;
+  --light:#D9D9D9;
+  --white:#FFFFFF;
+}
 
+body{
+  font-family:Arial, sans-serif;
+  background:var(--light);
+  margin:0;
+  padding:20px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--primary);
+  padding: 15px 20px;
+  border-radius: 6px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.header-container h2 { margin: 0; }
+
+.btn {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-primary { background: var(--secondary); color: white; }
+.btn-primary:hover { background: #5a6f8c; }
+
+.filter-box {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+}
+
+.filter-group { display: flex; align-items: center; gap: 10px; }
+.checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; }
+.checkbox-group label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+th { background-color: var(--secondary); color: white; }
+tr:hover { background-color: #f5f5f5; }
+
+.loading { text-align: center; font-weight: bold; padding: 20px; color: var(--secondary); }
+</style>
+</head>
+<body>
+
+<div class="header-container">
+  <h2 id="titulo-setor">Compradores - Setor: ---</h2>
+  <div>
+    <button class="btn btn-primary" onclick="window.location.href='setor.html'">Mudar Setor</button>
+    <button class="btn btn-primary" onclick="window.location.href='index.html'">Menu Principal</button>
+  </div>
+</div>
+
+<div class="filter-box">
+  <div class="checkbox-group">
+    <label><input type="checkbox" id="cb1" onchange="filtrarDadosLocalmente()"> Ambev (=0)</label>
+    <label><input type="checkbox" id="cb2" onchange="filtrarDadosLocalmente()"> MKTP (=0)</label>
+    <label><input type="checkbox" id="cb3" onchange="filtrarDadosLocalmente()"> Cerveja Zero (=0)</label>
+    <label><input type="checkbox" id="cb4" onchange="filtrarDadosLocalmente()"> Nab Zero (=0)</label>
+  </div>
+
+  <div class="filter-group">
+    <label for="slicer-dia"><b>Dia de Visita:</b></label>
+    <select id="slicer-dia" onchange="filtrarDadosLocalmente()">
+      <option value="Todos">Todos</option>
+      <option value="2-Seg">2-Seg</option>
+      <option value="3-Ter">3-Ter</option>
+      <option value="4-Qua">4-Qua</option>
+      <option value="5-Qui">5-Qui</option>
+      <option value="6-Sex">6-Sex</option>
+      <option value="7-Sáb">7-Sáb</option>
+      <option value="1-Dom">1-Dom</option>
+    </select>
+  </div>
+
+  <button class="btn" style="background:#888; color:white;" onclick="limparFiltros()">Limpar Filtros</button>
+</div>
+
+<div id="loading" class="loading">Carregando dados do Supabase...</div>
+
+<table id="tabela-compradores" style="display:none;">
+  <thead>
+    <tr>
+      <th>PDV</th>
+      <th>Nome</th>
+      <th>RN</th>
+      <th>GPS</th>
+      <th>Ambev</th>
+      <th>MKTP</th>
+      <th>Cerveja Zero</th>
+      <th>Nab Zero</th>
+    </tr>
+  </thead>
+  <tbody id="dados-tabela">
+    </tbody>
+</table>
+
+<script>
+const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+
+let dadosOriginais = []; // Guarda o retorno bruto do Supabase
+const setorAlvo = localStorage.getItem("setor_filtro");
+
+// Inicialização da página
+window.onload = function() {
+  if(!setorAlvo) {
+    alert("Nenhum setor selecionado!");
+    window.location.href = "setor.html";
+    return;
+  }
+  document.getElementById("titulo-setor").innerText = `Compradores - Setor: ${setorAlvo}`;
+  buscarDadosSupabase();
+}
+
+async function buscarDadosSupabase() {
+  // Chamada à tabela 'compradores', filtrando a coluna RN de acordo com o setor informado
+  const url = `${SUPABASE_URL}/rest/v1/compradores?RN=eq.${encodeURIComponent(setorAlvo)}`;
+  
+  try {
+    const r = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    
+    dadosOriginais = await r.json();
+    
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("tabela-compradores").style.display = "table";
+    
+    filtrarDadosLocalmente();
+    
+  } catch(e) {
+    console.error(e);
+    document.getElementById("loading").innerText = "Erro ao carregar dados do servidor.";
+  }
+}
+
+function filtrarDadosLocalmente() {
+  const cb1 = document.getElementById("cb1").checked; // cp_ambev
+  const cb2 = document.getElementById("cb2").checked; // cp_mktp
+  const cb3 = document.getElementById("cb3").checked; // cp_cervzero
+  const cb4 = document.getElementById("cb4").checked; // cp_nabzero
+  const diaSelecionado = document.getElementById("slicer-dia").value;
+
+  const tbody = document.getElementById("dados-tabela");
+  tbody.innerHTML = ""; // Limpa a tabela existente
+
+  // Aplica os filtros lógicos passados nos Checkboxes e no Slicer
+  const dadosFiltrados = dadosOriginais.filter(item => {
+    // Se o checkbox estiver marcado, o valor da coluna correspondente DEVE ser 0
+    if (cb1 && Number(item.cp_ambev) !== 0) return false;
+    if (cb2 && Number(item.cp_mktp) !== 0) return false;
+    if (cb3 && Number(item.cp_cervzero) !== 0) return false;
+    if (cb4 && Number(item.cp_nabzero) !== 0) return false;
+    
+    // Filtro do Slicer de dia (Verifica se sua coluna de dia se chama 'dia_visita' ou similar)
+    // Ajuste o termo 'item.dia' para o nome exato da sua coluna de dia no banco
+    if (diaSelecionado !== "Todos" && item.dia !== diaSelecionado) return false;
+    
+    return true;
+  });
+
+  if(dadosFiltrados.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;">Nenhum registro encontrado com os filtros atuais.</td></tr>`;
+    return;
+  }
+
+  // Renderiza as linhas filtradas na tabela
+  dadosFiltrados.forEach(item => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.PDV || ''}</td>
+      <td>${item.Nome || ''}</td>
+      <td>${item.RN || ''}</td>
+      <td>${item.gps || ''}</td>
+      <td>${item.cp_ambev}</td>
+      <td>${item.cp_mktp}</td>
+      <td>${item.cp_cervzero}</td>
+      <td>${item.cp_nabzero}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function limparFiltros() {
+  document.getElementById("cb1").checked = false;
+  document.getElementById("cb2").checked = false;
+  document.getElementById("cb3").checked = false;
+  document.getElementById("cb4").checked = false;
+  document.getElementById("slicer-dia").value = "Todos";
+  filtrarDadosLocalmente();
+}
+</script>
+</body>
+</html>
