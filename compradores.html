@@ -12,9 +12,6 @@
   --white:#FFFFFF;
 }
 
-.status-ok { color: #2e7d32; font-weight: bold; }   /* Verde escuro */
-.status-nok { color: #d32f2f; font-weight: bold; }  /* Vermelho */
-  
 body{
   font-family:Arial, sans-serif;
   background:var(--light);
@@ -45,6 +42,19 @@ body{
 .btn-primary { background: var(--secondary); color: white; }
 .btn-primary:hover { background: #5a6f8c; }
 
+.btn-pdf{
+  background:#d32f2f;   /* vermelho */
+  color:white;         /* fonte branca */
+  border:none;
+  padding:10px 16px;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+}
+.btn-pdf:hover{
+  background:#b71c1c;  /* vermelho mais escuro */
+}
+
 .filter-box {
   background: white;
   padding: 15px;
@@ -60,6 +70,10 @@ body{
 .filter-group { display: flex; align-items: center; gap: 10px; }
 .checkbox-group { display: flex; gap: 15px; flex-wrap: wrap; }
 .checkbox-group label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+/* Cores de status do GPS */
+.status-ok { color: #2e7d32; font-weight: bold; }   /* Verde escuro */
+.status-nok { color: #d32f2f; font-weight: bold; }  /* Vermelho */
 
 /* Estrutura de Tabela para Desktop */
 table {
@@ -104,10 +118,7 @@ tr:hover { background-color: #f5f5f5; }
   border-bottom: 1px dashed #eee;
   font-size: 14px;
 }
-
-.card-row:last-child {
-  border-bottom: none;
-}
+.card-row:last-child { border-bottom: none; }
 
 .card-grid-status {
   display: grid;
@@ -123,6 +134,9 @@ tr:hover { background-color: #f5f5f5; }
 @media (max-width: 768px) {
   table {
     display: none !important;
+  }
+  .btn-pdf{
+    display:none !important;
   }
   #mobile-cards-container {
     display: flex;
@@ -175,6 +189,7 @@ tr:hover { background-color: #f5f5f5; }
   </div>
 
   <button class="btn" style="background:#888; color:white;" onclick="limparFiltros()">Limpar Filtros</button>
+  <button class="btn-pdf" onclick="exportarPDF()">📄 Exportar p/ PDF</button>
 </div>
 
 <div id="loading" class="loading">Carregando dados do Supabase...</div>
@@ -228,10 +243,7 @@ async function buscarDadosSupabase() {
     });
     
     dadosOriginais = await r.json();
-    
     document.getElementById("loading").style.display = "none";
-    
-    // Mostra a tabela inicialmente se for desktop. O CSS gerencia a alternância para mobile.
     document.getElementById("tabela-compradores").style.display = "table"; 
     
     filtrarDadosLocalmente();
@@ -242,20 +254,14 @@ async function buscarDadosSupabase() {
   }
 }
 
-// Função auxiliar para converter os status (0 e 1) em Ícones
 function formatarStatus(valor) {
   const num = Number(valor);
   return num === 1 ? "✅" : "❌";
 }
 
-// Nova função para formatar o GPS com texto e cor
 function formatarGPS(valor) {
   const num = Number(valor);
-  if (num === 1) {
-    return `<span class="status-ok">OK</span>`;
-  } else {
-    return `<span class="status-nok">NOK</span>`;
-  }
+  return num === 1 ? `<span class="status-ok">OK</span>` : `<span class="status-nok">NOK</span>`;
 }
   
 function filtrarDadosLocalmente() {
@@ -268,20 +274,15 @@ function filtrarDadosLocalmente() {
   const tbody = document.getElementById("dados-tabela");
   const mobileContainer = document.getElementById("mobile-cards-container");
   
-  // Limpa as duas visões antes de renderizar
   tbody.innerHTML = ""; 
   mobileContainer.innerHTML = "";
 
-  // Processo de filtragem
   const dadosFiltrados = dadosOriginais.filter(item => {
     if (cb1 && Number(item.cp_ambev) !== 0) return false;
     if (cb2 && Number(item.cp_mktp) !== 0) return false;
     if (cb3 && Number(item.cp_cervzero) !== 0) return false;
     if (cb4 && Number(item.cp_nabzero) !== 0) return false;
-    
-    // Ajustado para filtrar a coluna "Visita" conforme o Slicer
     if (diaSelecionado !== "Todos" && item.Visita !== diaSelecionado) return false;
-    
     return true;
   });
 
@@ -292,10 +293,8 @@ function filtrarDadosLocalmente() {
     return;
   }
 
-  // Renderizar resultados em ambas as estruturas
   dadosFiltrados.forEach(item => {
-    
-    // 1. Renderização para Desktop (Tabela) - Altere a linha do GPS:
+    // 1. Tabela Desktop
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${item.PDV || ''}</td>
@@ -310,7 +309,7 @@ function filtrarDadosLocalmente() {
     `;
     tbody.appendChild(tr);
 
-    // 2. Renderização para Mobile (Cards) - Altere a linha do GPS:
+    // 2. Cards Mobile
     const card = document.createElement("div");
     card.className = "mobile-card";
     card.innerHTML = `
@@ -330,6 +329,22 @@ function filtrarDadosLocalmente() {
   });
 }
 
+function exportarPDF(){
+  // CORREÇÃO: Captura diretamente a tabela estruturada com os dados filtrados
+  const tabela = document.getElementById("tabela-compradores");
+  
+  // Define o nome do arquivo dinamicamente com o nome do setor buscado
+  const nomeArquivo = `Gap_Compradores_${setorAlvo || 'Geral'}.pdf`;
+
+  html2pdf().set({
+    margin: 10,
+    filename: nomeArquivo,
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { orientation: 'landscape', unit: 'mm', format: 'a4' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(tabela).save();
+}
+  
 function limparFiltros() {
   document.getElementById("cb1").checked = false;
   document.getElementById("cb2").checked = false;
@@ -339,5 +354,8 @@ function limparFiltros() {
   filtrarDadosLocalmente();
 }
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
 </body>
 </html>
