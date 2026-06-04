@@ -1,71 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>Portal Asa Norte</title>
-<style>
-:root{
-  --primary:#333F4F;
-  --secondary:#44546A;
-  --light:#D9D9D9;
-  --black:#000000;
-  --white:#FFFFFF;
-}  
-  
-body{
-  font-family:Arial;
-  background:#D9D9D9;
-  text-align:center;
-  padding:40px;
-}
-  
-.topbar{
-  display:flex;
-  align-items:center;
-  background:var(--primary);
-  padding:10px 14px;
-  border-radius:6px;
-  margin-bottom:12px;
-}
+  <head>
+    <meta charset="UTF-8" />
+    <title>Portal Asa Norte</title>
+    <style>
+      :root {
+        --primary: #333f4f;
+        --secondary: #44546a;
+        --light: #d9d9d9;
+        --black: #000000;
+        --white: #ffffff;
+      }
 
-.topbar .title{
-  color:var(--white);
-  font-size:24px;
-  font-weight:bold;
-}
+      body {
+        font-family: Arial;
+        background: #d9d9d9;
+        text-align: center;
+        padding: 40px;
+      }
 
-.logo{
-  height:48px;
-  margin-right:10px;
-}
-  
-.card{
-  display:inline-block;
-  background:white;
-  padding:30px;
-  margin:15px;
-  border-radius:8px;
-  text-decoration:none;
-  color:var(--primary);
-  width:220px;
-  box-shadow:0 2px 8px rgba(0,0,0,.1);
-}
-  
-.card:hover{
-  transform:scale(1.03);
-}
-</style>
-</head>
-<body>
+      .topbar {
+        display: flex;
+        align-items: center;
+        background: var(--primary);
+        padding: 10px 14px;
+        border-radius: 6px;
+        margin-bottom: 12px;
+      }
 
-  <div class="topbar">
-    <img src="logo.png" class="logo">
-    <span class="title">Portal - Grupo Asa Norte</span>
-  </div>
+      .topbar .title {
+        color: var(--white);
+        font-size: 24px;
+        font-weight: bold;
+      }
 
-<a class="card" href="task.html">📋 Consulta Task</a>
-<a class="card" href="login.html">💰 Volumes/Faturamento/Pontos</a>
-<a class="card" href="setor.html">🏪 Gap Compradores</a>
+      .logo {
+        height: 48px;
+        margin-right: 10px;
+      }
 
-</body>
+      .card {
+        display: inline-block;
+        background: white;
+        padding: 30px;
+        margin: 15px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--primary);
+        width: 220px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .card:hover {
+        transform: scale(1.03);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <img src="logo.png" class="logo" />
+      <span class="title">Portal - Grupo Asa Norte</span>
+    </div>
+
+    <a class="card" href="task.html">📋 Consulta Task</a>
+    <a class="card" href="volume_ips.html">📊 Volumes/Faturamento/Pontos</a>
+    <a class="card" href="login.html">💰 Demonstrativo</a>
+    <a class="card" href="setor.html">🏪 Gap Compradores</a>
+  </body>
 </html>

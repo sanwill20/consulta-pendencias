@@ -1,262 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Volume IPS</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Volume IPS</title>
 
-<style>
-:root{
-  --primary:#333F4F;
-  --secondary:#44546A;
-  --light:#D9D9D9;
-  --white:#FFFFFF;
-}
+    <style>
+      :root {
+        --primary: #333f4f;
+        --secondary: #44546a;
+        --light: #d9d9d9;
+        --white: #ffffff;
+      }
 
-body{
-  font-family:Arial;
-  margin:20px;
-  background:var(--light);
-}
+      body {
+        font-family: Arial;
+        margin: 20px;
+        background: var(--light);
+      }
 
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:var(--primary);
-  color:white;
-  padding:10px 15px;
-  border-radius:6px;
-  margin-bottom:15px;
-}
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--primary);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+      }
 
-button{
-  padding:8px 14px;
-  border:none;
-  border-radius:4px;
-  cursor:pointer;
-  background:var(--secondary);
-  color:white;
-}
+      button {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background: var(--secondary);
+        color: white;
+      }
 
-.filtro-admin{
-  margin-bottom:10px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
+      .filtro-admin {
+        margin-bottom: 10px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
 
-select,input{
-  padding:8px;
-  border:1px solid #ccc;
-  border-radius:4px;
-}
+      select,
+      input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
 
-.zoom-controls{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:10px;
-}
+      .zoom-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
 
-.zoom-controls button{
-  padding:6px 10px;
-}
+      .zoom-controls button {
+        padding: 6px 10px;
+      }
 
-.tabela-wrap{
-  overflow:auto;
-  width:100%;
-  max-height:80vh;
-  -webkit-overflow-scrolling:touch;
-  background:white;
-}
+      .tabela-wrap {
+        overflow: auto;
+        width: 100%;
+        max-height: 80vh;
+        -webkit-overflow-scrolling: touch;
+        background: white;
+      }
 
-#zoomWrap{
-  width:max-content;
-}
+      #zoomWrap {
+        width: max-content;
+      }
 
-table{
-  min-width:1400px;
-  border-collapse:collapse;
-  width:100%;
-  background:white;
-  font-size:13px;
-}
+      table {
+        min-width: 1400px;
+        border-collapse: collapse;
+        width: 100%;
+        background: white;
+        font-size: 13px;
+      }
 
-th,td{
-  border:1px solid #ccc;
-  padding:6px;
-  text-align:center;
-  white-space:nowrap;
-}
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: center;
+        white-space: nowrap;
+      }
 
-th{
-  height:36px;
-  box-sizing:border-box;
-}
+      th {
+        height: 36px;
+        box-sizing: border-box;
+      }
 
-/* primeira linha */
-tr.grupo th{
-  background:var(--primary);
-  color:white;
-  position:sticky;
-  top:0;
-  z-index:5;
-}
+      /* primeira linha */
+      tr.grupo th {
+        background: var(--primary);
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+      }
 
-/* segunda linha */
-tr.subgrupo th{
-  background:var(--primary);
-  color:white;
-  position:sticky;
-  top:35px;
-  z-index:4;
-}
+      /* segunda linha */
+      tr.subgrupo th {
+        background: var(--primary);
+        color: white;
+        position: sticky;
+        top: 35px;
+        z-index: 4;
+      }
 
-.negativo{
-  color:red;
-  font-weight:bold;
-}
+      .negativo {
+        color: red;
+        font-weight: bold;
+      }
 
-.positivo{
-  color:green;
-  font-weight:bold;
-}
+      .positivo {
+        color: green;
+        font-weight: bold;
+      }
 
-/* primeira coluna */
-.fix1{
-  position:sticky;
-  left:0;
-  width:70px;
-  min-width:70px;
-  max-width:70px;
-  background:white;
-  z-index:2;
-}
+      /* primeira coluna */
+      .fix1 {
+        position: sticky;
+        left: 0;
+        width: 70px;
+        min-width: 70px;
+        max-width: 70px;
+        background: white;
+        z-index: 2;
+      }
 
-/* segunda coluna */
-.fix2{
-  position:sticky;
-  left:70px;
-  background:white;
-  z-index:2;
-}
+      /* segunda coluna */
+      .fix2 {
+        position: sticky;
+        left: 70px;
+        background: white;
+        z-index: 2;
+      }
 
-/* cabeçalhos fixos */
-tr.grupo th.fix1,
-tr.grupo th.fix2,
-tr.subgrupo th.fix1,
-tr.subgrupo th.fix2{
-  z-index:6;
-}
-</style>
-</head>
-<body>
+      /* cabeçalhos fixos */
+      tr.grupo th.fix1,
+      tr.grupo th.fix2,
+      tr.subgrupo th.fix1,
+      tr.subgrupo th.fix2 {
+        z-index: 6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar">
+      <div><b id="boasvindas"></b></div>
+      <button onclick="logout()">Sair</button>
+    </div>
 
-<div class="topbar">
-  <div><b id="boasvindas"></b></div>
-  <button onclick="logout()">Sair</button>
-</div>
+    <div class="filtro-admin">
+      <select id="filtroEquipe" onchange="buscar()">
+        <option value="">Todas equipes</option>
+        <option value="TE_1">TE_1</option>
+        <option value="TE_2">TE_2</option>
+        <option value="TE_3">TE_3</option>
+        <option value="TE_4">TE_4</option>
+        <option value="TE_5">TE_5</option>
+        <option value="SR_1">SR_1</option>
+        <option value="BJ_1">BJ_1</option>
+        <option value="CM_1">CM_1</option>
+        <option value="CM_2">CM_2</option>
+        <option value="PN_3">PN_3</option>
+        <option value="PN_4">PN_4</option>
+      </select>
 
-<div class="filtro-admin">
-  <select id="filtroEquipe" onchange="buscar()">
-    <option value="">Todas equipes</option>
-    <option value="TE_1">TE_1</option>
-    <option value="TE_2">TE_2</option>
-    <option value="TE_3">TE_3</option>
-    <option value="TE_4">TE_4</option>
-    <option value="TE_5">TE_5</option>
-    <option value="SR_1">SR_1</option>
-    <option value="BJ_1">BJ_1</option>
-    <option value="CM_1">CM_1</option>
-    <option value="CM_2">CM_2</option>
-    <option value="PN_3">PN_3</option>
-    <option value="PN_4">PN_4</option>
-  </select>
+      <input
+        type="text"
+        id="filtroCod"
+        placeholder="Filtrar por Cod"
+        onkeyup="buscar()"
+      />
+    </div>
 
-  <input type="text" id="filtroCod" placeholder="Filtrar por Cod" onkeyup="buscar()">
-</div>
+    <div class="zoom-controls">
+      <button onclick="alterarZoom(-10)">➖</button>
+      <span id="zoomLabel">70%</span>
+      <button onclick="alterarZoom(10)">➕</button>
+    </div>
 
-<div class="zoom-controls">
-  <button onclick="alterarZoom(-10)">➖</button>
-  <span id="zoomLabel">70%</span>
-  <button onclick="alterarZoom(10)">➕</button>
-</div>
+    <div class="tabela-wrap">
+      <div id="zoomWrap">
+        <div id="tabela"></div>
+      </div>
+    </div>
 
-<div class="tabela-wrap">
-  <div id="zoomWrap">
-    <div id="tabela"></div>
-  </div>
-</div>
+    <script>
+      const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
-<script>
-const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+      let zoomAtual = window.innerWidth <= 768 ? 70 : 100;
 
-let zoomAtual = window.innerWidth <= 768 ? 70 : 100;
+      //const perfil = localStorage.getItem("perfil");
+      //const nome = localStorage.getItem("nome");
 
-const perfil = localStorage.getItem("perfil");
-const nome = localStorage.getItem("nome");
+      //if (!perfil) {
+      //  window.location.href = "login.html";
+      //}
 
-if(!perfil){
-  window.location.href="login.html";
-}
+      //document.getElementById("boasvindas").innerText = `Olá, ${nome}`;
 
-document.getElementById("boasvindas").innerText = `Olá, ${nome}`;
+      document.getElementById("boasvindas").innerText = `Olá, Bem-vindo!`;
 
-function logout(){
-  localStorage.clear();
-  window.location.href="login.html";
-}
+      function logout() {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
 
-function cor(v){
-  return Number(v) < 0 ? "negativo" : "positivo";
-}
+      function cor(v) {
+        return Number(v) < 0 ? "negativo" : "positivo";
+      }
 
-function aplicarZoom(){
-  const wrap = document.getElementById("zoomWrap");
-  wrap.style.zoom = `${zoomAtual}%`;
-  wrap.style.width = "max-content";
-  document.getElementById("zoomLabel").innerText = zoomAtual + "%";
-}
+      function aplicarZoom() {
+        const wrap = document.getElementById("zoomWrap");
+        wrap.style.zoom = `${zoomAtual}%`;
+        wrap.style.width = "max-content";
+        document.getElementById("zoomLabel").innerText = zoomAtual + "%";
+      }
 
-function alterarZoom(valor){
-  zoomAtual += valor;
-  if(zoomAtual < 40) zoomAtual = 40;
-  if(zoomAtual > 100) zoomAtual = 100;
-  aplicarZoom();
-}
+      function alterarZoom(valor) {
+        zoomAtual += valor;
+        if (zoomAtual < 40) zoomAtual = 40;
+        if (zoomAtual > 100) zoomAtual = 100;
+        aplicarZoom();
+      }
 
-async function buscar(){
-  let url = `${SUPABASE_URL}/rest/v1/volume_ips`;
+      async function buscar() {
+        let url = `${SUPABASE_URL}/rest/v1/volume_ips`;
 
-  const filtroEquipe = document.getElementById("filtroEquipe").value;
-  const filtroCod = document.getElementById("filtroCod").value;
+        const filtroEquipe = document.getElementById("filtroEquipe").value;
+        const filtroCod = document.getElementById("filtroCod").value;
 
-  let filtros = [];
+        let filtros = [];
 
-  if(filtroEquipe){
-    filtros.push(`GV=eq.${filtroEquipe}`);
-  }
+        if (filtroEquipe) {
+          filtros.push(`GV=eq.${filtroEquipe}`);
+        }
 
-  if(filtroCod){
-    filtros.push(`Cod=ilike.*${filtroCod}*`);
-  }
+        if (filtroCod) {
+          filtros.push(`Cod=ilike.*${filtroCod}*`);
+        }
 
-  if(filtros.length > 0){
-    url += "?" + filtros.join("&");
-  }
+        if (filtros.length > 0) {
+          url += "?" + filtros.join("&");
+        }
 
-  const r = await fetch(url,{
-    headers:{
-      apikey:SUPABASE_KEY,
-      Authorization:`Bearer ${SUPABASE_KEY}`
-    }
-  });
+        const r = await fetch(url, {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`,
+          },
+        });
 
-  const d = await r.json();
+        const d = await r.json();
 
-  let h = `<table>
+        let h = `<table>
     <tr class="grupo">
       <th rowspan="2" class="fix1">Cod</th>
       <th rowspan="2" class="fix2">Nome</th>
@@ -273,8 +282,8 @@ async function buscar(){
       <th>Meta</th><th>Real</th><th>Ating</th><th>Gap</th>
     </tr>`;
 
-  d.forEach(r=>{
-    h += `<tr>
+        d.forEach((r) => {
+          h += `<tr>
       <td class="fix1">${r.Cod ?? ""}</td>
       <td class="fix2">${r.Nome ?? ""}</td>
 
@@ -301,17 +310,16 @@ async function buscar(){
       <td>${r.ptend_task ?? ""}</td>
       <td class="${cor(r.gap_task)}">${r.gap_task ?? ""}</td>
     </tr>`;
-  });
+        });
 
-  h += "</table>";
-  document.getElementById("tabela").innerHTML = h;
+        h += "</table>";
+        document.getElementById("tabela").innerHTML = h;
 
-  setTimeout(aplicarZoom,100);
-}
+        setTimeout(aplicarZoom, 100);
+      }
 
-buscar();
-aplicarZoom();
-</script>
-
-</body>
+      buscar();
+      aplicarZoom();
+    </script>
+  </body>
 </html>

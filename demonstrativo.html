@@ -1,204 +1,612 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Estrutura Remuneração Vendas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root{
-          --primary:#333F4F;
-          --secondary:#44546A;
-          --light:#D9D9D9;
-          --black:#000000;
-          --white:#FFFFFF;
-        } 
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
-        th, td { border: 1px solid #ccc; padding: 6px 10px; text-align: left; font-size: 13px; }
-        .text-right { text-align: right; }
-        .text-center { text-align: center; }
-        .titulo-principal { text-align: center; font-weight: bold; font-size: 18px; padding: 10px; }
+      :root {
+        --primary: #333f4f;
+        --secondary: #44546a;
+        --light: #f2f2f2;
+        --dark: #d9d9d9;
+        --black: #000000;
+        --white: #ffffff;
+        --gray: #808080;
+        --red: #ff0000;
+        --green: #008000;
+        --light-green: #e2efda;
+        --blue: #0000ff;
+        --dark-gray: #404040;
+        --dark-blue: #00008b;
+        --dark-red: #8b0000;
+        --yellow: #ffff00;
+        --dark-yellow: #9b870c;
+        --orange: #ffa500;
+        --dark-orange: #ff8c00;
+        --light-orange: #fed966;
+        --light-gray-blue: #acb9ca;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        margin: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 25px;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 6px 10px;
+        text-align: left;
+        font-size: 13px;
+      }
+      .text-right {
+        text-align: right;
+        color: var(--black);
+        background-color: var(--light);
+      }
+      .text-center {
+        text-align: center;
+        color: var(--black);
+        font-weight: bold;
+        background-color: var(--light);
+      }
+      .titulo-principal {
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 10px;
+        color: var(--white);
+        background-color: var(--primary);
+      }
+      .titulo-secundario {
+        text-align: center;
+        font-weight: bold;
+        color: var(--white);
+        background-color: var(--secondary);
+      }
+      .titulo-terciario {
+        text-align: center;
+        font-weight: bold;
+        color: var(--white);
+        background-color: var(--dark-gray);
+      }
+      r .total {
+        text-align: right;
+        font-weight: bold;
+        color: var(--black);
+        background-color: var(--light-gray-blue);
+      }
+      .negativo {
+        color: red;
+        font-weight: bold;
+      }
+
+      .positivo {
+        color: green;
+        font-weight: bold;
+      }
+
+      button {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background: var(--secondary);
+        color: white;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
+    <button onclick="logout()">Sair</button>
     <table>
-        <thead>
-            <tr>
-                <th colspan="7" class="titulo-principal">REMUNERAÇÃO VENDAS</th>
-            </tr>
-            <tr>
-                <th colspan="2">CALENDÁRIO</th>
-                <th>FIXO</th>
-                <th>PRÊMIO POR OBJETIVO</th>
-                <th>DSR</th>
-                <th>INCENTIVO</th>
-                <th>TOTAL + BONUS</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>DIAS ÚTEIS</td>
-                <td class="text-center">25</td>
-                <td rowspan="3" class="text-right">R$ 1.621,00</td>
-                <td rowspan="3" class="text-right">R$ 1.556,31</td>
-                <td rowspan="3" class="text-right">R$ 373,52</td>
-                <td rowspan="3" class="text-right">R$ 500,00</td>
-                <td rowspan="3" class="text-right">R$ 4.050,83</td>
-            </tr>
-            <tr>
-                <td>DOMINGOS E FERIADOS</td>
-                <td class="text-center">6</td>
-            </tr>
-            <tr>
-                <td>TOTAL MÊS</td>
-                <td class="text-center">31</td>
-            </tr>
-            <tr>
-                <td>PRÊMIO POR OBJETIVO</td>
-                <td class="text-right">R$ 1.556,31</td>
-                <td colspan="5" rowspan="3"></td>
-            </tr>
-            <tr>
-                <td>DSR</td>
-                <td class="text-right">R$ 373,52</td>
-            </tr>
-            <tr>
-                <td>TOTAL</td>
-                <td class="text-right">R$ 1.192,83</td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th colspan="7" class="titulo-principal">REMUNERAÇÃO VENDAS</th>
+        </tr>
+        <tr>
+          <th
+            colspan="2"
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--secondary);
+            "
+          >
+            CALENDÁRIO
+          </th>
+          <th
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--secondary);
+            "
+          >
+            FIXO
+          </th>
+          <th
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--dark-red);
+            "
+          >
+            PRÊMIO POR OBJETIVO
+          </th>
+          <th
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--dark-red);
+            "
+          >
+            DSR
+          </th>
+          <th
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--dark-yellow);
+            "
+          >
+            INCENTIVO
+          </th>
+          <th
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--black);
+            "
+          >
+            TOTAL + BONUS
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="background-color: var(--gray); font-weight: bold">
+            DIAS ÚTEIS
+          </td>
+          <td
+            style="
+              text-align: center;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            26
+          </td>
+          <td
+            rowspan="3"
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            R$ 1.679,70
+          </td>
+          <td
+            rowspan="3"
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            R$ -
+          </td>
+          <td
+            rowspan="3"
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            R$ -
+          </td>
+          <td
+            rowspan="3"
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            R$ -
+          </td>
+          <td
+            rowspan="3"
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            R$ 1.679,70
+          </td>
+          .
+        </tr>
+        <tr>
+          <td style="background-color: var(--gray); font-weight: bold">
+            DOMINGOS E FERIADOS
+          </td>
+          <td
+            style="
+              text-align: center;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            4
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="
+              color: var(--white);
+              background-color: var(--dark-gray);
+              font-weight: bold;
+            "
+          >
+            TOTAL MÊS
+          </td>
+          <td
+            style="
+              text-align: center;
+              color: var(--white);
+              background-color: var(--dark-gray);
+              font-weight: bold;
+            "
+          >
+            30
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--gray); font-weight: bold">
+            PRÊMIO POR OBJETIVO
+          </td>
+          <td
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            -
+          </td>
+          <td colspan="5" rowspan="3"></td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--gray); font-weight: bold">DSR</td>
+          <td
+            style="
+              text-align: right;
+              background-color: var(--light);
+              font-weight: bold;
+            "
+          >
+            -
+          </td>
+        </tr>
+        <tr>
+          <td
+            style="
+              color: var(--white);
+              background-color: var(--dark-red);
+              font-weight: bold;
+            "
+          >
+            TOTAL
+          </td>
+          <td
+            style="
+              text-align: right;
+              background-color: var(--yellow);
+              font-weight: bold;
+            "
+          >
+            -
+          </td>
+        </tr>
+      </tbody>
     </table>
 
     <table>
-        <thead>
-            <tr>
-                <th>ROTA</th>
-                <th>RN</th>
-                <th class="text-center">217</th>
-                <th>CM</th>
-                <th colspan="3">LUCAS DA SILVA CARMO LINS</th>
-            </tr>
-            <tr>
-                <th>BLOCO</th>
-                <th>ITEM</th>
-                <th>META</th>
-                <th>REAL</th>
-                <th>% REAL</th>
-                <th>R$ BASE</th>
-                <th>R$ ATING PO</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan="3">VOLUME</td>
-                <td>Cerveja TT</td>
-                <td class="text-right">25%</td>
-                <td class="text-right">726,2</td>
-                <td class="text-right">140,2%</td>
-                <td class="text-right">R$ 355,61</td>
-                <td class="text-right">R$ 498,48</td>
-            </tr>
-            <tr>
-                <td>NAB TT</td>
-                <td class="text-right">15%</td>
-                <td class="text-right">108,9</td>
-                <td class="text-right">118,1</td>
-                <td class="text-right">108,4%</td>
-                <td class="text-right">R$ 213,37</td>
-            </tr>
-            <tr>
-                <td>Faturamento Marketplace</td>
-                <td class="text-right">10%</td>
-                <td class="text-right">R$ 59.919,94</td>
-                <td class="text-right">R$ 38.867,33</td>
-                <td class="text-right">64,9%</td>
-                <td class="text-right">R$ 142,25</td>
-            </tr>
-            <tr>
-                <td>IP,s</td>
-                <td>Tarefas Validadas (PTS)</td>
-                <td class="text-right">50%</td>
-                <td class="text-right">100.000</td>
-                <td class="text-right">116.200</td>
-                <td class="text-right">116,2%</td>
-                <td class="text-right">R$ 711,23</td>
-            </tr>
-            <tr>
-                <td colspan="5" style="border: none;"></td>
-                <th>TOTAL PO</th>
-                <td class="text-right"><strong>R$ 1.556,31</strong></td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th class="titulo-secundario">ROTA</th>
+          <th class="titulo-secundario">RN</th>
+          <th
+            id="setor"
+            style="text-align: center; background-color: var(--light-orange)"
+          ></th>
+          <th id="revenda" class="titulo-secundario"></th>
+          <th
+            colspan="4"
+            id="nome-usuario"
+            style="color: var(--white); background-color: var(--red)"
+          ></th>
+        </tr>
+        <tr>
+          <th class="titulo-terciario">BLOCO 1</th>
+          <th class="titulo-terciario">ITEM</th>
+          <th class="titulo-terciario">PESO</th>
+          <th class="titulo-terciario">META</th>
+          <th class="titulo-terciario">TEND</th>
+          <th class="titulo-terciario">% TEND</th>
+          <th class="titulo-terciario">R$ BASE</th>
+          <th class="titulo-terciario">R$ ATING PO</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3" class="titulo-secundario">VOLUME</td>
+          <td style="background-color: var(--dark); font-weight: bold">
+            Cerveja TT
+          </td>
+          <td
+            style="
+              background-color: var(--dark);
+              font-weight: bold;
+              text-align: center;
+            "
+          >
+            25%
+          </td>
+          <td class="text-right" id="meta-cerveja"></td>
+          <td class="text-right" id="tend-cerveja"></td>
+          <td class="text-right" id="ptend-cerveja"></td>
+          <td class="text-right">R$ 000,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--dark); font-weight: bold">
+            NAB TT
+          </td>
+          <td
+            style="
+              background-color: var(--dark);
+              font-weight: bold;
+              text-align: center;
+            "
+          >
+            15%
+          </td>
+          <td class="text-right" id="meta-nab"></td>
+          <td class="text-right" id="tend-nab"></td>
+          <td class="text-right" id="ptend-nab"></td>
+          <td class="text-right">R$ 000,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--dark); font-weight: bold">
+            Faturamento Marketplace
+          </td>
+          <td
+            style="
+              background-color: var(--dark);
+              font-weight: bold;
+              text-align: center;
+            "
+          >
+            10%
+          </td>
+          <td class="text-right" id="meta-mktp"></td>
+          <td class="text-right" id="tend-mktp"></td>
+          <td class="text-right" id="ptend-mktp"></td>
+          <td class="text-right">R$ 000,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td class="titulo-secundario">IPs</td>
+          <td style="background-color: var(--dark); font-weight: bold">
+            Tarefas Validadas (PTS)
+          </td>
+          <td
+            style="
+              background-color: var(--dark);
+              font-weight: bold;
+              text-align: center;
+            "
+          >
+            50%
+          </td>
+          <td class="text-right">100000</td>
+          <td class="text-right" id="tend-task"></td>
+          <td class="text-right" id="ptend-task"></td>
+          <td class="text-right">R$ 000,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td colspan="6" style="border: none"></td>
+          <th style="background-color: var(--dark-gray); color: var(--white)">
+            TOTAL PO
+          </th>
+          <td class="total"><strong>R$ 0.000,00</strong></td>
+        </tr>
+      </tbody>
     </table>
 
     <table>
-        <thead>
-            <tr>
-                <th>BLOCO</th>
-                <th>INDICADOR</th>
-                <th>Nº</th>
-                <th>META</th>
-                <th>REAL</th>
-                <th>% REAL</th>
-                <th>VALOR R$</th>
-                <th>ATING R$</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td rowspan="5">INCENTIVOS</td>
-                <td>COMPRADORES AMBEV</td>
-                <td class="text-center">1</td>
-                <td class="text-right">210,00</td>
-                <td class="text-right">214,00</td>
-                <td class="text-right">101,9%</td>
-                <td class="text-right">R$ 100,00</td>
-                <td class="text-right">R$ 100,00</td>
-            </tr>
-            <tr>
-                <td>% TASKS DE VOLUME</td>
-                <td class="text-center">2</td>
-                <td class="text-right">127,00</td>
-                <td class="text-right">241,00</td>
-                <td class="text-right">189,8%</td>
-                <td class="text-right">R$ 100,00</td>
-                <td class="text-right">R$ 100,00</td>
-            </tr>
-            <tr>
-                <td>% TASKS DE MARKETPLACE</td>
-                <td class="text-center">3</td>
-                <td class="text-right">135,00</td>
-                <td class="text-right">174,00</td>
-                <td class="text-right">128,9%</td>
-                <td class="text-right">R$ 100,00</td>
-                <td class="text-right">R$ 100,00</td>
-            </tr>
-            <tr>
-                <td>% TAREFA DE NAB</td>
-                <td class="text-center">4</td>
-                <td class="text-right">245,00</td>
-                <td class="text-right">304,00</td>
-                <td class="text-right">124,1%</td>
-                <td class="text-right">R$ 100,00</td>
-                <td class="text-right">R$ 100,00</td>
-            </tr>
-            <tr>
-                <td>% TASKS MATCH VALIDADAS</td>
-                <td class="text-center">5</td>
-                <td class="text-right">43,00</td>
-                <td class="text-right">64,00</td>
-                <td class="text-right">148,8%</td>
-                <td class="text-right">R$ 100,00</td>
-                <td class="text-right">R$ 100,00</td>
-            </tr>
-            <tr>
-                <td colspan="6" style="border: none;"></td>
-                <th>TOTAL INCENTIVO</th>
-                <td class="text-right"><strong>R$ 500,00</strong></td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th class="titulo-terciario">BLOCO 2</th>
+          <th class="titulo-terciario">INDICADOR</th>
+          <th class="titulo-terciario">Nº</th>
+          <th class="titulo-terciario">META</th>
+          <th class="titulo-terciario">REAL</th>
+          <th class="titulo-terciario">% REAL</th>
+          <th class="titulo-terciario">VALOR R$</th>
+          <th class="titulo-terciario">ATING R$</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="5" class="titulo-secundario">INCENTIVOS</td>
+          <td style="background-color: var(--light-green); font-weight: bold">
+            NOME DO INCENTIVO 1
+          </td>
+          <td
+            style="background-color: var(--light-green); font-weight: bold"
+            class="text-center"
+          >
+            1
+          </td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,0%</td>
+          <td class="text-right">R$ 100,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--light-green); font-weight: bold">
+            NOME DO INCENTIVO 2
+          </td>
+          <td
+            style="background-color: var(--light-green); font-weight: bold"
+            class="text-center"
+          >
+            2
+          </td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,0%</td>
+          <td class="text-right">R$ 100,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--light-green); font-weight: bold">
+            NOME DO INCENTIVO 3
+          </td>
+          <td
+            style="background-color: var(--light-green); font-weight: bold"
+            class="text-center"
+          >
+            3
+          </td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,0%</td>
+          <td class="text-right">R$ 100,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--light-green); font-weight: bold">
+            NOME DO INCENTIVO 4
+          </td>
+          <td
+            style="background-color: var(--light-green); font-weight: bold"
+            class="text-center"
+          >
+            4
+          </td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,0%</td>
+          <td class="text-right">R$ 100,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td style="background-color: var(--light-green); font-weight: bold">
+            NOME DO INCENTIVO 5
+          </td>
+          <td
+            style="background-color: var(--light-green); font-weight: bold"
+            class="text-center"
+          >
+            5
+          </td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,00</td>
+          <td class="text-right">000,0%</td>
+          <td class="text-right">R$ 100,00</td>
+          <td class="text-right">R$ 000,00</td>
+        </tr>
+        <tr>
+          <td colspan="6" style="border: none"></td>
+          <th
+            style="
+              background-color: var(--dark-gray);
+              color: var(--white);
+              font-weight: bold;
+            "
+          >
+            TOTAL INCENTIVO
+          </th>
+          <td class="total"><strong>R$ 000,00</strong></td>
+        </tr>
+      </tbody>
     </table>
 
-</body>
+    <script>
+      const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+
+      const nome = localStorage.getItem("nome");
+      const revenda = localStorage.getItem("revenda");
+      const setor = localStorage.getItem("setor");
+      document.getElementById("revenda").innerText = revenda;
+      document.getElementById("setor").innerText = setor;
+      document.getElementById("nome-usuario").innerText = nome;
+
+      function logout() {
+        localStorage.clear();
+        window.location.href = "login.html";
+      }
+
+      function cor(v) {
+        return Number(v) < 0 ? "negativo" : "positivo";
+      }
+
+      async function buscar() {
+        try {
+          let url = `${SUPABASE_URL}/rest/v1/volume_ips?Cod=eq.${encodeURIComponent(revenda + "_" + setor)}`;
+
+          const r = await fetch(url, {
+            headers: {
+              apikey: SUPABASE_KEY,
+              Authorization: `Bearer ${SUPABASE_KEY}`,
+            },
+          });
+
+          const d = await r.json();
+
+          if (d && d.length > 0) {
+            const fc = d[0];
+
+            document.getElementById("meta-cerveja").innerText = fc.meta_cerveja;
+            document.getElementById("meta-nab").innerText = fc.meta_nab;
+            document.getElementById("meta-mktp").innerText = fc.meta_mktp;
+
+            document.getElementById("tend-cerveja").innerText = fc.tend_cerveja;
+            document.getElementById("tend-nab").innerText = fc.tend_nab;
+            document.getElementById("tend-mktp").innerText = fc.tend_mktp;
+            document.getElementById("tend-task").innerText = fc.real_task;
+
+            document.getElementById("ptend-cerveja").innerText =
+              fc.ptend_cerveja;
+            document.getElementById("ptend-nab").innerText = fc.ptend_nab;
+            document.getElementById("ptend-mktp").innerText = fc.ptend_mktp;
+            document.getElementById("ptend-task").innerText = fc.ptend_task;
+          }
+        } catch (e) {
+          console.error("Erro ao buscar dados do Supabase", e);
+        }
+      }
+
+      buscar();
+    </script>
+  </body>
 </html>
