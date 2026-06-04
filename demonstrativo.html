@@ -650,7 +650,7 @@
         }
       }
 
-      let nivelZoom = 1.0; // 1.0 significa 100%
+      let nivelZoom = 0.5; // 1.0 significa 100%
 
       function mudarZoom(fator) {
         // Limita o zoom mínimo em 50% (0.5) e máximo em 150% (1.5) para não quebrar o layout
@@ -665,7 +665,7 @@
 
       function aplicarZoom() {
         const painel = document.getElementById("conteudo-painel");
-
+        
         // Aplica o zoom visual
         painel.style.transform = `scale(${nivelZoom})`;
 
@@ -674,6 +674,8 @@
         painel.style.width = `${100 / nivelZoom}%`;
       }
 
+      // 2. ADICIONE ESTA LINHA: Força o navegador a aplicar os 50% assim que abrir a tela
+      window.addEventListener("DOMContentLoaded", aplicarZoom);
       buscar();
     </script>
   </body>
