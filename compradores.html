@@ -172,6 +172,8 @@ tr:hover { background-color: #f5f5f5; }
     <label><input type="checkbox" id="cb2" onchange="filtrarDadosLocalmente()"> MKTP (=0)</label>
     <label><input type="checkbox" id="cb3" onchange="filtrarDadosLocalmente()"> Cerveja Zero (=0)</label>
     <label><input type="checkbox" id="cb4" onchange="filtrarDadosLocalmente()"> Nab Zero (=0)</label>
+    <label><input type="checkbox" id="cb5" onchange="filtrarDadosLocalmente()"> Long Neck (=0)</label>
+    <label><input type="checkbox" id="cb6" onchange="filtrarDadosLocalmente()"> Guaraná Zero (=0)</label>
   </div>
 
   <div class="filter-group">
@@ -206,6 +208,8 @@ tr:hover { background-color: #f5f5f5; }
       <th>MKTP</th>
       <th>Cerveja Zero</th>
       <th>Nab Zero</th>
+      <th>Long Neck</th>
+      <th>Guaraná Zero</th>
     </tr>
   </thead>
   <tbody id="dados-tabela">
@@ -269,6 +273,8 @@ function filtrarDadosLocalmente() {
   const cb2 = document.getElementById("cb2").checked; 
   const cb3 = document.getElementById("cb3").checked; 
   const cb4 = document.getElementById("cb4").checked; 
+  const cb5 = document.getElementById("cb5").checked; 
+  const cb6 = document.getElementById("cb6").checked; 
   const diaSelecionado = document.getElementById("slicer-dia").value;
 
   const tbody = document.getElementById("dados-tabela");
@@ -282,12 +288,14 @@ function filtrarDadosLocalmente() {
     if (cb2 && Number(item.cp_mktp) !== 0) return false;
     if (cb3 && Number(item.cp_cervzero) !== 0) return false;
     if (cb4 && Number(item.cp_nabzero) !== 0) return false;
+    if (cb5 && Number(item.cp_ln) !== 0) return false;
+    if (cb6 && Number(item.cp_gcazero) !== 0) return false;
     if (diaSelecionado !== "Todos" && item.Visita !== diaSelecionado) return false;
     return true;
   });
 
   if(dadosFiltrados.length === 0) {
-    const mensagemSemRegistro = `<tr><td colspan="9" style="text-align:center;">Nenhum registro encontrado com os filtros atuais.</td></tr>`;
+    const mensagemSemRegistro = `<tr><td colspan="11" style="text-align:center;">Nenhum registro encontrado com os filtros atuais.</td></tr>`;
     tbody.innerHTML = mensagemSemRegistro;
     mobileContainer.innerHTML = `<div style="text-align:center; padding:20px; font-weight:bold; color:#666;">Nenhum registro encontrado.</div>`;
     return;
@@ -306,6 +314,8 @@ function filtrarDadosLocalmente() {
       <td>${formatarStatus(item.cp_mktp)}</td>
       <td>${formatarStatus(item.cp_cervzero)}</td>
       <td>${formatarStatus(item.cp_nabzero)}</td>
+      <td>${formatarStatus(item.cp_ln)}</td>
+      <td>${formatarStatus(item.cp_gcazero)}</td>
     `;
     tbody.appendChild(tr);
 
@@ -323,6 +333,8 @@ function filtrarDadosLocalmente() {
         <div><b>MKTP:</b> ${formatarStatus(item.cp_mktp)}</div>
         <div><b>Cerv. Zero:</b> ${formatarStatus(item.cp_cervzero)}</div>
         <div><b>Nab Zero:</b> ${formatarStatus(item.cp_nabzero)}</div>
+        <div><b>Long Neck:</b> ${formatarStatus(item.cp_ln)}</div>
+        <div><b>Guará. Zero:</b> ${formatarStatus(item.cp_gcazero)}</div>
       </div>
     `;
     mobileContainer.appendChild(card);
@@ -330,10 +342,7 @@ function filtrarDadosLocalmente() {
 }
 
 function exportarPDF(){
-  // CORREÇÃO: Captura diretamente a tabela estruturada com os dados filtrados
   const tabela = document.getElementById("tabela-compradores");
-  
-  // Define o nome do arquivo dinamicamente com o nome do setor buscado
   const nomeArquivo = `Gap_Compradores_${setorAlvo || 'Geral'}.pdf`;
 
   html2pdf().set({
@@ -350,6 +359,8 @@ function limparFiltros() {
   document.getElementById("cb2").checked = false;
   document.getElementById("cb3").checked = false;
   document.getElementById("cb4").checked = false;
+  document.getElementById("cb5").checked = false;
+  document.getElementById("cb6").checked = false;
   document.getElementById("slicer-dia").value = "Todos";
   filtrarDadosLocalmente();
 }
