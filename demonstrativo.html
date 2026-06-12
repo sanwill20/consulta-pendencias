@@ -224,54 +224,48 @@
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              26
-            </td>
+              id="dias_uteis"
+            ></td>
             <td
               style="
                 text-align: right;
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              R$ 1.679,70
-            </td>
+              id="salario_fixo"
+            ></td>
             <td
               style="
                 text-align: right;
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              R$ -
-            </td>
+              id="premio_objetivo"
+            ></td>
             <td
               style="
                 text-align: right;
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              R$ -
-            </td>
+              id="dsr"
+            ></td>
             <td
               style="
                 text-align: right;
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              R$ -
-            </td>
+              id="incentivo"
+            ></td>
             <td
               style="
                 text-align: right;
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              R$ 1.679,70
-            </td>
+              id="total_bonus"
+            ></td>
           </tr>
           <tr>
             <td style="background-color: var(--gray); font-weight: bold">
@@ -283,9 +277,8 @@
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              4
-            </td>
+              id="feriados"
+            ></td>
             <td colspan="5" style="background-color: var(--white)"></td>
           </tr>
           <tr>
@@ -305,9 +298,8 @@
                 background-color: var(--dark-gray);
                 font-weight: bold;
               "
-            >
-              30
-            </td>
+              id="total_mes"
+            ></td>
             <td colspan="5" style="background-color: var(--white)"></td>
           </tr>
           <tr>
@@ -320,6 +312,7 @@
                 background-color: var(--light);
                 font-weight: bold;
               "
+              id="premio_calculo"
             >
               -
             </td>
@@ -339,9 +332,8 @@
                 background-color: var(--light);
                 font-weight: bold;
               "
-            >
-              -
-            </td>
+              id="dsr_calculo"
+            ></td>
           </tr>
           <tr>
             <td
@@ -359,9 +351,8 @@
                 background-color: var(--yellow);
                 font-weight: bold;
               "
-            >
-              -
-            </td>
+              id="premio_dsr"
+            ></td>
           </tr>
         </tbody>
       </table>
@@ -411,8 +402,8 @@
             <td class="text-right" id="meta-cerveja"></td>
             <td class="text-right" id="tend-cerveja"></td>
             <td class="text-right" id="ptend-cerveja"></td>
-            <td class="text-right">R$ 000,00</td>
-            <td class="text-right">R$ 000,00</td>
+            <td class="text-right" id="base_cerveja"></td>
+            <td class="text-right" id="ating_cerveja"></td>
           </tr>
           <tr>
             <td style="background-color: var(--dark); font-weight: bold">
@@ -430,8 +421,8 @@
             <td class="text-right" id="meta-nab"></td>
             <td class="text-right" id="tend-nab"></td>
             <td class="text-right" id="ptend-nab"></td>
-            <td class="text-right">R$ 000,00</td>
-            <td class="text-right">R$ 000,00</td>
+            <td class="text-right" id="base_nab"></td>
+            <td class="text-right" id="ating_nab"></td>
           </tr>
           <tr>
             <td style="background-color: var(--dark); font-weight: bold">
@@ -449,8 +440,8 @@
             <td class="text-right" id="meta-mktp"></td>
             <td class="text-right" id="tend-mktp"></td>
             <td class="text-right" id="ptend-mktp"></td>
-            <td class="text-right">R$ 000,00</td>
-            <td class="text-right">R$ 000,00</td>
+            <td class="text-right" id="base_mktp"></td>
+            <td class="text-right" id="ating_mktp"></td>
           </tr>
           <tr>
             <td class="titulo-secundario">IPs</td>
@@ -469,15 +460,25 @@
             <td class="text-right">100000</td>
             <td class="text-right" id="tend-task"></td>
             <td class="text-right" id="ptend-task"></td>
-            <td class="text-right">R$ 000,00</td>
-            <td class="text-right">R$ 000,00</td>
+            <td class="text-right" id="base_pontos"></td>
+            <td class="text-right" id="ating_pontos"></td>
           </tr>
           <tr>
             <td colspan="6" style="border: none"></td>
             <th style="background-color: var(--dark-gray); color: var(--white)">
               TOTAL PO
             </th>
-            <td class="total"><strong>R$ 0.000,00</strong></td>
+            <td
+              style="
+                background-color: var(--white);
+                color: var(--dark-gray);
+                text-align: center;
+                font-weight: bold;
+              "
+              id="total_po"
+            >
+              <strong></strong>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -644,6 +645,162 @@
             document.getElementById("ptend-nab").innerText = fc.ptend_nab;
             document.getElementById("ptend-mktp").innerText = fc.ptend_mktp;
             document.getElementById("ptend-task").innerText = fc.ptend_task;
+          }
+
+          await buscar_rem();
+        } catch (e) {
+          console.error("Erro ao buscar dados do Supabase", e);
+        }
+      }
+
+      // Função para tabela de remuneração
+      async function buscar_rem() {
+        try {
+          let url = `${SUPABASE_URL}/rest/v1/base_variavel?nome=eq.${encodeURIComponent(nome)}`;
+
+          const r = await fetch(url, {
+            headers: {
+              apikey: SUPABASE_KEY,
+              Authorization: `Bearer ${SUPABASE_KEY}`,
+            },
+          });
+
+          const d = await r.json();
+
+          if (d && d.length > 0) {
+            const fc = d[0];
+
+            // Exemplo de como capturar corretamente a % da tabela para o cálculo:
+            let atingimento_cerveja =
+              parseFloat(
+                document
+                  .getElementById("ptend-cerveja")
+                  .innerText.replace("%", ""),
+              ) / 100; // viraria 0.3976
+            let atingimento_nab =
+              parseFloat(
+                document.getElementById("ptend-nab").innerText.replace("%", ""),
+              ) / 100; // viraria 1.0977
+            let atingimento_mktp =
+              parseFloat(
+                document
+                  .getElementById("ptend-mktp")
+                  .innerText.replace("%", ""),
+              ) / 100; // viraria 0.0739
+            let atingimento_task =
+              parseFloat(
+                document
+                  .getElementById("ptend-task")
+                  .innerText.replace("%", ""),
+              ) / 100; // viraria 0.4854
+
+            // Depois aplica o Check que criámos (Opção 2):
+            let ating_cerveja =
+              atingimento_cerveja < 0.7
+                ? 0
+                : Math.min(atingimento_cerveja, 1.5); // Vai dar 0
+            let ating_nab =
+              atingimento_nab < 0.7 ? 0 : Math.min(atingimento_nab, 1.5); // Vai dar 1.0977 (Mantém)
+            let ating_mktp =
+              atingimento_mktp < 0.7 ? 0 : Math.min(atingimento_mktp, 1.5); // Vai dar 0
+            let ating_task =
+              atingimento_task < 0.6 ? 0 : Math.min(atingimento_task, 1.25); // Vai dar 0
+
+            document.getElementById("dias_uteis").innerText = fc.du;
+            document.getElementById("feriados").innerText = fc.feriados;
+            document.getElementById("total_mes").innerText =
+              fc.du + fc.feriados;
+            document.getElementById("salario_fixo").innerText = "1679.70";
+
+            // Retorno dos salários base
+            document.getElementById("base_cerveja").innerText = fc.base_cerveja;
+            document.getElementById("base_nab").innerText = fc.base_nab;
+            document.getElementById("base_mktp").innerText = fc.base_mktp;
+            document.getElementById("base_pontos").innerText = fc.base_pontos;
+
+            // Cálculo para atingimento de variável
+            document.getElementById("ating_cerveja").innerText = (
+              fc.base_cerveja * ating_cerveja
+            ).toFixed(2);
+            document.getElementById("ating_nab").innerText = (
+              fc.base_nab * ating_nab
+            ).toFixed(2);
+            document.getElementById("ating_mktp").innerText = (
+              fc.base_mktp * ating_mktp
+            ).toFixed(2);
+            document.getElementById("ating_pontos").innerText = (
+              fc.base_pontos * ating_task
+            ).toFixed(2);
+            document.getElementById("total_po").innerText =
+              "R$ " +
+              (
+                fc.base_cerveja * ating_cerveja +
+                fc.base_nab * ating_nab +
+                fc.base_mktp * ating_mktp +
+                fc.base_pontos * ating_task
+              ).toFixed(2);
+
+            // Imputar totais
+            document.getElementById("premio_objetivo").innerText = (
+              fc.base_cerveja * ating_cerveja +
+              fc.base_nab * ating_nab +
+              fc.base_mktp * ating_mktp +
+              fc.base_pontos * ating_task
+            ).toFixed(2);
+            document.getElementById("dsr").innerText = (
+              (parseFloat(
+                document
+                  .getElementById("premio_objetivo")
+                  .innerText.replace("R$ ", ""),
+              ) /
+                fc.du) *
+              fc.feriados
+            ).toFixed(2);
+            document.getElementById("premio_calculo").innerText = (
+              fc.base_cerveja * ating_cerveja +
+              fc.base_nab * ating_nab +
+              fc.base_mktp * ating_mktp +
+              fc.base_pontos * ating_task
+            ).toFixed(2);
+            document.getElementById("dsr_calculo").innerText = (
+              (parseFloat(
+                document
+                  .getElementById("premio_calculo")
+                  .innerText.replace("R$ ", ""),
+              ) /
+                fc.du) *
+              fc.feriados
+            ).toFixed(2);
+            document.getElementById("premio_dsr").innerText = (
+              parseFloat(
+                document
+                  .getElementById("premio_calculo")
+                  .innerText.replace("R$ ", ""),
+              ) +
+              parseFloat(
+                document
+                  .getElementById("dsr_calculo")
+                  .innerText.replace("R$ ", ""),
+              )
+            ).toFixed(2);
+            document.getElementById("incentivo").innerText = "0.00";
+            document.getElementById("total_bonus").innerText = (
+              parseFloat(
+                document
+                  .getElementById("premio_dsr")
+                  .innerText.replace("R$ ", ""),
+              ) +
+              parseFloat(
+                document
+                  .getElementById("incentivo")
+                  .innerText.replace("R$ ", ""),
+              ) +
+              parseFloat(
+                document
+                  .getElementById("salario_fixo")
+                  .innerText.replace("R$ ", ""),
+              )
+            ).toFixed(2);
           }
         } catch (e) {
           console.error("Erro ao buscar dados do Supabase", e);
