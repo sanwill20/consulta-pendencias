@@ -741,13 +741,13 @@
               ).toFixed(2);
 
             // Imputar totais
-            document.getElementById("premio_objetivo").innerText = (
+            document.getElementById("premio_objetivo").innerText = "R$ " + (
               fc.base_cerveja * ating_cerveja +
               fc.base_nab * ating_nab +
               fc.base_mktp * ating_mktp +
               fc.base_pontos * ating_task
             ).toFixed(2);
-            document.getElementById("dsr").innerText = (
+            document.getElementById("dsr").innerText = "R$ " + (
               (parseFloat(
                 document
                   .getElementById("premio_objetivo")
@@ -756,13 +756,13 @@
                 fc.du) *
               fc.feriados
             ).toFixed(2);
-            document.getElementById("premio_calculo").innerText = (
+            document.getElementById("premio_calculo").innerText = "R$ " + (
               fc.base_cerveja * ating_cerveja +
               fc.base_nab * ating_nab +
               fc.base_mktp * ating_mktp +
               fc.base_pontos * ating_task
             ).toFixed(2);
-            document.getElementById("dsr_calculo").innerText = (
+            document.getElementById("dsr_calculo").innerText = "R$ " + (
               (parseFloat(
                 document
                   .getElementById("premio_calculo")
@@ -771,7 +771,7 @@
                 fc.du) *
               fc.feriados
             ).toFixed(2);
-            document.getElementById("premio_dsr").innerText = (
+            document.getElementById("premio_dsr").innerText = "R$ " + (
               parseFloat(
                 document
                   .getElementById("premio_calculo")
@@ -783,8 +783,8 @@
                   .innerText.replace("R$ ", ""),
               )
             ).toFixed(2);
-            document.getElementById("incentivo").innerText = "0.00";
-            document.getElementById("total_bonus").innerText = (
+            document.getElementById("incentivo").innerText = "R$ " + "0.00";
+            document.getElementById("total_bonus").innerText = "R$ " + (
               parseFloat(
                 document
                   .getElementById("premio_dsr")
