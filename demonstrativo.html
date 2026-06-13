@@ -710,25 +710,25 @@
             document.getElementById("feriados").innerText = fc.feriados;
             document.getElementById("total_mes").innerText =
               fc.du + fc.feriados;
-            document.getElementById("salario_fixo").innerText = "1679.70";
+            document.getElementById("salario_fixo").innerText = "R$ " + "1679.70";
 
             // Retorno dos salários base
-            document.getElementById("base_cerveja").innerText = fc.base_cerveja;
-            document.getElementById("base_nab").innerText = fc.base_nab;
-            document.getElementById("base_mktp").innerText = fc.base_mktp;
-            document.getElementById("base_pontos").innerText = fc.base_pontos;
+            document.getElementById("base_cerveja").innerText = "R$ " + fc.base_cerveja;
+            document.getElementById("base_nab").innerText = "R$ " + fc.base_nab;
+            document.getElementById("base_mktp").innerText = "R$ " + fc.base_mktp;
+            document.getElementById("base_pontos").innerText = "R$ " + fc.base_pontos;
 
             // Cálculo para atingimento de variável
-            document.getElementById("ating_cerveja").innerText = (
+            document.getElementById("ating_cerveja").innerText = "R$ " + (
               fc.base_cerveja * ating_cerveja
             ).toFixed(2);
-            document.getElementById("ating_nab").innerText = (
+            document.getElementById("ating_nab").innerText = "R$ " + (
               fc.base_nab * ating_nab
             ).toFixed(2);
-            document.getElementById("ating_mktp").innerText = (
+            document.getElementById("ating_mktp").innerText = "R$ " + (
               fc.base_mktp * ating_mktp
             ).toFixed(2);
-            document.getElementById("ating_pontos").innerText = (
+            document.getElementById("ating_pontos").innerText = "R$ " + (
               fc.base_pontos * ating_task
             ).toFixed(2);
             document.getElementById("total_po").innerText =
