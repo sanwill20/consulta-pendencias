@@ -247,7 +247,7 @@ async function buscar(){
   // Mapeamento dos parâmetros para os campos da tabela historico_mes
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
   if(tipo_nome.value) params.push(`TIPO-NOME=eq.${encodeURIComponent(tipo_nome.value)}`);
-  if(cliente.value.trim()) params.push(`Cliente=eq${encodeURIComponent(cliente.value.trim())}`);
+  if(cliente.value.trim()) params.push(`Cliente=eq.${encodeURIComponent(cliente.valu)}`);
 
   // Selecionando apenas as colunas solicitadas da tabela historico_mes
   const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
