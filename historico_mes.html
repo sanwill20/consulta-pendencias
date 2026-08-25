@@ -210,14 +210,14 @@ tr:nth-child(even){
       <label>🍺 Tipo</label>
       <select id="tipo_nome">
         <option value="">Todos</option>
-        <option value="Cerveja">CERVEJA</option>
-        <option value="Nab">NAB</option>
+        <option value="CERVEJA">CERVEJA</option>
+        <option value="NAB">NAB</option>
       </select>
     </div>
   
     <div class="filter">
       <label>👤 Cliente</label>
-      <input id="cliente" placeholder="Digite o Cliente (ex: 12345)">
+      <input id="cliente" placeholder="Digite o Cliente (ex: TE12345)">
     </div>
     
     <button class="btn-pdf" onclick="exportarPDF()">📄 Exportar p/ PDF</button>
@@ -244,12 +244,16 @@ const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 async function buscar(){
   const params = [];
 
-  // Mapeamento dos parâmetros para os campos da tabela historico_mes
+  // Filtro de Operação
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
-  if(tipo_nome.value) params.push(`TIPO-NOME=eq.${encodeURIComponent(tipo_nome.value)}`);
-  if(cliente.value.trim()) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
+  
+  // Filtro TIPO-NOME (utiliza ilike para ignorar maiúsculas/minúsculas)
+  if(tipo_nome.value) params.push(`TIPO-NOME=ilike.${encodeURIComponent(tipo_nome.value)}`);
+  
+  // Filtro de Cliente (ilike parcial)
+  if(cliente.value.trim()) params.push(`Cliente=ilike.*${encodeURIComponent(cliente.value.trim())}*`);
 
-  // Selecionando apenas as colunas solicitadas da tabela historico_mes
+  // URL REST Supabase para historico_mes
   const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
 
   mensagem.textContent = "Carregando...";
@@ -292,7 +296,6 @@ async function buscar(){
     let c = "";
 
     d.forEach(r => {
-      // Ajuste de mapeamento caso o nome das chaves no banco utilize underline em 'Cod_Produto'
       const codProd = r.Cod_Produto || r['Cod. Produto'] || r.CodProduto || "";
       
       h += `<tr>
