@@ -251,7 +251,7 @@ async function buscar(){
   if(tipo_nome.value) params.push(`TIPO-NOME=ilike.${encodeURIComponent(tipo_nome.value)}`);
   
   // Filtro de Cliente (ilike parcial)
-  if(cliente.value.trim()) params.push(`Cliente=ilike.*${encodeURIComponent(cliente.value.trim())}*`);
+  if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
 
   // URL REST Supabase para historico_mes
   const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
