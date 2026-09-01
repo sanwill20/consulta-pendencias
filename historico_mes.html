@@ -219,7 +219,12 @@ tr:nth-child(even){
   
     <div class="filter">
       <label>👤 Cliente</label>
-      <input id="cliente" placeholder="Digite o Cliente (ex: TE12345)">
+      <input id="cliente" placeholder="Digite o Cliente (ex: 12345)">
+    </div>
+
+    <div class="filter">
+      <label>🛒 SKU</label>
+      <input id="sku" placeholder="Digite o SKU (ex: 988)">
     </div>
     
     <button class="btn-pdf" onclick="exportarPDF()">📄 Exportar p/ PDF</button>
@@ -249,14 +254,17 @@ async function buscar(){
   // Filtro de Operação
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
   
-  // Filtro TIPO-NOME (utiliza ilike para ignorar maiúsculas/minúsculas)
-  if(tipo_nome.value) params.push(`TIPO-NOME=ilike.${encodeURIComponent(tipo_nome.value)}`);
+  // Filtro TIPO-NOME com aspas duplas exigidas pela API do Supabase
+  if(tipo_nome.value) params.push(`${encodeURIComponent('"TIPO-NOME"')}=ilike.${encodeURIComponent(tipo_nome.value)}`);
   
-  // Filtro de Cliente (ilike parcial)
+  // Filtro de Cliente
   if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
 
-  // URL REST Supabase para historico_mes
-  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
+  // Filtro de SKU
+  if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
+
+  // URL REST Supabase com a coluna Cod_Setor inclusa na requisição
+  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
 
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
@@ -282,11 +290,13 @@ async function buscar(){
     mensagem.textContent = `${d.length} registro(s) encontrado(s).`;
     mensagem.className = "message success";
 
+    // Cabeçalho corrigido alinhando 7 colunas
     let h = `<table>
       <thead>
         <tr>
           <th>Cliente</th>
           <th>Fantasia</th>
+          <th>Setor</th>
           <th>Cód. Produto</th>
           <th>Nome</th>
           <th>Marca</th>
@@ -303,6 +313,7 @@ async function buscar(){
       h += `<tr>
         <td>${r.Cliente || ""}</td>
         <td>${r.Fantasia || ""}</td>
+        <td>${r.Cod_Setor || ""}</td>
         <td>${codProd}</td>
         <td>${r.NOME || ""}</td>
         <td>${r.MARCA || ""}</td>
@@ -310,7 +321,7 @@ async function buscar(){
       </tr>`;
 
       c += `<div class="card">
-        <div><b>Cliente:</b> ${r.Cliente || ""} - ${r.Fantasia || ""}</div>
+        <div><b>Cliente:</b> ${r.Cliente || ""} - ${r.Fantasia || ""} (Setor: ${r.Cod_Setor || ""})</div>
         <div><b>Cód. Produto:</b> ${codProd}</div>
         <div><b>Nome:</b> ${r.NOME || ""}</div>
         <div><b>Marca:</b> ${r.MARCA || ""}</div>
@@ -350,6 +361,7 @@ function exportarPDF(){
 
 const operacao = document.getElementById("operacao"),
       tipo_nome = document.getElementById("tipo_nome"),
+      sku = document.getElementById("sku"),
       cliente = document.getElementById("cliente"),
       mensagem = document.getElementById("mensagem"),
       tabela = document.getElementById("tabela"),
