@@ -24,6 +24,7 @@ body{
 .topbar{
   display:flex;
   align-items:center;
+  justify-content:space-between;
   background:var(--primary);
   padding:10px 14px;
   border-radius:6px;
@@ -34,6 +35,26 @@ body{
   color:var(--white);
   font-size:18px;
   font-weight:bold;
+}
+
+.btn-voltar{
+  background:transparent;
+  color:var(--white);
+  border:1px solid var(--white);
+  padding:6px 12px;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:bold;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:0;
+}
+
+.btn-voltar:hover{
+  background:rgba(255,255,255,0.15);
 }
 
 label{
@@ -174,11 +195,13 @@ tr:nth-child(even){
     box-sizing:border-box;
   }
 
-  .mobile-bar button{
+  .mobile-bar button, .mobile-bar a{
     flex:1;
-    font-size:14px;
-    padding:10px;
+    font-size:13px;
+    padding:10px 4px;
     margin-top:0;
+    text-align:center;
+    justify-content:center;
   }
 
   body{
@@ -191,6 +214,7 @@ tr:nth-child(even){
   
   <div class="topbar">
     <span class="title">Consulta - Histórico Mês</span>
+    <a href="index.html" class="btn-voltar no-pdf">🏠 Menu Principal</a>
   </div>
         
   <div class="filters no-pdf">
@@ -235,7 +259,8 @@ tr:nth-child(even){
   
   <div class="mobile-bar no-pdf">
     <button onclick="buscar()">🔍 Buscar</button>
-    <button onclick="limpar()">🧹 Limpar filtros</button>
+    <button onclick="limpar()">🧹 Limpar</button>
+    <a href="index.html" class="btn-voltar" style="background:var(--secondary); border:none;">🏠 Menu</a>
   </div>
   
   <div id="area-pdf">    
@@ -251,19 +276,11 @@ const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 async function buscar(){
   const params = [];
 
-  // Filtro de Operação
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
-  
-  // Filtro TIPO-NOME com aspas duplas exigidas pela API do Supabase
   if(tipo_nome.value) params.push(`${encodeURIComponent('"TIPO-NOME"')}=ilike.${encodeURIComponent(tipo_nome.value)}`);
-  
-  // Filtro de Cliente
   if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
-
-  // Filtro de SKU
   if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
 
-  // URL REST Supabase com a coluna Cod_Setor inclusa na requisição
   const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
 
   mensagem.textContent = "Carregando...";
@@ -290,7 +307,6 @@ async function buscar(){
     mensagem.textContent = `${d.length} registro(s) encontrado(s).`;
     mensagem.className = "message success";
 
-    // Cabeçalho corrigido alinhando 7 colunas
     let h = `<table>
       <thead>
         <tr>
