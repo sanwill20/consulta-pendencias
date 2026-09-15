@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Consulta Histórico Mês</title>
+<title>SKU - Equipamentos</title>
 
 <style>
 :root{
@@ -150,6 +150,14 @@ tr:nth-child(even){
   display:inline-block;
 }
 
+.card {
+  background: var(--white);
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--secondary);
+}
+
 @media (max-width: 768px){
   .desktop-only, .btn-pdf, table{
     display:none !important;
@@ -211,7 +219,7 @@ tr:nth-child(even){
 
      <div class="filter">
       <label>🙋🏻‍♂️ RN</label>
-      <input id="rn" placeholder="Digite o seu setor. Ex: 111)">
+      <input id="rn" placeholder="Digite o seu setor. Ex: 111">
     </div>
     
     <div class="filter">
@@ -253,9 +261,21 @@ tr:nth-child(even){
     <div class="cards" id="cards"></div>
   </div>
 
+<!-- Biblioteca carregada antes do script que a executa -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <script>
-const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
-const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+
+const operacao = document.getElementById("operacao"),
+      tipo_nome = document.getElementById("tipo_nome"),
+      sku = document.getElementById("sku"),
+      rn = document.getElementById("rn"),
+      cliente = document.getElementById("cliente"),
+      mensagem = document.getElementById("mensagem"),
+      tabela = document.getElementById("tabela"),
+      cards = document.getElementById("cards");
 
 async function buscar(){
   const params = [];
@@ -271,6 +291,7 @@ async function buscar(){
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
   tabela.innerHTML = "";
+  cards.innerHTML = "";
 
   try{
     const r = await fetch(url, {
@@ -320,7 +341,19 @@ async function buscar(){
         <td>${r.EMBALAGEM || ""}</td>
       </tr>`;
 
+      c += `<div class="card">
+        <strong>Cliente:</strong> ${r.Cliente || ""}<br>
+        <strong>Fantasia:</strong> ${r.Fantasia || ""}<br>
+        <strong>Setor:</strong> ${r.Cod_Setor || ""}<br>
+        <strong>Cód. Produto:</strong> ${codProd}<br>
+        <strong>Nome:</strong> ${r.NOME || ""}<br>
+        <strong>Marca:</strong> ${r.MARCA || ""}<br>
+        <strong>Embalagem:</strong> ${r.EMBALAGEM || ""}
+      </div>`;
+    });
+
     tabela.innerHTML = h + "</tbody></table>";
+    cards.innerHTML = c;
 
   }catch(e){
     console.error(e);
@@ -348,17 +381,7 @@ function exportarPDF(){
     ignoreElements: el => el.classList.contains("no-pdf")
   }).from(area).save();
 }
-
-const operacao = document.getElementById("operacao"),
-      tipo_nome = document.getElementById("tipo_nome"),
-      sku = document.getElementById("sku"),
-      rn = document.getElementById("rn"),
-      cliente = document.getElementById("cliente"),
-      mensagem = document.getElementById("mensagem"),
-      tabela = document.getElementById("tabela"),
 </script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 </body>
 </html>
