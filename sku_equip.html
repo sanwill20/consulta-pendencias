@@ -188,18 +188,7 @@ tr:nth-child(even){
       <label>🙋🏻‍♂️ RN</label>
       <input id="rn" placeholder="Digite o seu setor. Ex: 111">
     </div>
-    
-    <div class="filter">
-      <label>🍺 Tipo</label>
-      <select id="tipo_nome">
-        <option value="">Todos</option>
-        <option value="CERVEJA">CERVEJA</option>
-        <option value="NAB">NAB</option>
-        <option value="MATCH">MATCH</option>
-        <option value="MARKETPLACE">MARKETPLACE</option>
-      </select>
-    </div>
-  
+      
     <div class="filter">
       <label>👤 Cliente</label>
       <input id="cliente" placeholder="Digite o Cliente (ex: 12345)">
@@ -230,8 +219,6 @@ const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
 const operacao = document.getElementById("operacao"),
-      tipo_nome = document.getElementById("tipo_nome"),
-      sku = document.getElementById("sku"),
       rn = document.getElementById("rn"),
       cliente = document.getElementById("cliente"),
       mensagem = document.getElementById("mensagem"),
@@ -242,13 +229,11 @@ async function buscar(){
 
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
   if(rn.value) params.push(`Cod_Setor=eq.${encodeURIComponent(rn.value)}`);
-  if(tipo_nome.value) params.push(`${encodeURIComponent('"TIPO-NOME"')}=ilike.${encodeURIComponent(tipo_nome.value)}`);
   if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
-  if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
 
   params.push(`Check=eq.${encodeURIComponent('Sim')}`);
 
-  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM,Check&${params.join("&")}`;
+  const url = `${SUPABASE_URL}/rest/v1/sku_equip?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM,Check&${params.join("&")}`;
 
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
@@ -276,14 +261,20 @@ async function buscar(){
     let h = `<table>
       <thead>
         <tr>
-          <th>Cliente</th>
+          <th>PDV</th>
           <th>Fantasia</th>
           <th>Setor</th>
-          <th>Cód. Produto</th>
-          <th>Nome</th>
-          <th>Marca</th>
-          <th>Embalagem</th>
-          <th>Check</th>
+          <th>Qtde</th>
+          <th>SKU_01</th>
+          <th>SKU_02</th>
+          <th>SKU_03</th>
+          <th>SKU_04</th>
+          <th>SKU_05</th>
+          <th>SKU_06</th>
+          <th>SKU_07</th>
+          <th>SKU_08</th>
+          <th>SKU_09</th>
+          <th>SKU_10</th>
         </tr>
       </thead>
       <tbody>`;
@@ -292,14 +283,20 @@ async function buscar(){
       const codProd = r.Cod_Produto || r['Cod. Produto'] || r.CodProduto || "";
       
       h += `<tr>
-        <td>${r.Cliente || ""}</td>
-        <td>${r.Fantasia || ""}</td>
+        <td>${r.PDV || ""}</td>
+        <td>${r.Nome_Fantasia || ""}</td>
         <td>${r.Cod_Setor || ""}</td>
-        <td>${codProd}</td>
-        <td>${r.NOME || ""}</td>
-        <td>${r.MARCA || ""}</td>
-        <td>${r.EMBALAGEM || ""}</td>
-        <td>${r.Check || ""}</td>
+        <td>${r.Qtde_SKU || ""}</td>
+        <td>${r.SKU_01 || ""}</td>
+        <td>${r.SKU_02 || ""}</td>
+        <td>${r.SKU_03 || ""}</td>
+        <td>${r.SKU_04 || ""}</td>
+        <td>${r.SKU_05 || ""}</td>
+        <td>${r.SKU_06 || ""}</td>
+        <td>${r.SKU_07 || ""}</td>
+        <td>${r.SKU_08 || ""}</td>
+        <td>${r.SKU_09 || ""}</td>
+        <td>${r.SKU_10 || ""}</td>
       </tr>`;
     });
 
