@@ -150,47 +150,6 @@ tr:nth-child(even){
   display:inline-block;
 }
 
-.card {
-  background: var(--white);
-  padding: 10px;
-  margin-bottom: 8px;
-  border-radius: 6px;
-  border: 1px solid var(--secondary);
-}
-
-@media (max-width: 768px){
-  .desktop-only, .btn-pdf, table{
-    display:none !important;
-  }
-
-  .cards{
-    display:block;
-    margin-top:10px;
-  }
-
-  .mobile-bar{
-    display:flex;
-    gap:8px;
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:white;
-    padding:10px;
-    border-top:1px solid #ccc;
-    z-index:100;
-    box-sizing:border-box;
-  }
-
-  .mobile-bar button, .mobile-bar a{
-    flex:1;
-    font-size:13px;
-    padding:10px 4px;
-    margin-top:0;
-    text-align:center;
-    justify-content:center;
-  }
-
   body{
     padding-bottom:70px;
   }
@@ -200,7 +159,7 @@ tr:nth-child(even){
 <body>
   
   <div class="topbar">
-    <span class="title">Consulta - Histórico Mês</span>
+    <span class="title">SKU - Equipamentos</span>
     <a href="index.html" class="btn-voltar no-pdf">🏠 Menu Principal</a>
   </div>
         
@@ -248,12 +207,6 @@ tr:nth-child(even){
   
   <button class="no-pdf desktop-only" onclick="buscar()">🔍 Buscar</button>
   <button class="no-pdf desktop-only" onclick="limpar()">🧹 Limpar filtros</button>
-  
-  <div class="mobile-bar no-pdf">
-    <button onclick="buscar()">🔍 Buscar</button>
-    <button onclick="limpar()">🧹 Limpar</button>
-    <a href="index.html" class="btn-voltar" style="background:var(--secondary); border:none;">🏠 Menu</a>
-  </div>
   
   <div id="area-pdf">    
     <div class="message no-pdf" id="mensagem"></div>
