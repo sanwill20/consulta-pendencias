@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta Histórico Mês</title>
+
+<style>
+:root{
+  --primary:#333F4F;
+  --secondary:#44546A;
+  --light:#D9D9D9;
+  --black:#000000;
+  --white:#FFFFFF;
+}
+
+body{
+  font-family:Arial, sans-serif;
+  margin:20px;
+  background:var(--light);
+  color:var(--black);
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--primary);
+  padding:10px 14px;
+  border-radius:6px;
+  margin-bottom:12px;
+}
+
+.topbar .title{
+  color:var(--white);
+  font-size:18px;
+  font-weight:bold;
+}
+
+.btn-voltar{
+  background:transparent;
+  color:var(--white);
+  border:1px solid var(--white);
+  padding:6px 12px;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:13px;
+  font-weight:bold;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:0;
+}
+
+.btn-voltar:hover{
+  background:rgba(255,255,255,0.15);
+}
+
+label{
+  font-weight:bold;
+  margin-top:6px;
+  display:block;
+  color:var(--primary);
+}
+
+select, input{
+  padding:6px;
+  margin-top:2px;
+  min-width:200px;
+  border:1px solid var(--secondary);
+  border-radius:4px;
+  background:var(--white);
+}
+
+button{
+  padding:8px 16px;
+  margin-top:10px;
+  cursor:pointer;
+  background:var(--secondary);
+  color:var(--white);
+  border:none;
+  border-radius:4px;
+  transition:.2s;
+}
+
+button:hover{
+  background:var(--primary);
+}
+
+.btn-pdf{
+  background:#d32f2f;
+  color:white;
+  font-weight:bold;
+}
+
+.btn-pdf:hover{
+  background:#b71c1c;
+}
+
+table{
+  border-collapse:collapse;
+  margin-top:12px;
+  font-size:13px;
+  width:100%;
+  background:var(--white);
+}
+
+th, td{
+  border:1px solid var(--light);
+  padding:6px 8px;
+  text-align:left;
+}
+
+th{
+  background:var(--primary);
+  color:var(--white);
+}
+
+tr:nth-child(even){
+  background:#f7f7f7;
+}
+
+.message{
+  margin-top:8px;
+  font-weight:bold;
+}
+
+.success{color:green}
+.warning{color:#b45309}
+.error{color:red}
+
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+  background:var(--white);
+  padding:12px;
+  border-radius:6px;
+  border:1px solid var(--light);
+}
+
+.filter{
+  display:flex;
+  flex-direction:column;
+}
+
+.desktop-only{
+  display:inline-block;
+}
+
+@media (max-width: 768px){
+  .desktop-only, .btn-pdf, table{
+    display:none !important;
+  }
+
+  .cards{
+    display:block;
+    margin-top:10px;
+  }
+
+  .mobile-bar{
+    display:flex;
+    gap:8px;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    padding:10px;
+    border-top:1px solid #ccc;
+    z-index:100;
+    box-sizing:border-box;
+  }
+
+  .mobile-bar button, .mobile-bar a{
+    flex:1;
+    font-size:13px;
+    padding:10px 4px;
+    margin-top:0;
+    text-align:center;
+    justify-content:center;
+  }
+
+  body{
+    padding-bottom:70px;
+  }
+}
+</style>
+</head>
+<body>
+  
+  <div class="topbar">
+    <span class="title">Consulta - Histórico Mês</span>
+    <a href="index.html" class="btn-voltar no-pdf">🏠 Menu Principal</a>
+  </div>
+        
+  <div class="filters no-pdf">
+    <div class="filter">
+      <label>🏢 Operação</label>
+      <select id="operacao">
+        <option value="">Todas</option>
+        <option>Asa Norte Bom Jesus</option>
+        <option>Asa Norte Campo Maior</option>
+        <option>Asa Norte Parnaiba</option>
+        <option>Asa Norte São Raimundo</option>
+        <option>Asa Norte Teresina</option>
+      </select>
+    </div>
+
+     <div class="filter">
+      <label>🙋🏻‍♂️ RN</label>
+      <input id="rn" placeholder="Digite o seu setor. Ex: 111)">
+    </div>
+    
+    <div class="filter">
+      <label>🍺 Tipo</label>
+      <select id="tipo_nome">
+        <option value="">Todos</option>
+        <option value="CERVEJA">CERVEJA</option>
+        <option value="NAB">NAB</option>
+        <option value="MATCH">MATCH</option>
+        <option value="MARKETPLACE">MARKETPLACE</option>
+      </select>
+    </div>
+  
+    <div class="filter">
+      <label>👤 Cliente</label>
+      <input id="cliente" placeholder="Digite o Cliente (ex: 12345)">
+    </div>
+
+    <div class="filter">
+      <label>🛒 SKU</label>
+      <input id="sku" placeholder="Digite o SKU (ex: 988)">
+    </div>
+    
+    <button class="btn-pdf" onclick="exportarPDF()">📄 Exportar p/ PDF</button>
+  </div>
+  
+  <button class="no-pdf desktop-only" onclick="buscar()">🔍 Buscar</button>
+  <button class="no-pdf desktop-only" onclick="limpar()">🧹 Limpar filtros</button>
+  
+  <div class="mobile-bar no-pdf">
+    <button onclick="buscar()">🔍 Buscar</button>
+    <button onclick="limpar()">🧹 Limpar</button>
+    <a href="index.html" class="btn-voltar" style="background:var(--secondary); border:none;">🏠 Menu</a>
+  </div>
+  
+  <div id="area-pdf">    
+    <div class="message no-pdf" id="mensagem"></div>
+    <div id="tabela"></div>
+    <div class="cards" id="cards"></div>
+  </div>
+
+<script>
+const SUPABASE_URL="https://nzpquivtrvqwtsiooodr.supabase.co";
+const SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+
+async function buscar(){
+  const params = [];
+
+  if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
+  if(rn.value) params.push(`Cod_Setor=eq.${encodeURIComponent(rn.value)}`);
+  if(tipo_nome.value) params.push(`${encodeURIComponent('"TIPO-NOME"')}=ilike.${encodeURIComponent(tipo_nome.value)}`);
+  if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
+  if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
+
+  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
+
+  mensagem.textContent = "Carregando...";
+  mensagem.className = "message";
+  tabela.innerHTML = "";
+
+  try{
+    const r = await fetch(url, {
+      headers:{
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`
+      }
+    });
+
+    const d = await r.json();
+
+    if(!Array.isArray(d) || !d.length){
+      mensagem.textContent = "Nenhum registro encontrado.";
+      mensagem.className = "message warning";
+      return;
+    }
+
+    mensagem.textContent = `${d.length} registro(s) encontrado(s).`;
+    mensagem.className = "message success";
+
+    let h = `<table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Fantasia</th>
+          <th>Setor</th>
+          <th>Cód. Produto</th>
+          <th>Nome</th>
+          <th>Marca</th>
+          <th>Embalagem</th>
+        </tr>
+      </thead>
+      <tbody>`;
+
+    let c = "";
+
+    d.forEach(r => {
+      const codProd = r.Cod_Produto || r['Cod. Produto'] || r.CodProduto || "";
+      
+      h += `<tr>
+        <td>${r.Cliente || ""}</td>
+        <td>${r.Fantasia || ""}</td>
+        <td>${r.Cod_Setor || ""}</td>
+        <td>${codProd}</td>
+        <td>${r.NOME || ""}</td>
+        <td>${r.MARCA || ""}</td>
+        <td>${r.EMBALAGEM || ""}</td>
+      </tr>`;
+
+    tabela.innerHTML = h + "</tbody></table>";
+
+  }catch(e){
+    console.error(e);
+    mensagem.textContent = "Erro ao consultar os dados.";
+    mensagem.className = "message error";
+  }
+}
+
+function limpar(){
+  document.querySelectorAll("input,select").forEach(e => e.value = "");
+  tabela.innerHTML = "";
+  cards.innerHTML = "";
+  mensagem.textContent = "";
+}
+
+function exportarPDF(){
+  const area = document.getElementById("area-pdf");
+
+  html2pdf().set({
+    margin: 8,
+    filename: 'SKU_Equipamentos.pdf',
+    html2canvas: { scale: 2 },
+    jsPDF: { orientation: 'landscape' },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+    ignoreElements: el => el.classList.contains("no-pdf")
+  }).from(area).save();
+}
+
+const operacao = document.getElementById("operacao"),
+      tipo_nome = document.getElementById("tipo_nome"),
+      sku = document.getElementById("sku"),
+      rn = document.getElementById("rn"),
+      cliente = document.getElementById("cliente"),
+      mensagem = document.getElementById("mensagem"),
+      tabela = document.getElementById("tabela"),
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+</body>
+</html>
