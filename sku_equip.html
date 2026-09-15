@@ -16,7 +16,7 @@
 
 body{
   font-family:Arial, sans-serif;
-  margin:20px;
+  margin:15px;
   background:var(--light);
   color:var(--black);
 }
@@ -50,7 +50,6 @@ body{
   display:inline-flex;
   align-items:center;
   gap:6px;
-  margin-top:0;
 }
 
 .btn-voltar:hover{
@@ -65,13 +64,22 @@ label{
 }
 
 select, input{
-  padding:6px;
+  padding:8px;
   margin-top:2px;
-  min-width:200px;
+  min-width:180px;
   border:1px solid var(--secondary);
   border-radius:4px;
   background:var(--white);
+  box-sizing: border-box;
 }
+
+/* Remove setas do input number */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+input[type=number] { -moz-appearance: textfield; }
 
 button{
   padding:8px 16px;
@@ -81,6 +89,7 @@ button{
   color:var(--white);
   border:none;
   border-radius:4px;
+  font-weight:bold;
   transition:.2s;
 }
 
@@ -91,14 +100,12 @@ button:hover{
 .btn-pdf{
   background:#d32f2f;
   color:white;
-  font-weight:bold;
 }
 
 .btn-pdf:hover{
   background:#b71c1c;
 }
 
-/* Permite rolagem horizontal em telas menores */
 .table-container{
   width:100%;
   overflow-x:auto;
@@ -110,7 +117,7 @@ table{
   font-size:13px;
   width:100%;
   background:var(--white);
-  white-space:nowrap; /* Mantém os dados alinhados ao rolar */
+  white-space:nowrap;
 }
 
 th, td{
@@ -151,16 +158,69 @@ tr:nth-child(even){
 .filter{
   display:flex;
   flex-direction:column;
+  flex: 1;
 }
 
-.desktop-only{
-  display:inline-block;
+.btn-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
 }
 
+/* CARDS MOBILE (Oculto no Desktop por padrão) */
+#mobile-cards {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.card-item {
+  background: var(--white);
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  border-left: 5px solid var(--secondary);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 8px;
+}
+
+.sku-badge {
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  display: inline-block;
+}
+
+/* RESPONSIVIDADE (MOBILE) */
 @media (max-width: 768px){
-  .btn-pdf{
-    display:none !important;
-  }
+  .btn-pdf{ display:none !important; }
+  .table-container { display: none; } /* Oculta a tabela pesada no celular */
+  #mobile-cards { display: flex; } /* Exibe os Cards leves no celular */
+  
+  .filter { min-width: 100%; }
+  select, input { width: 100%; }
+  .btn-group { width: 100%; }
+  .btn-group button { flex: 1; }
 }
 </style>
 </head>
@@ -186,25 +246,31 @@ tr:nth-child(even){
 
      <div class="filter">
       <label>🙋🏻‍♂️ RN</label>
-      <input id="rn" placeholder="Digite o seu setor. Ex: 111">
+      <input type="number" id="rn" placeholder="Digite apenas números..." pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
     </div>
       
     <div class="filter">
       <label>👤 Cliente / PDV</label>
-      <input id="cliente" placeholder="Digite o PDV (ex: 12345)">
+      <input type="number" id="cliente" placeholder="Digite o PDV..." pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
     </div>
-    
-    <button class="btn-pdf" onclick="exportarPDF()">📄 Exportar p/ PDF</button>
+
+    <div class="btn-group no-pdf">
+      <button onclick="buscar()">🔍 Buscar</button>
+      <button onclick="limpar()">🧹 Limpar</button>
+      <button class="btn-pdf" onclick="exportarPDF()">📄 PDF</button>
+    </div>
   </div>
-  
-  <button class="no-pdf desktop-only" onclick="buscar()">🔍 Buscar</button>
-  <button class="no-pdf desktop-only" onclick="limpar()">🧹 Limpar filtros</button>
   
   <div id="area-pdf">    
     <div class="message no-pdf" id="mensagem"></div>
+    
+    <!-- Visualização Desktop (Tabela) -->
     <div class="table-container">
       <div id="tabela"></div>
     </div>
+
+    <!-- Visualização Mobile (Cards) -->
+    <div id="mobile-cards"></div>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -217,7 +283,8 @@ const operacao = document.getElementById("operacao"),
       rn = document.getElementById("rn"),
       cliente = document.getElementById("cliente"),
       mensagem = document.getElementById("mensagem"),
-      tabela = document.getElementById("tabela");
+      tabela = document.getElementById("tabela"),
+      cardsContainer = document.getElementById("mobile-cards");
 
 async function buscar(){
   const params = [];
@@ -232,6 +299,7 @@ async function buscar(){
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
   tabela.innerHTML = "";
+  cardsContainer.innerHTML = "";
 
   try{
     const r = await fetch(url, {
@@ -252,6 +320,7 @@ async function buscar(){
     mensagem.textContent = `${d.length} registro(s) encontrado(s).`;
     mensagem.className = "message success";
 
+    // --- MONTA A TABELA (DESKTOP / PDF) ---
     let h = `<table>
       <thead>
         <tr>
@@ -272,7 +341,11 @@ async function buscar(){
       </thead>
       <tbody>`;
 
+    // --- MONTA OS CARDS (MOBILE) ---
+    let cardsHtml = "";
+
     d.forEach(r => {
+      // Linha Tabela
       h += `<tr>
         <td>${r.PDV || ""}</td>
         <td>${r.Nome_Fantasia || ""}</td>
@@ -288,9 +361,31 @@ async function buscar(){
         <td>${r.SKU_09 || ""}</td>
         <td>${r.SKU_10 || ""}</td>
       </tr>`;
+
+      // Monta lista de SKUs não vazios para o Card
+      let skusList = "";
+      for(let i=1; i<=10; i++){
+        const key = `SKU_${i < 10 ? '0' + i : i}`;
+        if(r[key]){
+          skusList += `<span class="sku-badge">${r[key]}</span>`;
+        }
+      }
+
+      // Card HTML
+      cardsHtml += `
+        <div class="card-item">
+          <div class="card-header">
+            <span>📍 PDV: ${r.PDV || "N/A"}</span>
+            <span>📦 Qtd: ${r.Qtde_SKU ?? 0}</span>
+          </div>
+          <div class="card-title">${r.Nome_Fantasia || "Sem Nome Fantasia"}</div>
+          <div>${skusList || "<small>Nenhum SKU associado</small>"}</div>
+        </div>
+      `;
     });
 
     tabela.innerHTML = h + "</tbody></table>";
+    cardsContainer.innerHTML = cardsHtml;
 
   }catch(e){
     console.error(e);
@@ -302,6 +397,7 @@ async function buscar(){
 function limpar(){
   document.querySelectorAll("input,select").forEach(e => e.value = "");
   tabela.innerHTML = "";
+  cardsContainer.innerHTML = "";
   mensagem.textContent = "";
 }
 
