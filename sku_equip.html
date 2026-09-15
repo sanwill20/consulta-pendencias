@@ -19,6 +19,7 @@ body{
   margin:20px;
   background:var(--light);
   color:var(--black);
+  padding-bottom:70px;
 }
 
 .topbar{
@@ -150,8 +151,45 @@ tr:nth-child(even){
   display:inline-block;
 }
 
-  body{
-    padding-bottom:70px;
+.card{
+  background:var(--white);
+  padding:10px;
+  margin-bottom:8px;
+  border-radius:6px;
+  border:1px solid var(--secondary);
+}
+
+@media (max-width: 768px){
+  .desktop-only, .btn-pdf, table{
+    display:none !important;
+  }
+
+  .cards{
+    display:block;
+    margin-top:10px;
+  }
+
+  .mobile-bar{
+    display:flex;
+    gap:8px;
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    background:white;
+    padding:10px;
+    border-top:1px solid #ccc;
+    z-index:100;
+    box-sizing:border-box;
+  }
+
+  .mobile-bar button, .mobile-bar a{
+    flex:1;
+    font-size:13px;
+    padding:10px 4px;
+    margin-top:0;
+    text-align:center;
+    justify-content:center;
   }
 }
 </style>
@@ -214,7 +252,6 @@ tr:nth-child(even){
     <div class="cards" id="cards"></div>
   </div>
 
-<!-- Biblioteca carregada antes do script que a executa -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
@@ -239,9 +276,11 @@ async function buscar(){
   if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
   if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
 
+  // Adiciona o filtro estático da coluna Check
   params.push(`Check=eq.${encodeURIComponent('Sim')}`);
 
-  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM,Check&Check=eq.Sim${params.length ? '&' + params.join("&") : ''}`;
+  // URL corrigida: mantido o parâmetro params montado dinamicamente
+  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM,Check&${params.join("&")}`;
 
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
@@ -277,6 +316,7 @@ async function buscar(){
           <th>Nome</th>
           <th>Marca</th>
           <th>Embalagem</th>
+          <th>Check</th>
         </tr>
       </thead>
       <tbody>`;
@@ -294,6 +334,7 @@ async function buscar(){
         <td>${r.NOME || ""}</td>
         <td>${r.MARCA || ""}</td>
         <td>${r.EMBALAGEM || ""}</td>
+        <td>${r.Check || ""}</td>
       </tr>`;
 
       c += `<div class="card">
@@ -303,7 +344,8 @@ async function buscar(){
         <strong>Cód. Produto:</strong> ${codProd}<br>
         <strong>Nome:</strong> ${r.NOME || ""}<br>
         <strong>Marca:</strong> ${r.MARCA || ""}<br>
-        <strong>Embalagem:</strong> ${r.EMBALAGEM || ""}
+        <strong>Embalagem:</strong> ${r.EMBALAGEM || ""}<br>
+        <strong>Check:</strong> ${r.Check || ""}
       </div>`;
     });
 
