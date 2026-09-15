@@ -3,20 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulário</title>
+<title>Formulário - Grupo Asa Norte</title>
 <style>
-  body { margin: 0; padding: 0; font-family: Arial, sans-serif; background: #D9D9D9; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; background: #333F4F; padding: 10px 14px; }
-  .title { color: #fff; font-size: 18px; font-weight: bold; }
-  .btn-voltar { color: #fff; border: 1px solid #fff; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: bold; }
-  iframe { width: 100%; height: calc(100vh - 55px); border: none; }
+  :root {
+    --primary: #333F4F;
+    --light: #D9D9D9;
+    --white: #FFFFFF;
+  }
+  
+  body { 
+    margin: 0; 
+    padding: 0; 
+    font-family: Arial, sans-serif; 
+    background: var(--light); 
+    overflow: hidden;
+  }
+  
+  .topbar { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    background: var(--primary); 
+    padding: 10px 14px; 
+    height: 35px;
+  }
+  
+  .title { 
+    color: var(--white); 
+    font-size: 16px; 
+    font-weight: bold; 
+  }
+  
+  .btn-voltar { 
+    color: var(--white); 
+    border: 1px solid var(--white); 
+    padding: 5px 10px; 
+    border-radius: 4px; 
+    text-decoration: none; 
+    font-size: 12px; 
+    font-weight: bold; 
+  }
+  
+  .btn-voltar:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  iframe { 
+    width: 100%; 
+    height: calc(100vh - 55px); 
+    border: none; 
+    display: block;
+    background: #fff;
+  }
 </style>
 </head>
 <body>
+
   <div class="topbar">
-    <span class="title">Formulário</span>
-    <a href="index.html" class="btn-voltar">🏠 Voltar</a>
+    <span class="title">Forms: Solicitações Comerciais</span>
+    <a href="index.html" class="btn-voltar">🏠 Menu Principal</a>
   </div>
-  <iframe src="https://docs.google.com/forms/d/e/tmgtmPTTwRnij7md7/viewform?embedded=true">Carregando…</iframe>
+
+  <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdO7i2f0k-aN6_v-WIsi3mP-rY0o4y1x9y-8k3w7v8X8X8/viewform?embedded=true">Carregando formulário...</iframe>
+
 </body>
 </html>
