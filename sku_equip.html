@@ -216,7 +216,6 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const operacao = document.getElementById("operacao"),
       rn = document.getElementById("rn"),
       cliente = document.getElementById("cliente"),
-      sku = document.getElementById("sku"),
       mensagem = document.getElementById("mensagem"),
       tabela = document.getElementById("tabela");
 
@@ -226,17 +225,6 @@ async function buscar(){
   if(operacao.value) params.push(`Operacao=eq.${encodeURIComponent(operacao.value)}`);
   if(rn.value) params.push(`Cod_Setor=eq.${encodeURIComponent(rn.value)}`);
   if(cliente.value) params.push(`PDV=ilike.*${encodeURIComponent(cliente.value)}*`);
-
-  // Filtra por termo dentro de qualquer uma das colunas SKU_01 até SKU_10
-  if(sku.value){
-    const skuTermo = encodeURIComponent(sku.value);
-    const orCond = [];
-    for(let i=1; i<=10; i++){
-      const num = String(i).padStart(2, '0');
-      orCond.push(`SKU_${num}.ilike.*${skuTermo}*`);
-    }
-    params.push(`or=(${orCond.join(",")})`);
-  }
 
   const colunas = "PDV,Nome_Fantasia,Cod_Setor,Operacao,Qtde_SKU,SKU_01,SKU_02,SKU_03,SKU_04,SKU_05,SKU_06,SKU_07,SKU_08,SKU_09,SKU_10";
   const url = `${SUPABASE_URL}/rest/v1/sku_equip?select=${colunas}${params.length ? '&' + params.join("&") : ''}`;
