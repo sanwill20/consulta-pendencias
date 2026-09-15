@@ -239,7 +239,9 @@ async function buscar(){
   if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
   if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
 
-  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM${params.length ? '&' + params.join("&") : ''}`;
+  params.push(`Check=eq.${encodeURIComponent('Sim')}`);
+
+  const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM,Check&Check=eq.Sim${params.length ? '&' + params.join("&") : ''}`;
 
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
