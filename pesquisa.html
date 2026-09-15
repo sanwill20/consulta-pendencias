@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solicitação / Chamado - Grupo Asa Norte</title>
+<style>
+  :root {
+    --primary: #333F4F;
+    --secondary: #2F5597;
+    --light: #D9D9D9;
+    --white: #FFFFFF;
+    --border: #CCCCCC;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 15px;
+    background: var(--light);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--primary);
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+  }
+
+  .title {
+    color: var(--white);
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .btn-voltar {
+    color: var(--white);
+    border: 1px solid var(--white);
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  .form-card {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    color: var(--primary);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  input[type="number"], select, textarea, input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #FAFAFA;
+  }
+
+  input[type="number"]:focus, select:focus, textarea:focus {
+    border-color: var(--secondary);
+    outline: none;
+    background-color: #FFF;
+  }
+
+  /* Remove setas do input number */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: var(--secondary);
+  }
+
+  button:disabled {
+    background: #888888;
+    cursor: not-allowed;
+  }
+
+  .message {
+    margin-top: 15px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    display: none;
+  }
+
+  .success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; display: block; }
+  .error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; display: block; }
+  .info { color: #0c5460; background-color: #d1ecf1; border: 1px solid #bee5eb; display: block; }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <span class="title">📋 Solicitação</span>
+    <a href="index.html" class="btn-voltar">🏠 Menu</a>
+  </div>
+
+  <div class="form-card">
+    <form id="formSolicitacao">
+      
+      <!-- Selecione a Revenda -->
+      <div class="form-group">
+        <label for="revenda">🏢 Selecione a Revenda *</label>
+        <select id="revenda" required>
+          <option value="">Selecione...</option>
+          <option value="Asa Bom Jesus">Asa Bom Jesus</option>
+          <option value="Asa Campo Maior">Asa Campo Maior</option>
+          <option value="Asa Parnaiba">Asa Parnaiba</option>
+          <option value="Asa São Raimundo">Asa São Raimundo</option>
+          <option value="Asa Teresina">Asa Teresina</option>
+        </select>
+      </div>
+
+      <!-- Código do PDV -->
+      <div class="form-group">
+        <label for="pdv">🔢 Código do PDV *</label>
+        <input type="number" id="pdv" placeholder="Digite apenas números..." pattern="[0-9]*" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+      </div>
+
+      <!-- Assunto da Solicitação -->
+      <div class="form-group">
+        <label for="assunto">📌 Assunto da solicitação *</label>
+        <select id="assunto" required>
+          <option value="">Selecione...</option>
+          <option value="Academia Bees">Academia Bees</option>
+          <option value="Digital Cupons">Digital Cupons</option>
+          <option value="Pontos - Créditos de Pontos">Pontos - Créditos de Pontos</option>
+          <option value="Pontos - Estorno de Pontos">Pontos - Estorno de Pontos</option>
+          <option value="Outros">Outros</option>
+        </select>
+      </div>
+
+      <!-- Descrição -->
+      <div class="form-group">
+        <label for="descricao">📝 Descreva sobre a solicitação *</label>
+        <textarea id="descricao" rows="4" placeholder="Detalhes da sua solicitação..." required></textarea>
+      </div>
+
+      <!-- Anexos -->
+      <div class="form-group">
+        <label for="anexo">📷 Anexo (Opcional - Fotos / Imagens)</label>
+        <input type="file" id="anexo" accept="image/*">
+      </div>
+
+      <button type="submit" id="btnEnviar">🚀 Enviar Solicitação</button>
+    </form>
+
+    <div id="mensagem" class="message"></div>
+  </div>
+
+<script>
+const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
+
+// Função para compactar imagens antes do envio (Economiza Storage no Supabase)
+function compactarEConverterImagem(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1200; // Redimensiona para no máximo 1200px
+
+        if (width > height && width > maxDim) {
+          height *= maxDim / width;
+          width = maxDim;
+        } else if (height > maxDim) {
+          width *= maxDim / height;
+          height = maxDim;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Converte com qualidade reduzida para ter ~150KB
+        canvas.toBlob((blob) => {
+          resolve(blob);
+        }, 'image/jpeg', 0.7);
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
+}
+
+// Upload de anexo para o Supabase Storage
+async function uploadAnexo(file) {
+  try {
+    let fileBlob = file;
+    let fileName = `${Date.now()}.jpg`;
+
+    // Compacta caso seja imagem
+    if (file.type.startsWith('image/')) {
+      fileBlob = await compactarEConverterImagem(file);
+    } else {
+      fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/anexos/${fileName}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': fileBlob.type || 'image/jpeg'
+      },
+      body: fileBlob
+    });
+
+    if (res.ok) {
+      return `${SUPABASE_URL}/storage/v1/object/public/anexos/${fileName}`;
+    } else {
+      console.error("Erro upload:", await res.text());
+      return null;
+    }
+  } catch (e) {
+    console.error("Exceção upload:", e);
+    return null;
+  }
+}
+
+// Envio do formulário
+document.getElementById("formSolicitacao").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const msg = document.getElementById("mensagem");
+  const btn = document.getElementById("btnEnviar");
+  const fileInput = document.getElementById("anexo");
+
+  btn.disabled = true;
+  msg.textContent = "Processando e enviando...";
+  msg.className = "message info";
+
+  let anexoUrl = null;
+
+  // Se houver arquivo anexado, faz o upload primeiro
+  if (fileInput.files.length > 0) {
+    msg.textContent = "Otimizando e enviando foto...";
+    anexoUrl = await uploadAnexo(fileInput.files[0]);
+  }
+
+  const dados = {
+    revenda: document.getElementById("revenda").value,
+    pdv: parseInt(document.getElementById("pdv").value),
+    assunto: document.getElementById("assunto").value,
+    descricao: document.getElementById("descricao").value,
+    anexo_url: anexoUrl
+  };
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/solicitacoes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(dados)
+    });
+
+    if (response.ok) {
+      msg.textContent = "✅ Solicitação enviada com sucesso!";
+      msg.className = "message success";
+      document.getElementById("formSolicitacao").reset();
+    } else {
+      throw new Error("Erro ao registrar a solicitação.");
+    }
+  } catch (err) {
+    console.error(err);
+    msg.textContent = "❌ Erro ao enviar solicitação. Tente novamente.";
+    msg.className = "message error";
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
