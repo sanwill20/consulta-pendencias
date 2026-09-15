@@ -193,7 +193,7 @@
 const SUPABASE_URL = "https://nzpquivtrvqwtsiooodr.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im56cHF1aXZ0cnZxd3RzaW9vb2RyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc3MTc2MDYsImV4cCI6MjA4MzI5MzYwNn0.xkoPm1W0-IFDYCoVgq2PFhXJ9Bg8oP9j9Eht7yIJzcM";
 
-// Função para compactar imagens antes do envio (Economiza Storage no Supabase)
+// Compactação de imagem
 function compactarEConverterImagem(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -205,7 +205,7 @@ function compactarEConverterImagem(file) {
         const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
-        const maxDim = 1200; // Redimensiona para no máximo 1200px
+        const maxDim = 1200;
 
         if (width > height && width > maxDim) {
           height *= maxDim / width;
@@ -220,7 +220,6 @@ function compactarEConverterImagem(file) {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Converte com qualidade reduzida para ter ~150KB
         canvas.toBlob((blob) => {
           resolve(blob);
         }, 'image/jpeg', 0.7);
@@ -231,42 +230,46 @@ function compactarEConverterImagem(file) {
   });
 }
 
-// Upload de anexo para o Supabase Storage
+// Upload do Anexo para o Supabase Storage via FormData
 async function uploadAnexo(file) {
   try {
     let fileBlob = file;
-    let fileName = `${Date.now()}.jpg`;
+    let fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}.jpg`;
 
-    // Compacta caso seja imagem
     if (file.type.startsWith('image/')) {
       fileBlob = await compactarEConverterImagem(file);
     } else {
       fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, "_")}`;
     }
 
+    // Criação do objeto FormData para multipart/form-data
+    const formData = new FormData();
+    formData.append('file', fileBlob, fileName);
+
     const res = await fetch(`${SUPABASE_URL}/storage/v1/object/anexos/${fileName}`, {
       method: 'POST',
       headers: {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': fileBlob.type || 'image/jpeg'
+        'x-upsert': 'true'
       },
-      body: fileBlob
+      body: formData
     });
 
     if (res.ok) {
       return `${SUPABASE_URL}/storage/v1/object/public/anexos/${fileName}`;
     } else {
-      console.error("Erro upload:", await res.text());
+      const errText = await res.text();
+      console.error("Erro no upload para o Supabase Storage:", errText);
       return null;
     }
   } catch (e) {
-    console.error("Exceção upload:", e);
+    console.error("Exceção ao enviar arquivo:", e);
     return null;
   }
 }
 
-// Envio do formulário
+// Submissão do Formulário
 document.getElementById("formSolicitacao").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -275,15 +278,21 @@ document.getElementById("formSolicitacao").addEventListener("submit", async func
   const fileInput = document.getElementById("anexo");
 
   btn.disabled = true;
-  msg.textContent = "Processando e enviando...";
+  msg.textContent = "Processando solicitação...";
   msg.className = "message info";
 
   let anexoUrl = null;
 
-  // Se houver arquivo anexado, faz o upload primeiro
   if (fileInput.files.length > 0) {
     msg.textContent = "Otimizando e enviando foto...";
     anexoUrl = await uploadAnexo(fileInput.files[0]);
+
+    if (!anexoUrl) {
+      msg.textContent = "⚠️ Falha ao salvar a imagem no servidor. Verifique o tamanho do arquivo ou permissões do bucket 'anexos'.";
+      msg.className = "message error";
+      btn.disabled = false;
+      return;
+    }
   }
 
   const dados = {
@@ -311,7 +320,7 @@ document.getElementById("formSolicitacao").addEventListener("submit", async func
       msg.className = "message success";
       document.getElementById("formSolicitacao").reset();
     } else {
-      throw new Error("Erro ao registrar a solicitação.");
+      throw new Error("Erro ao registrar no banco de dados.");
     }
   } catch (err) {
     console.error(err);
