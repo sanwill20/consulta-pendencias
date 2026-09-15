@@ -19,7 +19,6 @@ body{
   margin:20px;
   background:var(--light);
   color:var(--black);
-  padding-bottom:70px;
 }
 
 .topbar{
@@ -99,12 +98,19 @@ button:hover{
   background:#b71c1c;
 }
 
+/* Permite rolagem horizontal em telas menores */
+.table-container{
+  width:100%;
+  overflow-x:auto;
+}
+
 table{
   border-collapse:collapse;
   margin-top:12px;
   font-size:13px;
   width:100%;
   background:var(--white);
+  white-space:nowrap; /* Mantém os dados alinhados ao rolar */
 }
 
 th, td{
@@ -151,45 +157,9 @@ tr:nth-child(even){
   display:inline-block;
 }
 
-.card{
-  background:var(--white);
-  padding:10px;
-  margin-bottom:8px;
-  border-radius:6px;
-  border:1px solid var(--secondary);
-}
-
 @media (max-width: 768px){
-  .desktop-only, .btn-pdf, table{
+  .btn-pdf{
     display:none !important;
-  }
-
-  .cards{
-    display:block;
-    margin-top:10px;
-  }
-
-  .mobile-bar{
-    display:flex;
-    gap:8px;
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:white;
-    padding:10px;
-    border-top:1px solid #ccc;
-    z-index:100;
-    box-sizing:border-box;
-  }
-
-  .mobile-bar button, .mobile-bar a{
-    flex:1;
-    font-size:13px;
-    padding:10px 4px;
-    margin-top:0;
-    text-align:center;
-    justify-content:center;
   }
 }
 </style>
@@ -248,8 +218,9 @@ tr:nth-child(even){
   
   <div id="area-pdf">    
     <div class="message no-pdf" id="mensagem"></div>
-    <div id="tabela"></div>
-    <div class="cards" id="cards"></div>
+    <div class="table-container">
+      <div id="tabela"></div>
+    </div>
   </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -264,8 +235,7 @@ const operacao = document.getElementById("operacao"),
       rn = document.getElementById("rn"),
       cliente = document.getElementById("cliente"),
       mensagem = document.getElementById("mensagem"),
-      tabela = document.getElementById("tabela"),
-      cards = document.getElementById("cards");
+      tabela = document.getElementById("tabela");
 
 async function buscar(){
   const params = [];
@@ -276,16 +246,13 @@ async function buscar(){
   if(cliente.value) params.push(`Cliente=eq.${encodeURIComponent(cliente.value)}`);
   if(sku.value) params.push(`Cod_Produto=eq.${encodeURIComponent(sku.value)}`);
 
-  // Adiciona o filtro estático da coluna Check
   params.push(`Check=eq.${encodeURIComponent('Sim')}`);
 
-  // URL corrigida: mantido o parâmetro params montado dinamicamente
   const url = `${SUPABASE_URL}/rest/v1/historico_mes?select=Cliente,Fantasia,Cod_Setor,Cod_Produto,NOME,MARCA,EMBALAGEM,Check&${params.join("&")}`;
 
   mensagem.textContent = "Carregando...";
   mensagem.className = "message";
   tabela.innerHTML = "";
-  cards.innerHTML = "";
 
   try{
     const r = await fetch(url, {
@@ -321,8 +288,6 @@ async function buscar(){
       </thead>
       <tbody>`;
 
-    let c = "";
-
     d.forEach(r => {
       const codProd = r.Cod_Produto || r['Cod. Produto'] || r.CodProduto || "";
       
@@ -336,21 +301,9 @@ async function buscar(){
         <td>${r.EMBALAGEM || ""}</td>
         <td>${r.Check || ""}</td>
       </tr>`;
-
-      c += `<div class="card">
-        <strong>Cliente:</strong> ${r.Cliente || ""}<br>
-        <strong>Fantasia:</strong> ${r.Fantasia || ""}<br>
-        <strong>Setor:</strong> ${r.Cod_Setor || ""}<br>
-        <strong>Cód. Produto:</strong> ${codProd}<br>
-        <strong>Nome:</strong> ${r.NOME || ""}<br>
-        <strong>Marca:</strong> ${r.MARCA || ""}<br>
-        <strong>Embalagem:</strong> ${r.EMBALAGEM || ""}<br>
-        <strong>Check:</strong> ${r.Check || ""}
-      </div>`;
     });
 
     tabela.innerHTML = h + "</tbody></table>";
-    cards.innerHTML = c;
 
   }catch(e){
     console.error(e);
@@ -362,7 +315,6 @@ async function buscar(){
 function limpar(){
   document.querySelectorAll("input,select").forEach(e => e.value = "");
   tabela.innerHTML = "";
-  cards.innerHTML = "";
   mensagem.textContent = "";
 }
 
